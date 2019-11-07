@@ -6,6 +6,7 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
 }
 
 void Game::Run() {
+  LoadTextures();
   window_.setView(view_);
   // run the program as long as the window is open
   while (window_.isOpen()) {
@@ -33,26 +34,30 @@ void Game::DrawMap() {
   int tile_size_x = window_size.x / map_.GetWidth();
   int tile_size_y = window_size.y / map_.GetHeight();
   int tile_size = std::min(tile_size_x, tile_size_y);
-
-  sf::RectangleShape rect;
-  rect.setSize(sf::Vector2f(tile_size, tile_size));
+  sf::Sprite sprite;
+  sf::Texture* texture;
 
   for (int y = 0; y < map_.GetHeight(); y++) {
     for (int x = 0; x < map_.GetWidth(); x++) {
       Tile tile = map_(x, y);
-      rect.setPosition(x * tile_size, y * tile_size);
-      switch (tile.GetType()) {
-        case Empty:
-          rect.setFillColor(sf::Color(0, 255, 0, 255));
-          break;
-        case Path:
-          rect.setFillColor(sf::Color(255, 255, 0, 255));
-          break;
-        default:
-          rect.setFillColor(sf::Color(255, 0, 0, 255));
-          break;
-      }
-      window_.draw(rect);
+      texture = &textures_.at(tile.GetTexture());
+      sprite.setTexture(*texture);
+      sprite.setPosition(x * tile_size, y * tile_size);
+      sprite.setScale(tile_size / (float)(*texture).getSize().x,
+                      tile_size / (float)(*texture).getSize().y);
+      window_.draw(sprite);
     }
   }
+}
+
+void Game::LoadTextures() {
+  LoadTexture("sprites/grass_tile_1.png");
+  LoadTexture("sprites/sand_tile.png");
+}
+
+void Game::LoadTexture(const std::string texture_name) {
+  sf::Texture texture;
+  texture.loadFromFile(texture_name);
+  texture.setSmooth(true);
+  textures_.insert(std::make_pair(texture_name, texture));
 }
