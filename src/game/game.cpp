@@ -30,6 +30,7 @@ void Game::Run() {
 void Game::DrawAll() {
   DrawMap();
   DrawEnemies();
+  DrawTowers();
 }
 
 void Game::DrawMap() {
@@ -71,10 +72,28 @@ void Game::DrawEnemies() {
   window_.draw(sprite);
 }
 
+void Game::DrawTowers() {
+  // Example:
+  auto window_size = window_.getSize();
+  int tower_size_x = window_size.x / map_.GetWidth();
+  int tower_size_y = window_size.y / map_.GetHeight();
+  int tower_size = std::min(tower_size_x, tower_size_y);
+  Tower tower = Tower(5, 20, 0, 2);
+  sf::Sprite sprite;
+  sf::Texture* texture = &textures_.at(tower.GetTexture());
+  sprite.setTexture(*texture);
+  sprite.setPosition(tower.GetLocation().second * tower_size,
+                     tower.GetLocation().first * tower_size);
+  sprite.setScale(tower_size / (float)(*texture).getSize().x,
+                  tower_size / (float)(*texture).getSize().y);
+  window_.draw(sprite);
+}
+
 void Game::LoadTextures() {
   LoadTexture("sprites/grass_tile_1.png");
   LoadTexture("sprites/sand_tile.png");
   LoadTexture("sprites/basic_enemy.png");
+  LoadTexture("sprites/basic_tower.png");
 }
 
 void Game::LoadTexture(const std::string texture_name) {

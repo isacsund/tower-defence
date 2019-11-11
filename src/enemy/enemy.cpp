@@ -1,6 +1,6 @@
 #include "enemy.hpp"
 
-Enemy::Enemy(int hp, int speed, float x, float y, const std::string& texture,
+Enemy::Enemy(int hp, int speed, int x, int y, const std::string& texture,
              EnemyTypes type, bool alive)
     : hp_(hp),
       speed_(speed),
