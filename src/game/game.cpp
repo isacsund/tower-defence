@@ -64,7 +64,8 @@ void Game::DrawEnemies() {
   sf::Sprite sprite;
   sf::Texture* texture = &textures_.at(enemy.GetTexture());
   sprite.setTexture(*texture);
-  sprite.setPosition(3 * enemy_size, 0);
+  sprite.setPosition(enemy.GetLocation().second * enemy_size,
+                     enemy.GetLocation().first * enemy_size);
   sprite.setScale(enemy_size / (float)(*texture).getSize().x,
                   enemy_size / (float)(*texture).getSize().y);
   window_.draw(sprite);
