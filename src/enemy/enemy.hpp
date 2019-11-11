@@ -14,9 +14,11 @@ class Enemy {
   const std::string& GetTexture() const;
   const EnemyTypes GetType() const;
 
+ protected:
+  int hp_;
+
  private:
   int speed_;
-  int hp_;
   float x_, y_;
   const std::string texture_;
   EnemyTypes type_;
