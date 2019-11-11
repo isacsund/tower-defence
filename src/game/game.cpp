@@ -27,7 +27,10 @@ void Game::Run() {
   }
 }
 
-void Game::DrawAll() { DrawMap(); }
+void Game::DrawAll() {
+  DrawMap();
+  DrawEnemies();
+}
 
 void Game::DrawMap() {
   auto window_size = window_.getSize();
@@ -50,9 +53,27 @@ void Game::DrawMap() {
   }
 }
 
+void Game::DrawEnemies() {
+  // Example:
+  auto window_size = window_.getSize();
+  int enemy_size_x = window_size.x / map_.GetWidth();
+  int enemy_size_y = window_size.y / map_.GetHeight();
+  int enemy_size = std::min(enemy_size_x, enemy_size_y);
+
+  Enemy enemy = Enemy(100, 1, 0, 3);
+  sf::Sprite sprite;
+  sf::Texture* texture = &textures_.at(enemy.GetTexture());
+  sprite.setTexture(*texture);
+  sprite.setPosition(3 * enemy_size, 0);
+  sprite.setScale(enemy_size / (float)(*texture).getSize().x,
+                  enemy_size / (float)(*texture).getSize().y);
+  window_.draw(sprite);
+}
+
 void Game::LoadTextures() {
   LoadTexture("sprites/grass_tile_1.png");
   LoadTexture("sprites/sand_tile.png");
+  LoadTexture("sprites/basic_enemy.png");
 }
 
 void Game::LoadTexture(const std::string texture_name) {

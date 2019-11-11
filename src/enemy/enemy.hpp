@@ -11,6 +11,8 @@ class Enemy {
   int GetHp() const;
   int GetSpeed() const;
   std::pair<int, int> GetLocation() const;
+  const std::string& GetTexture() const;
+  const EnemyTypes GetType() const;
 
  private:
   int speed_;
