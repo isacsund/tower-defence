@@ -100,12 +100,12 @@ void Game::DrawTowers() {
   int tower_size_x = window_size.x / map_.GetWidth();
   int tower_size_y = window_size.y / map_.GetHeight();
   int tower_size = std::min(tower_size_x, tower_size_y);
-  for (auto tower : towers_) {
+  for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
     sf::Sprite sprite;
-    sf::Texture* texture = &textures_.at(tower.GetTexture());
+    sf::Texture* texture = &textures_.at(it->GetTexture());
     sprite.setTexture(*texture);
-    sprite.setPosition(tower.GetPosition().first * tower_size,
-                       tower.GetPosition().second * tower_size);
+    sprite.setPosition(it->GetPosition().first * tower_size,
+                       it->GetPosition().second * tower_size);
     sprite.setScale(tower_size / (float)(*texture).getSize().x,
                     tower_size / (float)(*texture).getSize().y);
     window_.draw(sprite);
