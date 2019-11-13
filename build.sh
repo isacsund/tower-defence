@@ -1,1 +1,1 @@
-rm -rf build && cmake -B"./build/" -H"." && cd build && make
+cmake -B"./build/" -H"." && cd build && make
