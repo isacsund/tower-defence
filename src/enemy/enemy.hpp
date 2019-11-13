@@ -18,7 +18,6 @@ class Enemy {
  private:
   int hp_;
   int speed_;
-  bool alive_;
   int x_, y_;
   const std::string texture_;
   EnemyTypes type_;
