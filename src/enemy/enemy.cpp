@@ -16,4 +16,3 @@ int Enemy::GetSpeed() const { return speed_; }
 std::pair<int, int> Enemy::GetLocation() const { return {x_, y_}; }
 const std::string& Enemy::GetTexture() const { return texture_; }
 const EnemyTypes Enemy::GetType() const { return type_; }
-bool Enemy::GetStatus() const { return alive_; }
