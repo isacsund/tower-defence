@@ -12,9 +12,13 @@ class Map {
   const int GetHeight() const;
   const std::vector<std::vector<Tile>> GetTiles() const;
   const Tile& operator()(int x, int y) const;
+  const std::pair<int, int> GetEnemySpawn() const;
+  const std::pair<int, int> GetPlayerBase() const;
 
  private:
   std::vector<std::vector<Tile>> tiles_;
+  std::pair<int, int> enemy_spawn_;
+  std::pair<int, int> player_base_;
 };
 
 std::ostream& operator<<(std::ostream& os, const Map& map);
