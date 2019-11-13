@@ -1,5 +1,5 @@
 #include "map.hpp"
-
+#include "pathfinder.hpp"
 Map::Map(const std::string& filename) {
   std::ifstream is(filename);
   if (!is.is_open()) {
@@ -36,6 +36,7 @@ Map::Map(const std::string& filename) {
     }
   }
   is.close();
+  RecalculatePath();
 }
 
 const int Map::GetHeight() const { return tiles_.size(); }
@@ -49,6 +50,17 @@ const std::pair<int, int> Map::GetPlayerBase() const { return player_base_; }
 const std::vector<std::vector<Tile>> Map::GetTiles() const { return tiles_; };
 
 const Tile& Map::operator()(int x, int y) const { return tiles_[y][x]; };
+
+bool Map::RecalculatePath() {
+  auto new_path = Pathfinder::GetPath(*this);
+  if (new_path.size() <= 1) {
+    std::cout << "Error calculating the enemy path" << std::endl;
+    return false;
+  } else {
+    path_ = new_path;
+    return true;
+  }
+}
 
 std::ostream& operator<<(std::ostream& os, const Map& map) {
   for (auto row : map.GetTiles()) {

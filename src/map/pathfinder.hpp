@@ -19,5 +19,5 @@ const std::vector<std::vector<bool>> GetGrid(const Map map);
 
 bool Exists(std::vector<Node> nodes, Node node);
 
-const std::vector<std::pair<int, int>> GetPath(Map map);
+const std::vector<std::pair<int, int>> GetPath(const Map map);
 };  // namespace Pathfinder
