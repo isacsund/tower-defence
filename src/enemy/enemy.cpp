@@ -11,3 +11,4 @@ std::pair<int, int> Enemy::GetPosition() const { return {x_, y_}; }
 const std::string& Enemy::GetTexture() const { return texture_; }
 const EnemyTypes Enemy::GetType() const { return type_; }
 bool Enemy::IsAlive() const { return hp_ > 0; }
+void Enemy::SetHp(int hp) { hp_ = hp; }

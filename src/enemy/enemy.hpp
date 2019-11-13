@@ -14,6 +14,7 @@ class Enemy {
   const std::string& GetTexture() const;
   const EnemyTypes GetType() const;
   bool IsAlive() const;
+  void SetHp(int hp);
 
  private:
   int hp_;
