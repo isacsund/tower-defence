@@ -15,10 +15,8 @@ class Enemy {
   const EnemyTypes GetType() const;
   bool GetStatus() const;
 
- protected:
-  int hp_;
-
  private:
+  int hp_;
   int speed_;
   bool alive_;
   int x_, y_;
