@@ -1,12 +1,21 @@
 #include "game.hpp"
-#include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
-Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
+Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
+  gui_.setWindow(window_);
 }
 
 void Game::Run() {
   LoadTextures();
+
+  try {
+    tgui::Button::Ptr button = tgui::Button::create();
+    gui_.add(button);
+
+  } catch (const tgui::Exception& e) {
+    std::cerr << "TGUI Exception: " << e.what() << std::endl;
+  }
   window_.setView(view_);
   window_.setFramerateLimit(60);
   // run the program as long as the window is open
@@ -24,6 +33,7 @@ void Game::Run() {
     }
     window_.clear();
     DrawAll();
+    gui_.draw();
     window_.display();
   }
 }

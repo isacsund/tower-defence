@@ -13,4 +13,5 @@ target_link_libraries(tower-defence
         sfml-graphics
         sfml-window
         sfml-system
-        sfml-audio)
+        sfml-audio
+        ${TGUI_LIBRARY})
