@@ -9,7 +9,10 @@ void Game::Run() {
   LoadTextures();
 
   try {
-    tgui::Button::Ptr button = tgui::Button::create();
+    auto button = tgui::Button::create();
+    std::cout << map_.GetWidth() * GetTileSize();
+    button->setPosition(
+        tgui::Layout2d((map_.GetWidth() - 1) * GetTileSize(), 100));
     gui_.add(button);
 
   } catch (const tgui::Exception& e) {
@@ -44,10 +47,7 @@ void Game::DrawAll() {
 }
 
 void Game::DrawMap() {
-  auto window_size = window_.getSize();
-  int tile_size_x = window_size.x / map_.GetWidth();
-  int tile_size_y = window_size.y / map_.GetHeight();
-  int tile_size = std::min(tile_size_x, tile_size_y);
+  int tile_size = GetTileSize();
   sf::Sprite sprite;
   sf::Texture* texture;
 
@@ -65,12 +65,7 @@ void Game::DrawMap() {
 }
 
 void Game::DrawEnemies() {
-  // Example:
-  auto window_size = window_.getSize();
-  int enemy_size_x = window_size.x / map_.GetWidth();
-  int enemy_size_y = window_size.y / map_.GetHeight();
-  int enemy_size = std::min(enemy_size_x, enemy_size_y);
-
+  int enemy_size = GetTileSize();
   Enemy enemy = Enemy(100, 1, 4.5, 2.5);
   sf::Sprite sprite;
   sf::Texture* texture = &textures_.at(enemy.GetTexture());
@@ -83,11 +78,7 @@ void Game::DrawEnemies() {
 }
 
 void Game::DrawTowers() {
-  // Example:
-  auto window_size = window_.getSize();
-  int tower_size_x = window_size.x / map_.GetWidth();
-  int tower_size_y = window_size.y / map_.GetHeight();
-  int tower_size = std::min(tower_size_x, tower_size_y);
+  int tower_size = GetTileSize();
   Tower tower = Tower(5, 20, 0, 2);
   sf::Sprite sprite;
   sf::Texture* texture = &textures_.at(tower.GetTexture());
@@ -111,4 +102,11 @@ void Game::LoadTexture(const std::string texture_name) {
   texture.loadFromFile(texture_name);
   texture.setSmooth(true);
   textures_.insert(std::make_pair(texture_name, texture));
+}
+
+const int Game::GetTileSize() const {
+  auto window_size = window_.getSize();
+  int tile_size_x = window_size.x / map_.GetWidth();
+  int tile_size_y = window_size.y / map_.GetHeight();
+  return std::min(tile_size_x, tile_size_y);
 }

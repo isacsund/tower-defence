@@ -16,6 +16,7 @@ class Game {
   void DrawTowers();
   void LoadTextures();
   void LoadTexture(const std::string texture_name);
+  const int GetTileSize() const;
 
  private:
   Map map_;
