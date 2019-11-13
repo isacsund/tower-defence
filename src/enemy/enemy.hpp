@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 enum EnemyTypes { Standard, Fast /*, Big, Boss*/ };

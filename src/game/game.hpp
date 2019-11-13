@@ -16,6 +16,7 @@ class Game {
   void Tick();
   void LoadTextures();
   void LoadTexture(const std::string texture_name);
+  void FindEnemies();
 
  private:
   Map map_;
@@ -23,4 +24,5 @@ class Game {
   sf::View view_;
   std::map<const std::string, sf::Texture> textures_;
   std::vector<Enemy> enemies_;
+  std::vector<Tower> towers_;
 };

@@ -11,8 +11,5 @@ Tower::Tower(float range, float damage, int x, int y, TowerTypes type,
 
 const std::pair<int, int> Tower::GetPosition() const { return {x_, y_}; }
 const std::string& Tower::GetTexture() const { return texture_; }
-void Tower::Attack() const {
-  // search for enemy
-  // iterate enemy collection, select enemy farthest on map within tower range
-  // attack enemy
-}
+const float Tower::GetRange() const { return range_; }
+void Tower::Attack(Enemy& enemy) const { enemy.SetHp(enemy.GetHp() - damage_); }
