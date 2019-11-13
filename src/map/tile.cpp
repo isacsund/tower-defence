@@ -1,6 +1,6 @@
 #include "tile.hpp"
 
-Tile::Tile(Types type) : type_(type) {
+Tile::Tile(PathTypes type) : type_(type) {
   switch (type) {
     case Path:
       texture_ = "sprites/sand_tile.png";
@@ -10,7 +10,7 @@ Tile::Tile(Types type) : type_(type) {
   }
 }
 
-const Types Tile::GetType() const { return type_; }
+const PathTypes Tile::GetType() const { return type_; }
 
 const std::string& Tile::GetTexture() const { return texture_; }
 
