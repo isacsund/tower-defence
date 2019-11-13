@@ -15,6 +15,7 @@ class Map {
   const std::pair<int, int> GetEnemySpawn() const;
   const std::pair<int, int> GetPlayerBase() const;
   bool RecalculatePath();
+  std::vector<std::pair<int, int>> GetPath();
 
  private:
   std::vector<std::vector<Tile>> tiles_;
