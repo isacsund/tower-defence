@@ -10,7 +10,7 @@ class Tower {
   Tower(float range, float damage, int x, int y, TowerTypes type = Basic,
         const std::string& texture = "sprites/basic_tower.png");
   void Attack() const;
-  std::pair<int, int> GetPosition() const;
+  const std::pair<int, int> GetPosition() const;
   const std::string& GetTexture() const;
 
  private:
