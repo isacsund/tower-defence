@@ -62,6 +62,8 @@ bool Map::RecalculatePath() {
   }
 }
 
+std::vector<std::pair<int, int>> Map::GetPath() { return path_; }
+
 std::ostream& operator<<(std::ostream& os, const Map& map) {
   for (auto row : map.GetTiles()) {
     for (auto tile : row) {

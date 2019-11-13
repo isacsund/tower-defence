@@ -13,6 +13,7 @@ class Game {
   void DrawMap();
   void DrawEnemies();
   void DrawTowers();
+  void Tick();
   void LoadTextures();
   void LoadTexture(const std::string texture_name);
 
@@ -21,4 +22,5 @@ class Game {
   sf::RenderWindow window_;
   sf::View view_;
   std::map<const std::string, sf::Texture> textures_;
+  std::vector<Enemy> enemies_;
 };

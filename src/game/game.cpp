@@ -3,6 +3,8 @@
 
 Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
+  auto spawn = map_.GetEnemySpawn();
+  enemies_.push_back(Enemy(100, 1, spawn.first + 0.5, spawn.second + 0.5));
 }
 
 void Game::Run() {
@@ -24,7 +26,21 @@ void Game::Run() {
     }
     window_.clear();
     DrawAll();
+    Tick();
     window_.display();
+  }
+}
+
+void Game::Tick() {
+  auto path = map_.GetPath();
+  auto player_base = map_.GetPlayerBase();
+  for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
+    if (it->IsAlive()) {
+      it->Move(path);
+      if (it->GetTile() == player_base) {
+        it->SetHp(0);
+      }
+    }
   }
 }
 
@@ -62,15 +78,16 @@ void Game::DrawEnemies() {
   int enemy_size_y = window_size.y / map_.GetHeight();
   int enemy_size = std::min(enemy_size_x, enemy_size_y);
 
-  Enemy enemy = Enemy(100, 1, 4.5, 2.5);
-  sf::Sprite sprite;
-  sf::Texture* texture = &textures_.at(enemy.GetTexture());
-  sprite.setTexture(*texture);
-  sprite.setPosition(enemy.GetPosition().first * enemy_size - enemy_size / 2,
-                     enemy.GetPosition().second * enemy_size - enemy_size / 2);
-  sprite.setScale(enemy_size / (float)(*texture).getSize().x,
-                  enemy_size / (float)(*texture).getSize().y);
-  window_.draw(sprite);
+  for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
+    sf::Sprite sprite;
+    sf::Texture* texture = &textures_.at(it->GetTexture());
+    sprite.setTexture(*texture);
+    sprite.setPosition(it->GetPosition().first * enemy_size - enemy_size / 2,
+                       it->GetPosition().second * enemy_size - enemy_size / 2);
+    sprite.setScale(enemy_size / (float)(*texture).getSize().x,
+                    enemy_size / (float)(*texture).getSize().y);
+    window_.draw(sprite);
+  }
 }
 
 void Game::DrawTowers() {
