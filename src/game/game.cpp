@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include <iostream>
 
 Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
@@ -8,16 +9,6 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
 void Game::Run() {
   LoadTextures();
 
-  try {
-    auto button = tgui::Button::create();
-    std::cout << map_.GetWidth() * GetTileSize();
-    button->setPosition(
-        tgui::Layout2d((map_.GetWidth() - 1) * GetTileSize(), 100));
-    gui_.add(button);
-
-  } catch (const tgui::Exception& e) {
-    std::cerr << "TGUI Exception: " << e.what() << std::endl;
-  }
   window_.setView(view_);
   window_.setFramerateLimit(60);
   // run the program as long as the window is open
@@ -35,7 +26,6 @@ void Game::Run() {
     }
     window_.clear();
     DrawAll();
-    gui_.draw();
     window_.display();
   }
 }
@@ -44,6 +34,7 @@ void Game::DrawAll() {
   DrawMap();
   DrawEnemies();
   DrawTowers();
+  DrawGui();
 }
 
 void Game::DrawMap() {
@@ -90,6 +81,38 @@ void Game::DrawTowers() {
   window_.draw(sprite);
 }
 
+void Game::DrawSidebar() {
+  tgui::Grid::Ptr layout = tgui::Grid::create();
+  layout->setSize(window_.getSize().x - ((map_.GetWidth() - 1) * GetTileSize()),
+                  0.5f * tgui::bindHeight(gui_));
+  layout->setPosition((map_.GetWidth() - 1) * GetTileSize(), 0);
+  gui_.add(layout);
+  sf::Texture* texture = &textures_.at("sprites/basic_tower.png");
+  try {
+    for (size_t i = 0; i < 2; i++) {
+      for (size_t j = 0; j < 2; j++) {
+        auto button = tgui::Button::create();
+        button->setSize(100, 100);
+        // tgui::Texture texturea(*texture, sf::IntRect(0, 0, 0, 0),
+        // sf::IntRect(0, 0, 0, 0));
+
+        // button->getRenderer()->setNormalTexture(texturea);
+
+        button->connect("pressed", [&]() { window_.close(); });
+        layout->addWidget(button, j, i, tgui::Borders(0, 0, 0, 0));
+      }
+    }
+
+  } catch (const tgui::Exception& e) {
+    std::cerr << "TGUI Exception: " << e.what() << std::endl;
+  }
+}
+
+void Game::DrawGui() {
+  DrawSidebar();
+  gui_.draw();
+}
+
 void Game::LoadTextures() {
   LoadTexture("sprites/grass_tile_1.png");
   LoadTexture("sprites/sand_tile.png");
@@ -106,7 +129,7 @@ void Game::LoadTexture(const std::string texture_name) {
 
 const int Game::GetTileSize() const {
   auto window_size = window_.getSize();
-  int tile_size_x = window_size.x / map_.GetWidth();
-  int tile_size_y = window_size.y / map_.GetHeight();
+  int tile_size_x = (window_size.x - 200) / map_.GetWidth();
+  int tile_size_y = (window_size.y - 200) / map_.GetHeight();
   return std::min(tile_size_x, tile_size_y);
 }

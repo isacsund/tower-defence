@@ -14,6 +14,8 @@ class Game {
   void DrawMap();
   void DrawEnemies();
   void DrawTowers();
+  void DrawGui();
+  void DrawSidebar();
   void LoadTextures();
   void LoadTexture(const std::string texture_name);
   const int GetTileSize() const;
