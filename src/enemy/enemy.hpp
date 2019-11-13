@@ -6,7 +6,7 @@ class Enemy {
  public:
   Enemy(int hp, int speed, int x, int y,
         const std::string& texture = "sprites/basic_enemy.png",
-        EnemyTypes type = Standard, bool alive = true);
+        EnemyTypes type = Standard);
   void Move();
   int GetHp() const;
   int GetSpeed() const;

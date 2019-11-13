@@ -1,14 +1,8 @@
 #include "enemy.hpp"
 
 Enemy::Enemy(int hp, int speed, int x, int y, const std::string& texture,
-             EnemyTypes type, bool alive)
-    : hp_(hp),
-      speed_(speed),
-      x_(x),
-      y_(y),
-      texture_(texture),
-      type_(type),
-      alive_(alive) {}
+             EnemyTypes type)
+    : hp_(hp), speed_(speed), x_(x), y_(y), texture_(texture), type_(type) {}
 
 void Enemy::Move() {}  // TODO: Implement A* search algorithm xd
 int Enemy::GetHp() const { return hp_; }
