@@ -33,8 +33,14 @@ void Game::Run() {
 
 void Game::Tick() {
   auto path = map_.GetPath();
+  auto player_base = map_.GetPlayerBase();
   for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
-    it->Move();
+    if (it->IsAlive()) {
+      it->Move(path);
+      if (it->GetTile() == player_base) {
+        it->SetHp(0);
+      }
+    }
   }
 }
 
