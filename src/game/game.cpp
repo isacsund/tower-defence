@@ -62,12 +62,12 @@ void Game::DrawEnemies() {
   int enemy_size_y = window_size.y / map_.GetHeight();
   int enemy_size = std::min(enemy_size_x, enemy_size_y);
 
-  Enemy enemy = Enemy(100, 1, 0, 3);
+  Enemy enemy = Enemy(100, 1, 4.5, 2.5);
   sf::Sprite sprite;
   sf::Texture* texture = &textures_.at(enemy.GetTexture());
   sprite.setTexture(*texture);
-  sprite.setPosition(enemy.GetPosition().first * enemy_size,
-                     enemy.GetPosition().second * enemy_size);
+  sprite.setPosition(enemy.GetPosition().first * enemy_size - enemy_size / 2,
+                     enemy.GetPosition().second * enemy_size - enemy_size / 2);
   sprite.setScale(enemy_size / (float)(*texture).getSize().x,
                   enemy_size / (float)(*texture).getSize().y);
   window_.draw(sprite);
