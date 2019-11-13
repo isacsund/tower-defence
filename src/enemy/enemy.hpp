@@ -13,7 +13,7 @@ class Enemy {
   std::pair<int, int> GetPosition() const;
   const std::string& GetTexture() const;
   const EnemyTypes GetType() const;
-  bool GetStatus() const;
+  bool IsAlive() const;
 
  private:
   int hp_;
