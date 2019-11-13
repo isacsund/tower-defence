@@ -1,5 +1,4 @@
 #include "game.hpp"
-#include <TGUI/TGUI.hpp>
 
 Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
