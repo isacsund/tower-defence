@@ -19,8 +19,10 @@ Map::Map(const std::string& filename) {
             break;
           case 'B':
             tiles_[i].push_back(Tile(PlayerBase));
+            break;
           case 'S':
             tiles_[i].push_back(Tile(EnemySpawn));
+            break;
           default:
             tiles_[i].push_back(Tile(Empty));
             break;
