@@ -1,16 +1,16 @@
 #pragma once
 #include <iostream>
 
-enum PathTypes { Path, Empty, EnemySpawn, PlayerBase };
+enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
 
 class Tile {
  public:
-  Tile(PathTypes type = Empty);
-  const PathTypes GetType() const;
+  Tile(TileTypes type = Empty);
+  const TileTypes GetType() const;
   const std::string& GetTexture() const;
 
  private:
-  PathTypes type_;
+  TileTypes type_;
   std::string texture_;
 };
 
