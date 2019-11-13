@@ -57,4 +57,5 @@ const std::pair<int, int> Enemy::FindNextTile(
   } else {
     std::cout << "Error finding next tile on path" << std::endl;
   }
+  return target_tile;
 }
