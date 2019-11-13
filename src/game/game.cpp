@@ -65,8 +65,8 @@ void Game::DrawEnemies() {
   sf::Sprite sprite;
   sf::Texture* texture = &textures_.at(enemy.GetTexture());
   sprite.setTexture(*texture);
-  sprite.setPosition(enemy.GetLocation().second * enemy_size,
-                     enemy.GetLocation().first * enemy_size);
+  sprite.setPosition(enemy.GetPosition().first * enemy_size,
+                     enemy.GetPosition().second * enemy_size);
   sprite.setScale(enemy_size / (float)(*texture).getSize().x,
                   enemy_size / (float)(*texture).getSize().y);
   window_.draw(sprite);
@@ -82,8 +82,8 @@ void Game::DrawTowers() {
   sf::Sprite sprite;
   sf::Texture* texture = &textures_.at(tower.GetTexture());
   sprite.setTexture(*texture);
-  sprite.setPosition(tower.GetLocation().second * tower_size,
-                     tower.GetLocation().first * tower_size);
+  sprite.setPosition(tower.GetPosition().first * tower_size,
+                     tower.GetPosition().second * tower_size);
   sprite.setScale(tower_size / (float)(*texture).getSize().x,
                   tower_size / (float)(*texture).getSize().y);
   window_.draw(sprite);

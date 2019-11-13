@@ -10,7 +10,7 @@ class Enemy {
   void Move();
   int GetHp() const;
   int GetSpeed() const;
-  std::pair<int, int> GetLocation() const;
+  std::pair<int, int> GetPosition() const;
   const std::string& GetTexture() const;
   const EnemyTypes GetType() const;
   bool GetStatus() const;

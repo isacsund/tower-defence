@@ -9,7 +9,7 @@ Tower::Tower(float range, float damage, int x, int y, TowerTypes type,
       texture_(texture),
       type_(type) {}
 
-std::pair<int, int> Tower::GetLocation() const { return {x_, y_}; }
+std::pair<int, int> Tower::GetPosition() const { return {x_, y_}; }
 const std::string& Tower::GetTexture() const { return texture_; }
 void Tower::Attack() const {
   // search for enemy
