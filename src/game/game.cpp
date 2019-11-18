@@ -15,6 +15,7 @@ void Game::Run() {
 
   window_.setView(view_);
   window_.setFramerateLimit(60);
+
   // run the program as long as the window is open
   while (window_.isOpen()) {
     // check all the window's events that were triggered since the last
@@ -133,6 +134,7 @@ void Game::DrawSidebar() {
 }
 
 void Game::DrawGui() {
+  gui_.removeAllWidgets();
   DrawSidebar();
   gui_.draw();
 }
