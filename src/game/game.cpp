@@ -162,7 +162,7 @@ void Game::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
   float closest_distance = std::numeric_limits<float>::max();
   auto closest_enemy = enemies_.end();
-  for (auto tower : towers_) {
+  for (auto& tower : towers_) {
     float range = tower.GetRange();
     auto tower_pos = tower.GetPosition();
     for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
@@ -174,10 +174,10 @@ void Game::FindEnemies() {
         closest_distance = distance;
       }
     }
-    if (closest_enemy != enemies_.end() &&
-        cur_time - tower.GetLastAttack() > tower.GetAttSpeed()) {
-      tower.Attack(*closest_enemy);
+    if ((closest_enemy != enemies_.end()) &&
+        (cur_time - tower.GetLastAttack() > tower.GetAttSpeed())) {
       tower.SetLastAttack(cur_time);
+      tower.Attack(*closest_enemy);
     }
   }
 }
