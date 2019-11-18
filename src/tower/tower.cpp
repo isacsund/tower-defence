@@ -8,7 +8,8 @@ Tower::Tower(float range, float damage, float att_speed, int x, int y,
       x_(x),
       y_(y),
       texture_(texture),
-      type_(type) {}
+      type_(type),
+      last_attack_(0) {}
 
 const std::pair<int, int> Tower::GetPosition() const { return {x_, y_}; }
 const std::string& Tower::GetTexture() const { return texture_; }

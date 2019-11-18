@@ -41,7 +41,7 @@ const std::pair<int, int> Enemy::GetTile() const { return {int(x_), int(y_)}; }
 const std::string& Enemy::GetTexture() const { return texture_; }
 EnemyTypes Enemy::GetType() const { return type_; }
 bool Enemy::IsAlive() const { return hp_ > 0; }
-void Enemy::SetHp(int hp) { hp_ = hp; }
+void Enemy::SetHp(float hp) { hp_ = hp; }
 
 const std::pair<int, int> Enemy::FindNextTile(
     const std::vector<std::pair<int, int>>& path) const {

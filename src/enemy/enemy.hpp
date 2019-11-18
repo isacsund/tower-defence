@@ -17,7 +17,7 @@ class Enemy {
   const std::string& GetTexture() const;
   EnemyTypes GetType() const;
   bool IsAlive() const;
-  void SetHp(int hp);
+  void SetHp(float hp);
   const std::pair<int, int> FindNextTile(
       const std::vector<std::pair<int, int>>& path) const;
 
