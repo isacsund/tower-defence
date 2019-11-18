@@ -61,3 +61,10 @@ const std::pair<int, int> Enemy::FindNextTile(
   }
   return target_tile;
 }
+
+// Debugging function
+std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
+  os << enemy.GetType() << " enemy at: (" << enemy.GetPosition().first << ","
+     << enemy.GetPosition().second << ") with " << enemy.GetHp() << " hp";
+  return os;
+}

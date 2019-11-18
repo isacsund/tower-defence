@@ -30,3 +30,5 @@ class Enemy {
   EnemyTypes type_;
   std::pair<int, int> target_tile_;
 };
+
+std::ostream& operator<<(std::ostream& os, const Enemy& enemy);
