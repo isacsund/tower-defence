@@ -154,7 +154,7 @@ void Game::LoadTexture(const std::string texture_name) {
   textures_.insert(std::make_pair(texture_name, texture));
 }
 
-const int Game::GetTileSize() const {
+int Game::GetTileSize() const {
   auto window_size = window_.getSize();
   int tile_size_x = (window_size.x - 200) / map_.GetWidth();
   int tile_size_y = (window_size.y - 200) / map_.GetHeight();
