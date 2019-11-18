@@ -2,8 +2,9 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
+Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
+  gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(100, 1, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 2, 1, 2));
@@ -11,8 +12,10 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
 
 void Game::Run() {
   LoadTextures();
+
   window_.setView(view_);
   window_.setFramerateLimit(60);
+
   // run the program as long as the window is open
   while (window_.isOpen()) {
     // check all the window's events that were triggered since the last
@@ -51,13 +54,11 @@ void Game::DrawAll() {
   DrawMap();
   DrawEnemies();
   DrawTowers();
+  DrawGui();
 }
 
 void Game::DrawMap() {
-  auto window_size = window_.getSize();
-  int tile_size_x = window_size.x / map_.GetWidth();
-  int tile_size_y = window_size.y / map_.GetHeight();
-  int tile_size = std::min(tile_size_x, tile_size_y);
+  int tile_size = GetTileSize();
   sf::Sprite sprite;
   sf::Texture* texture;
 
@@ -75,11 +76,7 @@ void Game::DrawMap() {
 }
 
 void Game::DrawEnemies() {
-  auto window_size = window_.getSize();
-  int enemy_size_x = window_size.x / map_.GetWidth();
-  int enemy_size_y = window_size.y / map_.GetHeight();
-  int enemy_size = std::min(enemy_size_x, enemy_size_y);
-
+  int enemy_size = GetTileSize();
   for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
     if (it->IsAlive()) {
       sf::Sprite sprite;
@@ -96,10 +93,7 @@ void Game::DrawEnemies() {
 }
 
 void Game::DrawTowers() {
-  auto window_size = window_.getSize();
-  int tower_size_x = window_size.x / map_.GetWidth();
-  int tower_size_y = window_size.y / map_.GetHeight();
-  int tower_size = std::min(tower_size_x, tower_size_y);
+  int tower_size = GetTileSize();
   for (auto it = towers_.begin(); it != towers_.end(); it++) {
     sf::Sprite sprite;
     sf::Texture* texture = &textures_.at(it->GetTexture());
@@ -110,6 +104,39 @@ void Game::DrawTowers() {
                     tower_size / (float)(*texture).getSize().y);
     window_.draw(sprite);
   }
+}
+
+void Game::DrawSidebar() {
+  tgui::Grid::Ptr layout = tgui::Grid::create();
+  layout->setSize(window_.getSize().x - ((map_.GetWidth() - 1) * GetTileSize()),
+                  0.5f * tgui::bindHeight(gui_));
+  layout->setPosition((map_.GetWidth() - 1) * GetTileSize(), 0);
+  gui_.add(layout);
+  sf::Texture* texture = &textures_.at("sprites/basic_tower.png");
+  try {
+    for (size_t i = 0; i < 2; i++) {
+      for (size_t j = 0; j < 2; j++) {
+        auto button = tgui::Button::create();
+        button->setSize(100, 100);
+        // tgui::Texture texturea(*texture, sf::IntRect(0, 0, 0, 0),
+        // sf::IntRect(0, 0, 0, 0));
+
+        // button->getRenderer()->setNormalTexture(texturea);
+
+        button->connect("pressed", [&]() { window_.close(); });
+        layout->addWidget(button, j, i, tgui::Borders(0, 0, 0, 0));
+      }
+    }
+
+  } catch (const tgui::Exception& e) {
+    std::cerr << "TGUI Exception: " << e.what() << std::endl;
+  }
+}
+
+void Game::DrawGui() {
+  gui_.removeAllWidgets();
+  DrawSidebar();
+  gui_.draw();
 }
 
 void Game::LoadTextures() {
@@ -124,6 +151,13 @@ void Game::LoadTexture(const std::string texture_name) {
   texture.loadFromFile(texture_name);
   texture.setSmooth(true);
   textures_.insert(std::make_pair(texture_name, texture));
+}
+
+const int Game::GetTileSize() const {
+  auto window_size = window_.getSize();
+  int tile_size_x = (window_size.x - 200) / map_.GetWidth();
+  int tile_size_y = (window_size.y - 200) / map_.GetHeight();
+  return std::min(tile_size_x, tile_size_y);
 }
 
 void Game::FindEnemies() {
