@@ -18,7 +18,7 @@ class Game {
   void DrawSidebar();
   void Tick();
   void LoadTextures();
-  void LoadTexture(const std::string texture_name);
+  void LoadTexture(const std::string& texture_name);
   void FindEnemies();
   int GetTileSize() const;
 

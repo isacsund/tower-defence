@@ -7,7 +7,7 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(100, 1, spawn.first + 0.5, spawn.second + 0.5));
-  towers_.push_back(Tower(10, 10, 1, 1, 2));
+  towers_.push_back(Tower(10, 100, 1, 1, 2));
 }
 
 void Game::Run() {
@@ -147,11 +147,11 @@ void Game::LoadTextures() {
   LoadTexture("sprites/basic_tower.png");
 }
 
-void Game::LoadTexture(const std::string texture_name) {
+void Game::LoadTexture(const std::string& texture_name) {
   sf::Texture texture;
   texture.loadFromFile(texture_name);
   texture.setSmooth(true);
-  textures_.insert(std::make_pair(texture_name, texture));
+  textures_.insert({texture_name, texture});
 }
 
 int Game::GetTileSize() const {
