@@ -25,4 +25,5 @@ class Game {
   std::map<const std::string, sf::Texture> textures_;
   std::vector<Enemy> enemies_;
   std::vector<Tower> towers_;
+  sf::Clock clock_;
 };

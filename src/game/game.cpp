@@ -5,8 +5,8 @@
 Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
   auto spawn = map_.GetEnemySpawn();
-  enemies_.push_back(Enemy(1000, 1, spawn.first + 0.5, spawn.second + 0.5));
-  towers_.push_back(Tower(1, 1, 1, 2));
+  enemies_.push_back(Enemy(100, 1, spawn.first + 0.5, spawn.second + 0.5));
+  towers_.push_back(Tower(10, 10, 2, 1, 2));
 }
 
 void Game::Run() {
@@ -127,6 +127,8 @@ void Game::LoadTexture(const std::string texture_name) {
 }
 
 void Game::FindEnemies() {
+  auto cur_time = clock_.getElapsedTime().asSeconds();
+
   float closest_distance = std::numeric_limits<float>::max();
   auto closest_enemy = enemies_.end();
   for (auto tower : towers_) {
@@ -141,8 +143,10 @@ void Game::FindEnemies() {
         closest_distance = distance;
       }
     }
-    if (closest_enemy != enemies_.end()) {
+    if (closest_enemy != enemies_.end() &&
+        cur_time - tower.GetLastAttack() > tower.GetAttSpeed()) {
       tower.Attack(*closest_enemy);
+      tower.SetLastAttack(cur_time);
     }
   }
 }
