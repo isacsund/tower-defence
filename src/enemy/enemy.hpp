@@ -22,8 +22,8 @@ class Enemy {
       const std::vector<std::pair<int, int>>& path) const;
 
  private:
-  float hp_;
   float max_hp_;
+  float hp_;
   float speed_;
   float x_, y_;
   const std::string texture_;
