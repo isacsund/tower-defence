@@ -8,8 +8,8 @@
 class Map {
  public:
   Map(const std::string& filename);
-  const int GetWidth() const;
-  const int GetHeight() const;
+  int GetWidth() const;
+  int GetHeight() const;
   const std::vector<std::vector<Tile>> GetTiles() const;
   const Tile& operator()(int x, int y) const;
   const std::pair<int, int> GetEnemySpawn() const;

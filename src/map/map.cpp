@@ -39,9 +39,9 @@ Map::Map(const std::string& filename) {
   RecalculatePath();
 }
 
-const int Map::GetHeight() const { return tiles_.size(); }
+int Map::GetHeight() const { return tiles_.size(); }
 
-const int Map::GetWidth() const { return tiles_[0].size(); }
+int Map::GetWidth() const { return tiles_[0].size(); }
 
 const std::pair<int, int> Map::GetEnemySpawn() const { return enemy_spawn_; }
 
