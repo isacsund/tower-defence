@@ -6,7 +6,7 @@ enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
 class Tile {
  public:
   Tile(TileTypes type = Empty);
-  const TileTypes GetType() const;
+  TileTypes GetType() const;
   const std::string& GetTexture() const;
 
  private:
