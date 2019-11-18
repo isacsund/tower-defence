@@ -13,8 +13,8 @@ class Player {
   void RemoveLives(int damage);
 
  private:
+  const std::string name_;
+  int lives_;
   int money_;
   int score_;
-  int lives_;
-  const std::string name_;
 };
