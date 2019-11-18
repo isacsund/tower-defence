@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <iostream>
 
-Enemy::Enemy(int hp, int speed, float x, float y, const std::string& texture,
-             EnemyTypes type)
+Enemy::Enemy(float hp, float speed, float x, float y,
+             const std::string& texture, EnemyTypes type)
     : hp_(hp),
       speed_(speed),
       x_(x),
