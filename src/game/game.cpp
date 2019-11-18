@@ -27,6 +27,7 @@ void Game::Run() {
       if (event.type == sf::Event::Resized) {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         window_.setView(view_);
+        gui_.setView(view_);
       }
     }
     window_.clear();
