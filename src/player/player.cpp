@@ -1,7 +1,7 @@
 #include "player.hpp"
 
 Player::Player(const std::string& name, int lives, int money, int score)
-    : money_(money), score_(score), name_(name), lives_(lives) {}
+    : name_(name), lives_(lives), money_(money), score_(score) {}
 int Player::GetMoney() const { return money_; }
 int Player::GetScore() const { return score_; }
 int Player::GetLives() const { return lives_; }
