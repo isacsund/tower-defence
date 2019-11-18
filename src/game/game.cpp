@@ -136,8 +136,8 @@ void Game::FindEnemies() {
     auto tower_pos = tower.GetPosition();
     for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
       auto enemy_pos = it->GetPosition();
-      float distance = sqrt(pow(tower_pos.first - enemy_pos.first, 2) +
-                            pow(tower_pos.second - enemy_pos.second, 2));
+      float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
+                            pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
       if (distance <= range && distance < closest_distance && it->IsAlive()) {
         closest_enemy = it;
         closest_distance = distance;
