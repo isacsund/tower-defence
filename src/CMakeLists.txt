@@ -10,6 +10,7 @@ add_executable(tower-defence ${SRC})
 # Include TGUI/JSON header files
 include_directories("${CMAKE_SOURCE_DIR}/deps/TGUI-0.7.8/include")
 include_directories("${CMAKE_SOURCE_DIR}/deps/JSON")
+include_directories(${Boost_INCLUDE_DIR})
 
 # Link the library
 target_link_libraries(tower-defence
@@ -18,4 +19,5 @@ target_link_libraries(tower-defence
         sfml-window
         sfml-system
         sfml-audio
-        tgui)
+        tgui
+        ${Boost_LIBRARIES})
