@@ -22,10 +22,8 @@ include(auto_collect)
 # Find the SFML libraries
 find_package(SFML 2.4 REQUIRED audio graphics window system)
 
-find_package(Boost REQUIRED filesystem)
-
-# Add TGUI sources
-add_subdirectory(deps/TGUI-0.7.8)
+# Add dependencies
+add_subdirectory(deps)
 
 # Add core sources
 add_subdirectory(src)
