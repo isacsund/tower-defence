@@ -7,7 +7,7 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(100, 1, spawn.first + 0.5, spawn.second + 0.5));
-  towers_.push_back(Tower(10, 10, 2, 1, 2));
+  towers_.push_back(Tower(10, 10, 1, 1, 2));
 }
 
 void Game::Run() {
@@ -77,14 +77,14 @@ void Game::DrawMap() {
 
 void Game::DrawEnemies() {
   int enemy_size = GetTileSize();
-  for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
-    if (it->IsAlive()) {
+  for (auto& enemy : enemies_) {
+    if (enemy.IsAlive()) {
       sf::Sprite sprite;
-      sf::Texture* texture = &textures_.at(it->GetTexture());
+      sf::Texture* texture = &textures_.at(enemy.GetTexture());
       sprite.setTexture(*texture);
       sprite.setPosition(
-          it->GetPosition().first * enemy_size - enemy_size / 2,
-          it->GetPosition().second * enemy_size - enemy_size / 2);
+          enemy.GetPosition().first * enemy_size - enemy_size / 2,
+          enemy.GetPosition().second * enemy_size - enemy_size / 2);
       sprite.setScale(enemy_size / (float)(*texture).getSize().x,
                       enemy_size / (float)(*texture).getSize().y);
       window_.draw(sprite);
@@ -94,12 +94,12 @@ void Game::DrawEnemies() {
 
 void Game::DrawTowers() {
   int tower_size = GetTileSize();
-  for (auto it = towers_.begin(); it != towers_.end(); it++) {
+  for (auto& tower : towers_) {
     sf::Sprite sprite;
-    sf::Texture* texture = &textures_.at(it->GetTexture());
+    sf::Texture* texture = &textures_.at(tower.GetTexture());
     sprite.setTexture(*texture);
-    sprite.setPosition(it->GetPosition().first * tower_size,
-                       it->GetPosition().second * tower_size);
+    sprite.setPosition(tower.GetPosition().first * tower_size,
+                       tower.GetPosition().second * tower_size);
     sprite.setScale(tower_size / (float)(*texture).getSize().x,
                     tower_size / (float)(*texture).getSize().y);
     window_.draw(sprite);
@@ -163,20 +163,20 @@ int Game::GetTileSize() const {
 void Game::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
   float closest_distance = std::numeric_limits<float>::max();
-  auto closest_enemy = enemies_.end();
+  Enemy* closest_enemy = nullptr;
   for (auto& tower : towers_) {
     float range = tower.GetRange();
     auto tower_pos = tower.GetPosition();
-    for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
-      auto enemy_pos = it->GetPosition();
+    for (auto& enemy : enemies_) {
+      auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
                             pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
-      if (distance <= range && distance < closest_distance && it->IsAlive()) {
-        closest_enemy = it;
+      if (distance <= range && distance < closest_distance && enemy.IsAlive()) {
+        closest_enemy = &enemy;
         closest_distance = distance;
       }
     }
-    if ((closest_enemy != enemies_.end()) &&
+    if ((closest_enemy) &&
         (cur_time - tower.GetLastAttack() > tower.GetAttSpeed())) {
       tower.SetLastAttack(cur_time);
       tower.Attack(*closest_enemy);
