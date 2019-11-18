@@ -132,7 +132,6 @@ void Game::DrawSidebar() {
                   0.5f * tgui::bindHeight(gui_));
   layout->setPosition(map_.GetWidth() * GetTileSize(), 0);
   gui_.add(layout);
-  sf::Texture* texture = &textures_.at("sprites/basic_tower.png");
   try {
     for (size_t i = 0; i < 2; i++) {
       for (size_t j = 0; j < 2; j++) {
