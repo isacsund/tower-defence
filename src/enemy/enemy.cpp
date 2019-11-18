@@ -49,7 +49,7 @@ const std::pair<int, int> Enemy::FindNextTile(
   }
   auto it = std::find(path.begin(), path.end(), target_tile_);
   if (it != path.end()) {
-    int idx = std::distance(path.begin(), it);
+    size_t idx = std::distance(path.begin(), it);
     if (idx < path.size() - 1) {
       target_tile = path[idx + 1];
     }

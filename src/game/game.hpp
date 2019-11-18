@@ -20,7 +20,7 @@ class Game {
   void LoadTextures();
   void LoadTexture(const std::string texture_name);
   void FindEnemies();
-  const int GetTileSize() const;
+  int GetTileSize() const;
 
  private:
   Map map_;
