@@ -109,9 +109,9 @@ void Game::DrawTowers() {
 
 void Game::DrawSidebar() {
   tgui::Grid::Ptr layout = tgui::Grid::create();
-  layout->setSize(window_.getSize().x - ((map_.GetWidth() - 1) * GetTileSize()),
+  layout->setSize(window_.getSize().x - (map_.GetWidth() * GetTileSize()),
                   0.5f * tgui::bindHeight(gui_));
-  layout->setPosition((map_.GetWidth() - 1) * GetTileSize(), 0);
+  layout->setPosition(map_.GetWidth() * GetTileSize(), 0);
   gui_.add(layout);
   sf::Texture* texture = &textures_.at("sprites/basic_tower.png");
   try {
