@@ -15,7 +15,7 @@ Current directory structure:
 
 ## Build instructions
 
-* Two dependencies are currently needed to build the project, **CMake** and **SFML 2.5** so make sure these are installed on your system.
+* Two dependencies are currently needed to build the project, **CMake** and **SFML 2.4** so make sure these are installed on your system.
 
 * Run the build.sh script found in the main directory (`./build.sh`)
 

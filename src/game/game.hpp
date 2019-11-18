@@ -16,8 +16,10 @@ class Game {
   void DrawTowers();
   void DrawGui();
   void DrawSidebar();
+  void Tick();
   void LoadTextures();
   void LoadTexture(const std::string texture_name);
+  void FindEnemies();
   const int GetTileSize() const;
 
  private:
@@ -26,4 +28,7 @@ class Game {
   sf::View view_;
   tgui::Gui gui_;
   std::map<const std::string, sf::Texture> textures_;
+  std::vector<Enemy> enemies_;
+  std::vector<Tower> towers_;
+  sf::Clock clock_;
 };
