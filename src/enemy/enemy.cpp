@@ -64,7 +64,8 @@ const std::pair<int, int> Enemy::FindNextTile(
 
 // Debugging function
 std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
-  os << enemy.GetType() << " enemy at: (" << enemy.GetPosition().first << ","
-     << enemy.GetPosition().second << ") with " << enemy.GetHp() << " hp\n";
+  os << "Enemy at: (" << enemy.GetPosition().first << ","
+     << enemy.GetPosition().second << ") with " << enemy.GetHp() << "/"
+     << enemy.GetMaxHp() << " hp\n";
   return os;
 }
