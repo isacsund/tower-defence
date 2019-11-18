@@ -16,7 +16,7 @@ Tile::Tile(TileTypes type) : type_(type) {
   }
 }
 
-const TileTypes Tile::GetType() const { return type_; }
+TileTypes Tile::GetType() const { return type_; }
 
 const std::string& Tile::GetTexture() const { return texture_; }
 

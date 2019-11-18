@@ -14,7 +14,7 @@ class Tower {
   void Attack(Enemy& enemy) const;
   const std::pair<int, int> GetPosition() const;
   const std::string& GetTexture() const;
-  const float GetRange() const;
+  float GetRange() const;
   float GetAttSpeed() const;
   float GetLastAttack() const;
   void SetLastAttack(float att_time);

@@ -9,13 +9,13 @@ class Enemy {
         const std::string& texture = "sprites/basic_enemy.png",
         EnemyTypes type = Standard);
   void Move(const std::vector<std::pair<int, int>>& path);
-  const int GetHp() const;
-  const int GetSpeed() const;
+  int GetHp() const;
+  int GetSpeed() const;
   const std::pair<float, float> GetPosition() const;
   const std::pair<int, int> GetTile() const;
   const std::string& GetTexture() const;
-  const EnemyTypes GetType() const;
-  const bool IsAlive() const;
+  EnemyTypes GetType() const;
+  bool IsAlive() const;
   void SetHp(int hp);
   const std::pair<int, int> FindNextTile(
       const std::vector<std::pair<int, int>>& path) const;
