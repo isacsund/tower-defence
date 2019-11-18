@@ -5,11 +5,12 @@ enum EnemyTypes { Standard, Fast /*, Big, Boss*/ };
 
 class Enemy {
  public:
-  Enemy(float hp, float speed, float x, float y,
+  Enemy(float max_hp, float speed, float x, float y,
         const std::string& texture = "sprites/basic_enemy.png",
         EnemyTypes type = Standard);
   void Move(const std::vector<std::pair<int, int>>& path);
   int GetHp() const;
+  int GetMaxHp() const;
   int GetSpeed() const;
   const std::pair<float, float> GetPosition() const;
   const std::pair<int, int> GetTile() const;
@@ -22,6 +23,7 @@ class Enemy {
 
  private:
   float hp_;
+  float max_hp_;
   float speed_;
   float x_, y_;
   const std::string texture_;

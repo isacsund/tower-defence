@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <iostream>
 
-Enemy::Enemy(float hp, float speed, float x, float y,
+Enemy::Enemy(float max_hp, float speed, float x, float y,
              const std::string& texture, EnemyTypes type)
-    : hp_(hp),
+    : max_hp_(max_hp),
+      hp_(max_hp),
       speed_(speed),
       x_(x),
       y_(y),
@@ -33,6 +34,7 @@ void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
 }
 
 int Enemy::GetHp() const { return hp_; }
+int Enemy::GetMaxHp() const { return max_hp_; }
 int Enemy::GetSpeed() const { return speed_; }
 const std::pair<float, float> Enemy::GetPosition() const { return {x_, y_}; }
 const std::pair<int, int> Enemy::GetTile() const { return {int(x_), int(y_)}; }
