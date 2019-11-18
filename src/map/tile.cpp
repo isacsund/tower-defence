@@ -5,6 +5,12 @@ Tile::Tile(TileTypes type) : type_(type) {
     case Path:
       texture_ = "sprites/sand_tile.png";
       break;
+    case PlayerBase:
+      texture_ = "sprites/sand_tile.png";
+      break;
+    case EnemySpawn:
+      texture_ = "sprites/sand_tile.png";
+      break;
     default:
       texture_ = "sprites/grass_tile_1.png";
   }
