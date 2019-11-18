@@ -33,9 +33,9 @@ void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
   y_ += dy * speed_ / 100;
 }
 
-int Enemy::GetHp() const { return hp_; }
-int Enemy::GetMaxHp() const { return max_hp_; }
-int Enemy::GetSpeed() const { return speed_; }
+float Enemy::GetHp() const { return hp_; }
+float Enemy::GetMaxHp() const { return max_hp_; }
+float Enemy::GetSpeed() const { return speed_; }
 const std::pair<float, float> Enemy::GetPosition() const { return {x_, y_}; }
 const std::pair<int, int> Enemy::GetTile() const { return {int(x_), int(y_)}; }
 const std::string& Enemy::GetTexture() const { return texture_; }

@@ -6,8 +6,8 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
   gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
-  enemies_.push_back(Enemy(100, 1, spawn.first + 0.5, spawn.second + 0.5));
-  towers_.push_back(Tower(10, 100, 1, 1, 2));
+  enemies_.push_back(Enemy(200, 0.2, spawn.first + 0.5, spawn.second + 0.5));
+  towers_.push_back(Tower(10, 10, 1, 1, 2));
 }
 
 void Game::Run() {
@@ -78,8 +78,27 @@ void Game::DrawMap() {
 
 void Game::DrawEnemies() {
   int enemy_size = GetTileSize();
+  const int hp_bar_width = enemy_size / 2;
+  const int hp_bar_height = enemy_size / 10;
   for (auto& enemy : enemies_) {
     if (enemy.IsAlive()) {
+      // Draw hp bar
+      float hp_ratio = enemy.GetHp() / enemy.GetMaxHp();
+      sf::RectangleShape hp_bar_green;
+      sf::RectangleShape hp_bar_red;
+      hp_bar_green.setFillColor(sf::Color::Green);
+      hp_bar_red.setFillColor(sf::Color::Red);
+      hp_bar_red.setSize(sf::Vector2f(hp_bar_width, hp_bar_height));
+      hp_bar_green.setSize(
+          sf::Vector2f(hp_bar_width * hp_ratio, hp_bar_height));
+      hp_bar_green.setPosition(
+          enemy.GetPosition().first * enemy_size - hp_bar_width / 2,
+          enemy.GetPosition().second * enemy_size - enemy_size / 2);
+      hp_bar_red.setPosition(hp_bar_green.getPosition());
+      window_.draw(hp_bar_red);
+      window_.draw(hp_bar_green);
+
+      // Draw enemy
       sf::Sprite sprite;
       sf::Texture* texture = &textures_.at(enemy.GetTexture());
       sprite.setTexture(*texture);
