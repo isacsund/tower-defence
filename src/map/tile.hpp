@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "SFML/Graphics.hpp"
 
 enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
 
@@ -12,6 +13,7 @@ class Tile {
  private:
   TileTypes type_;
   std::string texture_;
+  sf::Sprite sprite_;
 };
 
 bool IsTraversable(TileTypes type);
