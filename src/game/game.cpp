@@ -2,7 +2,7 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
+Game::Game() : map_(Map("maps/map.txt")), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
   gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
