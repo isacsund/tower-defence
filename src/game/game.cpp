@@ -2,9 +2,8 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : map_(Map("maps/map.txt")), window_(), view_(), gui_() {
+Game::Game() : map_(Map("maps/map.txt")), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
-  gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(200, 0.2, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 1, 1, 2));
@@ -27,7 +26,6 @@ void Game::Run() {
       if (event.type == sf::Event::Resized) {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         window_.setView(view_);
-        gui_.setView(view_);
       }
     }
     window_.clear();
@@ -55,7 +53,6 @@ void Game::DrawAll() {
   DrawMap();
   DrawEnemies();
   DrawTowers();
-  DrawGui();
 }
 
 void Game::DrawMap() {
@@ -124,38 +121,6 @@ void Game::DrawTowers() {
                     tower_size / (float)(*texture).getSize().y);
     window_.draw(sprite);
   }
-}
-
-void Game::DrawSidebar() {
-  tgui::Grid::Ptr layout = tgui::Grid::create();
-  layout->setSize(window_.getSize().x - (map_.GetWidth() * GetTileSize()),
-                  0.5f * tgui::bindHeight(gui_));
-  layout->setPosition(map_.GetWidth() * GetTileSize(), 0);
-  gui_.add(layout);
-  try {
-    for (size_t i = 0; i < 2; i++) {
-      for (size_t j = 0; j < 2; j++) {
-        auto button = tgui::Button::create();
-        button->setSize(100, 100);
-        // tgui::Texture texturea(*texture, sf::IntRect(0, 0, 0, 0),
-        // sf::IntRect(0, 0, 0, 0));
-
-        // button->getRenderer()->setNormalTexture(texturea);
-
-        button->connect("pressed", [&]() { window_.close(); });
-        layout->addWidget(button, j, i, tgui::Borders(0, 0, 0, 0));
-      }
-    }
-
-  } catch (const tgui::Exception& e) {
-    std::cerr << "TGUI Exception: " << e.what() << std::endl;
-  }
-}
-
-void Game::DrawGui() {
-  gui_.removeAllWidgets();
-  DrawSidebar();
-  gui_.draw();
 }
 
 void Game::LoadTextures() {
