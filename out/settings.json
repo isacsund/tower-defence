@@ -1,0 +1,9 @@
+{
+    "maps": {
+        "01": {
+            "name": "Map 01",
+            "file": "maps/01/map.txt",
+            "waves": "maps/01/waves.json"
+        }
+    }
+}

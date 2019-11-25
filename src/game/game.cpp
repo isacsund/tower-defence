@@ -1,10 +1,22 @@
 #include "game.hpp"
 #include <math.h>
 #include <SFML/Graphics.hpp>
-
-Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
+#include <iostream>
+#include "../configuration/configmanager.hpp"
+Game::Game() : map_(), window_(), view_(), gui_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
   gui_.setWindow(window_);
+
+  std::string config_error;
+
+  if (!config_manager->ParseFile("settings.json", config_error)) {
+    std::cout << "Failed to parse configuration file." << std::endl;
+    window_.close();
+  }
+
+  map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
+                                                           "maps/01/file"));
+
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(200, 0.2, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 1, 1, 2));
@@ -133,16 +145,16 @@ void Game::DrawSidebar() {
   layout->setPosition(map_.GetWidth() * GetTileSize(), 0);
   gui_.add(layout);
   try {
-    for (size_t i = 0; i < 2; i++) {
-      for (size_t j = 0; j < 2; j++) {
+    for (size_t i = 0; i < 1; i++) {
+      for (size_t j = 0; j < 1; j++) {
         auto button = tgui::Button::create();
-        button->setSize(100, 100);
+        button->setSize(1000, 1000);
         // tgui::Texture texturea(*texture, sf::IntRect(0, 0, 0, 0),
         // sf::IntRect(0, 0, 0, 0));
 
         // button->getRenderer()->setNormalTexture(texturea);
 
-        button->connect("pressed", [&]() { window_.close(); });
+        button->connect("clicked", &Game::Test, this);
         layout->addWidget(button, j, i, tgui::Borders(0, 0, 0, 0));
       }
     }
@@ -151,6 +163,8 @@ void Game::DrawSidebar() {
     std::cerr << "TGUI Exception: " << e.what() << std::endl;
   }
 }
+
+void Game::Test() { std::cout << "test"; }
 
 void Game::DrawGui() {
   gui_.removeAllWidgets();
