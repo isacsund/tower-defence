@@ -1,7 +1,6 @@
 #include "configmanager.hpp"
 #include <boost/filesystem.hpp>
-
-using json = nlohmann::json;
+#include <boost/property_tree/json_parser.hpp>
 
 ConfigManager* ConfigManager::get_instance() {
   static ConfigManager instance;
@@ -15,13 +14,21 @@ bool ConfigManager::ParseFile(const std::string& file_path,
     return false;
   }
   try {
-    nlohmann::json config = json::parse(file_path);
-    if (config.empty()) {
-      error_message = "Config file is empty!";
+    boost::property_tree::ptree full_tree;
+
+    boost::property_tree::json_parser::read_json(file_path, full_tree);
+
+    if (full_tree.empty()) {
+      error_message = "Configuration file is empty!";
+      return false;
     }
-    config_ = config;
-  } catch (const std::exception& e) {
-    error_message = e.what();
+    config_ = full_tree;
+  } catch (boost::property_tree::json_parser::json_parser_error const& e) {
+    if (e.line() == 0)
+      error_message = e.message() + " (" + e.filename() + ")";
+    else
+      error_message = e.message() + " (" + e.filename() + ":" +
+                      std::to_string(e.line()) + ")";
     return false;
   }
   return true;

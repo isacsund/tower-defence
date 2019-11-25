@@ -15,5 +15,4 @@ target_link_libraries(tower-defence
         sfml-system
         sfml-audio
         tgui
-        boost
-        json)
+        boost)
