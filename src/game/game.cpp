@@ -70,7 +70,8 @@ void Game::DrawMap() {
   for (int y = 0; y < map_.GetHeight(); y++) {
     for (int x = 0; x < map_.GetWidth(); x++) {
       Tile tile = map_(x, y);
-      texture = &textures_.at(tile.GetTexture());
+      // texture = &textures_.at(tile.GetTexture());
+      texture = TextureManager::GetTexture(tile.GetTexture());
       sprite.setTexture(*texture);
       sprite.setPosition(x * tile_size, y * tile_size);
       sprite.setScale(tile_size / (float)(*texture).getSize().x,

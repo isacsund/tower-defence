@@ -5,6 +5,7 @@
 #include "../enemy/enemy.hpp"
 #include "../map/map.hpp"
 #include "../tower/tower.hpp"
+#include "texturemanager.hpp"
 
 class Game {
  public:
