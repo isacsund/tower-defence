@@ -49,7 +49,7 @@ const std::pair<int, int> Map::GetPlayerBase() const { return player_base_; }
 
 const std::vector<std::vector<Tile>> Map::GetTiles() const { return tiles_; }
 
-const Tile& Map::operator()(int x, int y) const { return tiles_[y][x]; }
+const Tile& Map::operator()(int x, int y) { return tiles_[y][x]; }
 
 bool Map::RecalculatePath() {
   auto new_path = Pathfinder::GetPath(*this);

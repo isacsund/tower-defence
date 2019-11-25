@@ -2,9 +2,9 @@
 #include <math.h>
 #include <SFML/Graphics.hpp>
 
-Game::Game() : map_(Map("out/map.txt")), window_(), view_(), gui_() {
+Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
-  gui_.setWindow(window_);
+  // gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(200, 0.2, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 1, 1, 2));
@@ -27,7 +27,10 @@ void Game::Run() {
     std::cout << fps << std::endl;
     while (window_.pollEvent(event)) {
       // "close requested" event: we close the window
-      if (event.type == sf::Event::Closed) window_.close();
+      if (event.type == sf::Event::Closed) {
+        // TextureManager::~TextureManager();
+        window_.close();
+      }
       if (event.type == sf::Event::Resized) {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         window_.setView(view_);
@@ -59,24 +62,24 @@ void Game::DrawAll() {
   DrawMap();
   DrawEnemies();
   DrawTowers();
-  DrawGui();
+  // DrawGui();
 }
 
 void Game::DrawMap() {
   int tile_size = GetTileSize();
-  sf::Sprite sprite;
-  sf::Texture* texture;
+  sf::Sprite* sprite;
 
   for (int y = 0; y < map_.GetHeight(); y++) {
     for (int x = 0; x < map_.GetWidth(); x++) {
       Tile tile = map_(x, y);
-      // texture = &textures_.at(tile.GetTexture());
-      texture = TextureManager::GetTexture(tile.GetTexture());
-      sprite.setTexture(*texture);
-      sprite.setPosition(x * tile_size, y * tile_size);
-      sprite.setScale(tile_size / (float)(*texture).getSize().x,
-                      tile_size / (float)(*texture).getSize().y);
-      window_.draw(sprite);
+      sprite = tile.GetSprite();
+      if (sprite->getTexture() != nullptr) {
+        sprite->setPosition(x * tile_size, y * tile_size);
+        sprite->setScale(
+            tile_size / (float)(*sprite->getTexture()).getSize().x,
+            tile_size / (float)(*sprite->getTexture()).getSize().y);
+        window_.draw(*sprite);
+      }
     }
   }
 }
@@ -119,15 +122,16 @@ void Game::DrawEnemies() {
 
 void Game::DrawTowers() {
   int tower_size = GetTileSize();
+  sf::Sprite* sprite;
   for (auto& tower : towers_) {
-    sf::Sprite sprite;
-    sf::Texture* texture = &textures_.at(tower.GetTexture());
-    sprite.setTexture(*texture);
-    sprite.setPosition(tower.GetPosition().first * tower_size,
-                       tower.GetPosition().second * tower_size);
-    sprite.setScale(tower_size / (float)(*texture).getSize().x,
-                    tower_size / (float)(*texture).getSize().y);
-    window_.draw(sprite);
+    sprite = tower.GetSprite();
+    if (sprite->getTexture() != nullptr) {
+      sprite->setPosition(tower.GetPosition().first * tower_size,
+                          tower.GetPosition().second * tower_size);
+      sprite->setScale(tower_size / (float)(*sprite->getTexture()).getSize().x,
+                       tower_size / (float)(*sprite->getTexture()).getSize().y);
+      window_.draw(*sprite);
+    }
   }
 }
 

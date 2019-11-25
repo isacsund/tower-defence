@@ -11,7 +11,7 @@ class Map {
   int GetWidth() const;
   int GetHeight() const;
   const std::vector<std::vector<Tile>> GetTiles() const;
-  const Tile& operator()(int x, int y) const;
+  const Tile& operator()(int x, int y);
   const std::pair<int, int> GetEnemySpawn() const;
   const std::pair<int, int> GetPlayerBase() const;
   bool RecalculatePath();

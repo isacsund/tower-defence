@@ -1,5 +1,7 @@
 #include <string>
 #include "../enemy/enemy.hpp"
+#include "../game/texturemanager.hpp"
+#include "SFML/Graphics.hpp"
 
 enum TowerTypes {
   Basic,
@@ -18,6 +20,7 @@ class Tower {
   float GetAttSpeed() const;
   float GetLastAttack() const;
   void SetLastAttack(float att_time);
+  sf::Sprite* GetSprite();
 
  private:
   float range_;
@@ -27,4 +30,5 @@ class Tower {
   const std::string texture_;
   TowerTypes type_;
   float last_attack_;
+  sf::Sprite sprite_;
 };

@@ -14,11 +14,14 @@ Tile::Tile(TileTypes type) : type_(type) {
     default:
       texture_ = "sprites/grass_tile_1.png";
   }
+  sprite_ = sf::Sprite(*TextureManager::GetTexture(texture_));
 }
 
 TileTypes Tile::GetType() const { return type_; }
 
 const std::string& Tile::GetTexture() const { return texture_; }
+
+sf::Sprite* Tile::GetSprite() { return &sprite_; }
 
 bool IsTraversable(TileTypes type) {
   switch (type) {
@@ -35,4 +38,4 @@ bool IsTraversable(TileTypes type) {
 std::ostream& operator<<(std::ostream& os, const Tile& tile) {
   os << tile.GetType();
   return os;
-};
+}
