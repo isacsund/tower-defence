@@ -164,8 +164,6 @@ void Game::DrawSidebar() {
   }
 }
 
-void Game::Test() { std::cout << "test"; }
-
 void Game::DrawGui() {
   gui_.removeAllWidgets();
   DrawSidebar();
