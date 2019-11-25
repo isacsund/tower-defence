@@ -3,7 +3,7 @@
 
 class ConfigManager {
  public:
-  static ConfigManager* get_instance();
+  static ConfigManager* GetInstance();
   bool ParseFile(const std::string& file_path, std::string& error_message);
   template <typename T>
   T GetValueOrDefault(const std::string& name, T default_value) {
@@ -33,3 +33,5 @@ class ConfigManager {
  private:
   boost::property_tree::ptree config_;
 };
+
+#define config_manager ConfigManager::GetInstance()

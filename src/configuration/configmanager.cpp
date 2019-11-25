@@ -2,7 +2,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
-ConfigManager* ConfigManager::get_instance() {
+ConfigManager* ConfigManager::GetInstance() {
   static ConfigManager instance;
   return &instance;
 }
