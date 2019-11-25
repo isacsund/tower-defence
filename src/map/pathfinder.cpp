@@ -93,7 +93,8 @@ const std::vector<std::pair<int, int>> GetPath(const Map map) {
           int x = cur_node.x + offset.first;
           int y = cur_node.y + offset.second;
           // Make sure neighbour is inside map
-          if (x < grid[0].size() && x >= 0 && y < grid.size() && y >= 0) {
+          if (x < int(grid[0].size()) && x >= 0 && y < int(grid.size()) &&
+              y >= 0) {
             // Check if neighbour tile is traversable
             if (grid[y][x]) {
               Node child;

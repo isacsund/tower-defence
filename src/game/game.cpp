@@ -3,9 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "../configuration/configmanager.hpp"
-Game::Game() : map_(), window_(), view_(), gui_() {
+Game::Game() : map_(), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
-  gui_.setWindow(window_);
 
   std::string config_error;
 
@@ -39,7 +38,6 @@ void Game::Run() {
       if (event.type == sf::Event::Resized) {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         window_.setView(view_);
-        gui_.setView(view_);
       }
     }
     window_.clear();
@@ -67,7 +65,6 @@ void Game::DrawAll() {
   DrawMap();
   DrawEnemies();
   DrawTowers();
-  DrawGui();
 }
 
 void Game::DrawMap() {
@@ -136,38 +133,6 @@ void Game::DrawTowers() {
                     tower_size / (float)(*texture).getSize().y);
     window_.draw(sprite);
   }
-}
-
-void Game::DrawSidebar() {
-  tgui::Grid::Ptr layout = tgui::Grid::create();
-  layout->setSize(window_.getSize().x - (map_.GetWidth() * GetTileSize()),
-                  0.5f * tgui::bindHeight(gui_));
-  layout->setPosition(map_.GetWidth() * GetTileSize(), 0);
-  gui_.add(layout);
-  try {
-    for (size_t i = 0; i < 1; i++) {
-      for (size_t j = 0; j < 1; j++) {
-        auto button = tgui::Button::create();
-        button->setSize(1000, 1000);
-        // tgui::Texture texturea(*texture, sf::IntRect(0, 0, 0, 0),
-        // sf::IntRect(0, 0, 0, 0));
-
-        // button->getRenderer()->setNormalTexture(texturea);
-
-        button->connect("clicked", &Game::Test, this);
-        layout->addWidget(button, j, i, tgui::Borders(0, 0, 0, 0));
-      }
-    }
-
-  } catch (const tgui::Exception& e) {
-    std::cerr << "TGUI Exception: " << e.what() << std::endl;
-  }
-}
-
-void Game::DrawGui() {
-  gui_.removeAllWidgets();
-  DrawSidebar();
-  gui_.draw();
 }
 
 void Game::LoadTextures() {
