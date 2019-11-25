@@ -35,4 +35,4 @@ bool IsTraversable(TileTypes type) {
 std::ostream& operator<<(std::ostream& os, const Tile& tile) {
   os << tile.GetType();
   return os;
-};
+}

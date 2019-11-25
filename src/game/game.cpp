@@ -15,16 +15,12 @@ void Game::Run() {
 
   window_.setView(view_);
   window_.setFramerateLimit(60);
-  float last_time = clock_.getElapsedTime().asSeconds();
+
   // run the program as long as the window is open
   while (window_.isOpen()) {
     // check all the window's events that were triggered since the last
     // iteration of the loop
     sf::Event event;
-    float cur_time = clock_.getElapsedTime().asSeconds();
-    float fps = 1.0f / (cur_time - last_time);
-    last_time = cur_time;
-    std::cout << fps << std::endl;
     while (window_.pollEvent(event)) {
       // "close requested" event: we close the window
       if (event.type == sf::Event::Closed) window_.close();
