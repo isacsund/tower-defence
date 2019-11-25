@@ -88,6 +88,7 @@ void Game::DrawEnemies() {
   int enemy_size = GetTileSize();
   const int hp_bar_width = enemy_size / 2;
   const int hp_bar_height = enemy_size / 10;
+  sf::Sprite* sprite;
   for (auto& enemy : enemies_) {
     if (enemy.IsAlive()) {
       // Draw hp bar
@@ -107,15 +108,13 @@ void Game::DrawEnemies() {
       window_.draw(hp_bar_green);
 
       // Draw enemy
-      sf::Sprite sprite;
-      sf::Texture* texture = &textures_.at(enemy.GetTexture());
-      sprite.setTexture(*texture);
-      sprite.setPosition(
+      sprite = enemy.GetSprite();
+      sprite->setPosition(
           enemy.GetPosition().first * enemy_size - enemy_size / 2,
           enemy.GetPosition().second * enemy_size - enemy_size / 2);
-      sprite.setScale(enemy_size / (float)(*texture).getSize().x,
-                      enemy_size / (float)(*texture).getSize().y);
-      window_.draw(sprite);
+      sprite->setScale(enemy_size / (float)(*sprite->getTexture()).getSize().x,
+                       enemy_size / (float)(*sprite->getTexture()).getSize().y);
+      window_.draw(*sprite);
     }
   }
 }

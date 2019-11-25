@@ -20,4 +20,4 @@ void Tower::Attack(Enemy& enemy) const { enemy.SetHp(enemy.GetHp() - damage_); }
 float Tower::GetAttSpeed() const { return att_speed_; }
 float Tower::GetLastAttack() const { return last_attack_; }
 void Tower::SetLastAttack(float att_time) { last_attack_ = att_time; }
-sf::Sprite* Tower::GetSprite() { return &sprite_; };
+sf::Sprite* Tower::GetSprite() { return &sprite_; }

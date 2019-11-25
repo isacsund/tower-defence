@@ -12,7 +12,9 @@ Enemy::Enemy(float max_hp, float speed, float x, float y,
       y_(y),
       texture_(texture),
       type_(type),
-      target_tile_({-1, -1}) {}
+      target_tile_({-1, -1}) {
+  sprite_ = sf::Sprite(*TextureManager::GetTexture(texture_));
+}
 
 void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
   if (!IsAlive()) return;
@@ -61,6 +63,8 @@ const std::pair<int, int> Enemy::FindNextTile(
   }
   return target_tile;
 }
+
+sf::Sprite* Enemy::GetSprite() { return &sprite_; }
 
 // Debugging function
 std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
