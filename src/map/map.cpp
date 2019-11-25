@@ -1,6 +1,8 @@
 #include "map.hpp"
 #include "pathfinder.hpp"
-Map::Map(const std::string& filename) {
+Map::Map() {}
+
+void Map::Load(const std::string& filename) {
   std::ifstream is(filename);
   if (!is.is_open()) {
     std::cout << "Failed to open " << filename << std::endl;

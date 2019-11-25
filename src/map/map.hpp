@@ -7,7 +7,8 @@
 
 class Map {
  public:
-  Map(const std::string& filename);
+  Map();
+  void Load(const std::string& filename);
   int GetWidth() const;
   int GetHeight() const;
   const std::vector<std::vector<Tile>> GetTiles() const;

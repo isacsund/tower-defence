@@ -1,9 +1,21 @@
 #include "game.hpp"
 #include <math.h>
 #include <SFML/Graphics.hpp>
-
-Game::Game() : map_(Map("maps/map.txt")), window_(), view_() {
+#include <iostream>
+#include "../configuration/configmanager.hpp"
+Game::Game() : map_(), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
+
+  std::string config_error;
+
+  if (!config_manager->ParseFile("settings.json", config_error)) {
+    std::cout << "Failed to parse configuration file." << std::endl;
+    window_.close();
+  }
+
+  map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
+                                                           "maps/01/file"));
+
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(200, 0.2, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 1, 1, 2));
