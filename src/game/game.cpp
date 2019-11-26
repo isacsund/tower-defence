@@ -6,13 +6,11 @@ Game::Game() : map_(Map("out/map.txt")), window_(), view_() {
   window_.create(sf::VideoMode(800, 600), "Tower Defence");
   // gui_.setWindow(window_);
   auto spawn = map_.GetEnemySpawn();
-  enemies_.push_back(Enemy(200, 0.2, spawn.first + 0.5, spawn.second + 0.5));
+  enemies_.push_back(Enemy(200, 1, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 1, 1, 2));
 }
 
 void Game::Run() {
-  LoadTextures();
-
   window_.setView(view_);
   window_.setFramerateLimit(60);
   float last_time = clock_.getElapsedTime().asSeconds();
@@ -28,7 +26,6 @@ void Game::Run() {
     while (window_.pollEvent(event)) {
       // "close requested" event: we close the window
       if (event.type == sf::Event::Closed) {
-        // TextureManager::~TextureManager();
         window_.close();
       }
       if (event.type == sf::Event::Resized) {
@@ -164,20 +161,6 @@ void Game::DrawGui() {
   gui_.removeAllWidgets();
   DrawSidebar();
   gui_.draw();
-}
-
-void Game::LoadTextures() {
-  LoadTexture("sprites/grass_tile_1.png");
-  LoadTexture("sprites/sand_tile.png");
-  LoadTexture("sprites/basic_enemy.png");
-  LoadTexture("sprites/basic_tower.png");
-}
-
-void Game::LoadTexture(const std::string& texture_name) {
-  sf::Texture texture;
-  texture.loadFromFile(texture_name);
-  texture.setSmooth(true);
-  textures_.insert({texture_name, texture});
 }
 
 int Game::GetTileSize() const {

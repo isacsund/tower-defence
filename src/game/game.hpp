@@ -5,7 +5,6 @@
 #include "../enemy/enemy.hpp"
 #include "../map/map.hpp"
 #include "../tower/tower.hpp"
-#include "texturemanager.hpp"
 
 class Game {
  public:
@@ -18,8 +17,6 @@ class Game {
   void DrawGui();
   void DrawSidebar();
   void Tick();
-  void LoadTextures();
-  void LoadTexture(const std::string& texture_name);
   void FindEnemies();
   int GetTileSize() const;
 
@@ -28,7 +25,6 @@ class Game {
   sf::RenderWindow window_;
   sf::View view_;
   tgui::Gui gui_;
-  std::map<const std::string, sf::Texture> textures_;
   std::vector<Enemy> enemies_;
   std::vector<Tower> towers_;
   sf::Clock clock_;
