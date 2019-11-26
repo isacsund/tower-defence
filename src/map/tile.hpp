@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include "SFML/Graphics.hpp"
 
 enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
 

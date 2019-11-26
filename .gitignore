@@ -12,4 +12,8 @@ CTestTestfile.cmake
 _deps
 
 # Out directory
-out/*
+out/lib
+out/tower-defence
+
+# VSCode folder
+.vscode
