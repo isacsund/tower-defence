@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../game/texturemanager.hpp"
 #include "SFML/Graphics.hpp"
 
 enum EnemyTypes { Standard, Fast /*, Big, Boss*/ };
@@ -17,12 +16,12 @@ class Enemy {
   float GetSpeed() const;
   const std::pair<float, float> GetPosition() const;
   const std::pair<int, int> GetTile() const;
-  const std::string& GetTexture() const;
   EnemyTypes GetType() const;
   bool IsAlive() const;
   void SetHp(float hp);
   const std::pair<int, int> FindNextTile(
       const std::vector<std::pair<int, int>>& path) const;
+  sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
 
  private:
@@ -30,9 +29,9 @@ class Enemy {
   float hp_;
   float speed_;
   float x_, y_;
-  const std::string texture_;
   EnemyTypes type_;
   std::pair<int, int> target_tile_;
+  const std::string texturename_;
   sf::Sprite sprite_;
 };
 

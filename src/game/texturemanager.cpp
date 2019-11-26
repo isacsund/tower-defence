@@ -1,29 +1,23 @@
 #include "texturemanager.hpp"
-#include <iostream>
 
-std::map<const std::string, std::shared_ptr<sf::Texture>>
-    TextureManager::textures_;
-
-std::shared_ptr<sf::Texture> TextureManager::GetTexture(
-    const std::string name) {
-  if (textures_.find(name) != textures_.end()) {
-    return textures_.at(name);
-  } else {
-    LoadTexture(name);
-  }
-  return textures_.at(name);
+TextureManager& TextureManager::GetInstance() {
+  static TextureManager instance;
+  return instance;
 }
 
-std::shared_ptr<sf::Texture> TextureManager::LoadTexture(
-    const std::string name) {
-  std::shared_ptr<sf::Texture> texture =
-      std::make_shared<sf::Texture>(sf::Texture());
+sf::Texture& TextureManager::GetTexture(const std::string name) {
+  auto texture = textures_.find(name);
+  // If the texture doesn't exist we load it first
+  if (texture == textures_.end()) {
+    texture = LoadTexture(name);
+  }
+  return *texture->second;
+}
+
+std::map<const std::string, std::unique_ptr<sf::Texture>>::iterator
+TextureManager::LoadTexture(const std::string name) {
+  std::unique_ptr<sf::Texture> texture =
+      std::make_unique<sf::Texture>(sf::Texture());
   texture->loadFromFile(name);
-  textures_[name] = texture;
-  return textures_[name];
-}
-TextureManager::~TextureManager() {
-  for (auto it = textures_.begin(); it != textures_.end(); it++) {
-    delete it->second.get();
-  }
+  return textures_.insert(std::make_pair(name, std::move(texture))).first;
 }

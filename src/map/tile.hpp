@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include "../game/texturemanager.hpp"
 #include "SFML/Graphics.hpp"
 
 enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
@@ -9,12 +8,12 @@ class Tile {
  public:
   Tile(TileTypes type = Empty);
   TileTypes GetType() const;
-  const std::string& GetTexture() const;
+  sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
 
  private:
   TileTypes type_;
-  std::string texture_;
+  std::string texturename_;
   sf::Sprite sprite_;
 };
 

@@ -5,12 +5,17 @@
 
 class TextureManager {
  public:
-  ~TextureManager();
+  static TextureManager& GetInstance();
+  sf::Texture& GetTexture(const std::string name);
+  std::map<const std::string, std::unique_ptr<sf::Texture>>::iterator
+  LoadTexture(const std::string name);
 
-  static std::shared_ptr<sf::Texture> GetTexture(const std::string name);
-  static std::shared_ptr<sf::Texture> LoadTexture(const std::string name);
+  TextureManager(TextureManager const&) = delete;
+  void operator=(TextureManager const&) = delete;
 
  private:
-  static std::map<const std::string, std::shared_ptr<sf::Texture>> textures_;
-  TextureManager(){};
+  TextureManager() {}
+  std::map<const std::string, std::unique_ptr<sf::Texture>> textures_;
 };
+
+#define texture_manager TextureManager::GetInstance()

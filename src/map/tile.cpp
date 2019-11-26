@@ -1,25 +1,28 @@
 #include "tile.hpp"
+#include "../game/texturemanager.hpp"
 
 Tile::Tile(TileTypes type) : type_(type) {
   switch (type) {
     case Path:
-      texture_ = "sprites/sand_tile.png";
+      texturename_ = "sprites/sand_tile.png";
       break;
     case PlayerBase:
-      texture_ = "sprites/sand_tile.png";
+      texturename_ = "sprites/sand_tile.png";
       break;
     case EnemySpawn:
-      texture_ = "sprites/sand_tile.png";
+      texturename_ = "sprites/sand_tile.png";
       break;
     default:
-      texture_ = "sprites/grass_tile_1.png";
+      texturename_ = "sprites/grass_tile_1.png";
   }
-  sprite_ = sf::Sprite(*TextureManager::GetTexture(texture_));
+  sprite_ = sf::Sprite(GetTexture());
 }
 
 TileTypes Tile::GetType() const { return type_; }
 
-const std::string& Tile::GetTexture() const { return texture_; }
+sf::Texture& Tile::GetTexture() const {
+  return texture_manager.GetTexture(texturename_);
+}
 
 sf::Sprite* Tile::GetSprite() { return &sprite_; }
 

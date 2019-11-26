@@ -2,18 +2,19 @@
 #include <math.h>
 #include <algorithm>
 #include <iostream>
+#include "../game/texturemanager.hpp"
 
 Enemy::Enemy(float max_hp, float speed, float x, float y,
-             const std::string& texture, EnemyTypes type)
+             const std::string& texturename, EnemyTypes type)
     : max_hp_(max_hp),
       hp_(max_hp),
       speed_(speed),
       x_(x),
       y_(y),
-      texture_(texture),
+      texturename_(texturename),
       type_(type),
       target_tile_({-1, -1}) {
-  sprite_ = sf::Sprite(*TextureManager::GetTexture(texture_));
+  sprite_ = sf::Sprite(GetTexture());
 }
 
 void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
@@ -40,7 +41,6 @@ float Enemy::GetMaxHp() const { return max_hp_; }
 float Enemy::GetSpeed() const { return speed_; }
 const std::pair<float, float> Enemy::GetPosition() const { return {x_, y_}; }
 const std::pair<int, int> Enemy::GetTile() const { return {int(x_), int(y_)}; }
-const std::string& Enemy::GetTexture() const { return texture_; }
 EnemyTypes Enemy::GetType() const { return type_; }
 bool Enemy::IsAlive() const { return hp_ > 0; }
 void Enemy::SetHp(float hp) { hp_ = hp; }
@@ -62,6 +62,10 @@ const std::pair<int, int> Enemy::FindNextTile(
     std::cout << "Error finding next tile on path" << std::endl;
   }
   return target_tile;
+}
+
+sf::Texture& Enemy::GetTexture() const {
+  return texture_manager.GetTexture(texturename_);
 }
 
 sf::Sprite* Enemy::GetSprite() { return &sprite_; }
