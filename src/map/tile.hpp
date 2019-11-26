@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
 
 enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
