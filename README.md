@@ -15,8 +15,8 @@ Current directory structure:
 
 ## Build instructions
 
-* Two dependencies are currently needed to build the project, **CMake** and **SFML 2.4** so make sure these are installed on your system.
+* Three dependencies are currently needed to build the project, **CMake**, **SFML 2.4** and **Boost** so make sure these are installed on your system.
 
 * Run the build.sh script found in the main directory (`./build.sh`)
 
-* Go to the `out/` directory (`cd out/`) and simply run the excecutable (`./tower-defence`)
+* Run the run.sh script (`./run.sh`)
