@@ -3,14 +3,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "../configuration/configmanager.hpp"
-Game::Game() : map_(), window_(), view_() {
-  window_.create(sf::VideoMode(800, 600), "Tower Defence");
+#include "texturemanager.hpp"
+Game::Game() : map_(), view_() {
+  window.create(sf::VideoMode(800, 600), "Tower Defence");
+  window.setFramerateLimit(60);
 
   std::string config_error;
 
   if (!config_manager->ParseFile("settings.json", config_error)) {
     std::cout << "Failed to parse configuration file." << std::endl;
-    window_.close();
+    window.close();
   }
 
   map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
@@ -21,29 +23,33 @@ Game::Game() : map_(), window_(), view_() {
   towers_.push_back(Tower(10, 10, 1, 1, 2));
 }
 
-void Game::Run() {
-  window_.setView(view_);
-  window_.setFramerateLimit(60);
+Game::~Game() {
+  while (!states_.empty()) PopState();
+}
 
-  // run the program as long as the window is open
-  while (window_.isOpen()) {
-    // check all the window's events that were triggered since the last
-    // iteration of the loop
-    sf::Event event;
-    while (window_.pollEvent(event)) {
-      // "close requested" event: we close the window
-      if (event.type == sf::Event::Closed) {
-        window_.close();
-      }
-      if (event.type == sf::Event::Resized) {
-        view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
-        window_.setView(view_);
-      }
-    }
-    window_.clear();
-    DrawAll();
-    Tick();
-    window_.display();
+void Game::PushState(GameState* state) { states_.push(state); }
+
+void Game::PopState() { states_.pop(); }
+
+void Game::ChangeState(GameState* state) {
+  if (!states_.empty()) PopState();
+  PushState(state);
+}
+
+GameState* Game::PeekState() {
+  if (states_.empty()) return nullptr;
+  return states_.top();
+}
+
+void Game::Run() {
+  while (window.isOpen()) {
+    if (PeekState() == nullptr) continue;
+    PeekState()->HandleInput();
+    window.clear();
+    PeekState()->Draw();
+    // DrawAll();
+    // Tick();
+    window.display();
   }
 }
 
@@ -80,7 +86,7 @@ void Game::DrawMap() {
         sprite->setScale(
             tile_size / (float)(*sprite->getTexture()).getSize().x,
             tile_size / (float)(*sprite->getTexture()).getSize().y);
-        window_.draw(*sprite);
+        window.draw(*sprite);
       }
     }
   }
@@ -106,8 +112,8 @@ void Game::DrawEnemies() {
           enemy.GetPosition().first * enemy_size - hp_bar_width / 2,
           enemy.GetPosition().second * enemy_size - enemy_size / 2);
       hp_bar_red.setPosition(hp_bar_green.getPosition());
-      window_.draw(hp_bar_red);
-      window_.draw(hp_bar_green);
+      window.draw(hp_bar_red);
+      window.draw(hp_bar_green);
 
       // Draw enemy
       sprite = enemy.GetSprite();
@@ -116,7 +122,7 @@ void Game::DrawEnemies() {
           enemy.GetPosition().second * enemy_size - enemy_size / 2);
       sprite->setScale(enemy_size / (float)(*sprite->getTexture()).getSize().x,
                        enemy_size / (float)(*sprite->getTexture()).getSize().y);
-      window_.draw(*sprite);
+      window.draw(*sprite);
     }
   }
 }
@@ -131,15 +137,15 @@ void Game::DrawTowers() {
                           tower.GetPosition().second * tower_size);
       sprite->setScale(tower_size / (float)(*sprite->getTexture()).getSize().x,
                        tower_size / (float)(*sprite->getTexture()).getSize().y);
-      window_.draw(*sprite);
+      window.draw(*sprite);
     }
   }
 }
 
 int Game::GetTileSize() const {
-  auto window_size = window_.getSize();
-  int tile_size_x = (window_size.x - 200) / map_.GetWidth();
-  int tile_size_y = (window_size.y - 200) / map_.GetHeight();
+  auto windowsize = window.getSize();
+  int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
+  int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
   return std::min(tile_size_x, tile_size_y);
 }
 
