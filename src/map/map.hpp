@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,6 +10,7 @@ class Map {
  public:
   Map();
   void Load(const std::string& filename);
+  void Draw(sf::RenderWindow& window);
   int GetWidth() const;
   int GetHeight() const;
   const std::vector<std::vector<Tile>> GetTiles() const;

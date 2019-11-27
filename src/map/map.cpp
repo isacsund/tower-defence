@@ -41,6 +41,28 @@ void Map::Load(const std::string& filename) {
   RecalculatePath();
 }
 
+void Map::Draw(sf::RenderWindow& window) {
+  auto windowsize = window.getSize();
+  int tile_size_x = (windowsize.x - 200) / GetWidth();
+  int tile_size_y = (windowsize.y - 200) / GetHeight();
+  auto tile_size = std::min(tile_size_x, tile_size_y);
+
+  sf::Sprite* sprite;
+  for (int y = 0; y < GetHeight(); y++) {
+    for (int x = 0; x < GetWidth(); x++) {
+      Tile tile = tiles_[y][x];
+      sprite = tile.GetSprite();
+      if (sprite->getTexture() != nullptr) {
+        sprite->setPosition(x * tile_size, y * tile_size);
+        sprite->setScale(
+            tile_size / (float)(*sprite->getTexture()).getSize().x,
+            tile_size / (float)(*sprite->getTexture()).getSize().y);
+        window.draw(*sprite);
+      }
+    }
+  }
+}
+
 int Map::GetHeight() const { return tiles_.size(); }
 
 int Map::GetWidth() const { return tiles_[0].size(); }

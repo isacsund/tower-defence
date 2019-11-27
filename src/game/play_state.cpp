@@ -1,16 +1,24 @@
 #include "play_state.hpp"
 #include <SFML/Graphics.hpp>
+#include "../configuration/configmanager.hpp"
 #include "game_state.hpp"
 #include "texturemanager.hpp"
 
 PlayState::PlayState(Game* game) {
   this->game = game;
-  background_.setTexture(texture_manager.GetTexture("sprites/basic_enemy.png"));
+  std::string config_error;
+
+  if (!config_manager->ParseFile("settings.json", config_error)) {
+    std::cout << "Failed to parse configuration file." << std::endl;
+  }
+
+  map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
+                                                           "maps/01/file"));
 }
 
 void PlayState::Draw() {
   this->game->window.setView(view_);
-  this->game->window.draw(background_);
+  map_.Draw(this->game->window);
 }
 
 void PlayState::HandleInput() {
@@ -25,13 +33,8 @@ void PlayState::HandleInput() {
       }
       /* Resize the window */
       case sf::Event::Resized: {
-        view_.setSize(event.size.width, event.size.height);
-        background_.setPosition(
-            this->game->window.mapPixelToCoords(sf::Vector2i(0, 0), view_));
-        background_.setScale(float(event.size.width) /
-                                 float(background_.getTexture()->getSize().x),
-                             float(event.size.height) /
-                                 float(background_.getTexture()->getSize().y));
+        view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
+        this->game->window.setView(view_);
         break;
       }
       case sf::Event::KeyPressed: {
