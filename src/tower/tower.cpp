@@ -2,7 +2,7 @@
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
-             TowerTypes type, const std::string& texturename)
+             const std::string& texturename, TowerTypes type)
     : range_(range),
       damage_(damage),
       att_speed_(att_speed),

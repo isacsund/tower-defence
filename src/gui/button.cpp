@@ -20,7 +20,7 @@ void Button::SetPosition(sf::Vector2f position) {
   position_ = position;
   sprite_.setPosition(position_);
   title_.setPosition(position_);
-};
+}
 
 bool Button::Contains(sf::Vector2f mouse_position) {
   return sprite_.getGlobalBounds().contains(mouse_position);

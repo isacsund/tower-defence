@@ -77,3 +77,7 @@ std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
      << enemy.GetMaxHp() << " hp";
   return os;
 }
+
+void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  target.draw(sprite_, states);
+}

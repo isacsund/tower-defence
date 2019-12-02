@@ -42,3 +42,13 @@ std::ostream& operator<<(std::ostream& os, const Tile& tile) {
   os << tile.GetType();
   return os;
 }
+
+void Tile::SetPosition(float x, float y) { sprite_.setPosition(x, y); }
+void Tile::SetScale(float tile_size) {
+  sprite_.setScale(tile_size / (float)(*sprite_.getTexture()).getSize().x,
+                   tile_size / (float)(*sprite_.getTexture()).getSize().y);
+}
+
+void Tile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  target.draw(sprite_, states);
+}
