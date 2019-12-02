@@ -97,7 +97,7 @@ std::vector<Enemy> Map::LoadWave(int wave) {
     if (monsters.first == "basic") enemy_type = Standard;
 
     for (boost::property_tree::ptree::value_type& monster : monsters.second) {
-      for (size_t i = 0; i < monster.second.get<int>("amount"); i++) {
+      for (int i = 0; i < monster.second.get<int>("amount"); i++) {
         enemies.push_back(Enemy(monster.second.get<int>("max_hp"),
                                 monster.second.get<int>("speed"),
                                 enemy_spawn_.first, enemy_spawn_.second,
