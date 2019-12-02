@@ -22,7 +22,12 @@ PlayState::PlayState(Game* game) {
                                                            "maps/01/file"));
 }
 
-void PlayState::Draw() { map_.Draw(this->game->window); }
+void PlayState::Draw() {
+  map_.Draw(this->game->window);
+  auto spawn = map_.GetEnemySpawn();
+  Enemy enemy = Enemy(200, 1, spawn.first + 0.5, spawn.second + 0.5);
+  enemy.Draw(this->game->window, map_);
+}
 
 void PlayState::HandleInput() {
   sf::Event event;

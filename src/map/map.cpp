@@ -44,10 +44,9 @@ void Map::Load(const std::string& filename) {
 void Map::Draw(sf::RenderWindow& window) {
   auto windowsize = window.getSize();
   int tile_size_x = (windowsize.x - 200) / GetWidth();
-  int tile_size_y = (windowsize.y - 200) / GetHeight();
+  int tile_size_y = (windowsize.y) / GetHeight();
   auto tile_size = std::min(tile_size_x, tile_size_y);
 
-  sf::Sprite* sprite;
   for (int y = 0; y < GetHeight(); y++) {
     for (int x = 0; x < GetWidth(); x++) {
       Tile tile = tiles_[y][x];
