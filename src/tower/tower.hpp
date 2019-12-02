@@ -10,8 +10,8 @@ enum TowerTypes {
 class Tower {
  public:
   Tower(float range, float damage, float att_speed, int x, int y,
-        TowerTypes type = Basic,
-        const std::string& texture = "sprites/basic_tower.png");
+        const std::string& texturename = "sprites/basic_tower.png",
+        TowerTypes type = Basic);
   void Attack(Enemy& enemy) const;
   const std::pair<int, int> GetPosition() const;
 

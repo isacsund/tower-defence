@@ -8,7 +8,7 @@ enum EnemyTypes { Standard, Fast /*, Big, Boss*/ };
 class Enemy {
  public:
   Enemy(float max_hp, float speed, float x, float y,
-        const std::string& texture = "sprites/basic_enemy.png",
+        const std::string& texturename = "sprites/basic_enemy.png",
         EnemyTypes type = Standard);
   void Move(const std::vector<std::pair<int, int>>& path);
   float GetHp() const;
