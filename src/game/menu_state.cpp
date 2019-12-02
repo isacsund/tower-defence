@@ -5,8 +5,9 @@
 
 MenuState::MenuState(Game* game) {
   this->game = game;
-  sf::View view_(sf::FloatRect(0, 0, this->game->window.getSize().x,
-                               this->game->window.getSize().y));
+  sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
+  sf::View view_(sf::FloatRect(0, 0, window_size.x, window_size.y));
+  game->window.setView(view_);
   background_.setTexture(texture_manager.GetTexture("sprites/background.png"));
   background_.setScale(float(this->game->window.getSize().x) /
                            float(background_.getTexture()->getSize().x),
@@ -17,15 +18,12 @@ MenuState::MenuState(Game* game) {
     std::cout << "Failed to load font";
   }
 
-  sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
-
   buttons_.emplace("Play",
                    Button("Test", font_,
                           sf::Vector2f(window_size.x / 2, window_size.y / 2)));
 }
 
 void MenuState::Draw() {
-  this->game->window.setView(view_);
   this->game->window.draw(background_);
   for (auto& button : buttons_) {
     this->game->window.draw(button.second);
@@ -46,7 +44,6 @@ void MenuState::HandleInput() {
       }
       /* Resize the window */
       case sf::Event::Resized: {
-        // view_.setSize(event.size.width, event.size.height);
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         game->window.setView(view_);
 

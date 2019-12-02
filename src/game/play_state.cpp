@@ -13,14 +13,14 @@ PlayState::PlayState(Game* game) {
     std::cout << "Failed to parse configuration file." << std::endl;
   }
 
+  sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
+  view_.reset(sf::FloatRect(0, 0, window_size.x, window_size.y));
+  this->game->window.setView(view_);
   map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
                                                            "maps/01/file"));
 }
 
-void PlayState::Draw() {
-  this->game->window.setView(view_);
-  map_.Draw(this->game->window);
-}
+void PlayState::Draw() { map_.Draw(this->game->window); }
 
 void PlayState::HandleInput() {
   sf::Event event;
