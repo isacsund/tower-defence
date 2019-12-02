@@ -17,8 +17,8 @@ MenuState::MenuState(Game* game) {
 
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
 
-  buttons_.push_back(
-      Button("Test", font_, sf::Vector2f(window_size.x / 2, 200)));
+  buttons_.push_back(Button(
+      "Test", font_, sf::Vector2f(window_size.x / 2, window_size.y / 2)));
 }
 
 void MenuState::Draw() {
@@ -41,13 +41,19 @@ void MenuState::HandleInput() {
       }
       /* Resize the window */
       case sf::Event::Resized: {
-        view_.setSize(event.size.width, event.size.height);
+        // view_.setSize(event.size.width, event.size.height);
+        view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
+        game->window.setView(view_);
+
         background_.setPosition(
             this->game->window.mapPixelToCoords(sf::Vector2i(0, 0), view_));
         background_.setScale(float(event.size.width) /
                                  float(background_.getTexture()->getSize().x),
                              float(event.size.height) /
                                  float(background_.getTexture()->getSize().y));
+        buttons_.at(0).SetPosition(
+            sf::Vector2f(event.size.width / 2, event.size.height / 2));
+
         break;
       }
       case sf::Event::KeyPressed: {

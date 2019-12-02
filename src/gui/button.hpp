@@ -3,9 +3,10 @@
 
 class Button : public sf::Drawable {
  public:
-  Button(std::string title, sf::Font font, sf::Vector2f position);
+  Button(std::string title, sf::Font& font, sf::Vector2f position);
 
   sf::Vector2u GetSize();
+  void SetPosition(sf::Vector2f position);
 
  private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
