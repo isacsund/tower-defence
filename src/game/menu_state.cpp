@@ -5,7 +5,7 @@
 
 MenuState::MenuState(Game* game) {
   this->game = game;
-  background_.setTexture(texture_manager.GetTexture("sprites/background.jpeg"));
+  background_.setTexture(texture_manager.GetTexture("sprites/background.png"));
   background_.setScale(float(this->game->window.getSize().x) /
                            float(background_.getTexture()->getSize().x),
                        float(this->game->window.getSize().y) /

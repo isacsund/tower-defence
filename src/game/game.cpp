@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../configuration/configmanager.hpp"
 #include "texturemanager.hpp"
+
 Game::Game() : map_(), view_() {
   window.create(sf::VideoMode(800, 600), "Tower Defence");
   window.setFramerateLimit(60);
