@@ -3,7 +3,8 @@
 
 class Button : public sf::Drawable {
  public:
-  Button(std::string title, sf::Font& font, sf::Vector2f position);
+  Button(std::string title, sf::Font& font, sf::Vector2f position,
+         const std::string& texture_name = "sprites/button.png");
 
   sf::Vector2u GetSize();
   void SetPosition(sf::Vector2f position);

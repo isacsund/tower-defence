@@ -2,7 +2,8 @@
 #include <iostream>
 #include "../game/texturemanager.hpp"
 
-Button::Button(std::string title, sf::Font& font, sf::Vector2f position)
+Button::Button(std::string title, sf::Font& font, sf::Vector2f position,
+               const std::string& texture_name)
     : font_(font), position_(position) {
   title_.setFont(font);
   title_.setString(title);
@@ -10,7 +11,7 @@ Button::Button(std::string title, sf::Font& font, sf::Vector2f position)
   title_.setStyle(sf::Text::Regular);
 
   title_.setFillColor(sf::Color::White);
-  sprite_.setTexture(texture_manager.GetTexture("sprites/button.png"));
+  sprite_.setTexture(texture_manager.GetTexture(texture_name));
   SetPosition(position_);
 }
 
