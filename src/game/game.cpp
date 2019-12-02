@@ -58,29 +58,10 @@ void Game::Tick() {
   FindEnemies();
 }
 
+/*
 void Game::DrawAll() {
-  DrawMap();
   DrawEnemies();
   DrawTowers();
-}
-
-void Game::DrawMap() {
-  int tile_size = GetTileSize();
-  sf::Sprite* sprite;
-
-  for (int y = 0; y < map_.GetHeight(); y++) {
-    for (int x = 0; x < map_.GetWidth(); x++) {
-      Tile tile = map_(x, y);
-      sprite = tile.GetSprite();
-      if (sprite->getTexture() != nullptr) {
-        sprite->setPosition(x * tile_size, y * tile_size);
-        sprite->setScale(
-            tile_size / (float)(*sprite->getTexture()).getSize().x,
-            tile_size / (float)(*sprite->getTexture()).getSize().y);
-        window.draw(*sprite);
-      }
-    }
-  }
 }
 
 void Game::DrawEnemies() {
@@ -131,7 +112,7 @@ void Game::DrawTowers() {
       window.draw(*sprite);
     }
   }
-}
+}*/
 
 int Game::GetTileSize() const {
   auto windowsize = window.getSize();

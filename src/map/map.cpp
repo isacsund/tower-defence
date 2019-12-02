@@ -51,14 +51,9 @@ void Map::Draw(sf::RenderWindow& window) {
   for (int y = 0; y < GetHeight(); y++) {
     for (int x = 0; x < GetWidth(); x++) {
       Tile tile = tiles_[y][x];
-      sprite = tile.GetSprite();
-      if (sprite->getTexture() != nullptr) {
-        sprite->setPosition(x * tile_size, y * tile_size);
-        sprite->setScale(
-            tile_size / (float)(*sprite->getTexture()).getSize().x,
-            tile_size / (float)(*sprite->getTexture()).getSize().y);
-        window.draw(*sprite);
-      }
+      tile.SetPosition(x * tile_size, y * tile_size);
+      tile.SetScale(tile_size);
+      window.draw(tile);
     }
   }
 }
