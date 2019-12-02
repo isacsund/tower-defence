@@ -8,18 +8,22 @@ Button::Button(std::string title, sf::Font& font, sf::Vector2f position)
   title_.setString(title);
   title_.setCharacterSize(30);
   title_.setStyle(sf::Text::Regular);
-  title_.setPosition(position);
+
   title_.setFillColor(sf::Color::White);
   sprite_.setTexture(texture_manager.GetTexture("sprites/button.png"));
-  sprite_.setPosition(position_);
+  SetPosition(position_);
 }
 
 sf::Vector2u Button::GetSize() { return sprite_.getTexture()->getSize(); }
 
 void Button::SetPosition(sf::Vector2f position) {
   position_ = position;
+  auto text_size = title_.getLocalBounds();
+  auto button_size = sprite_.getLocalBounds();
+  title_.setPosition(
+      sf::Vector2f(position_.x + button_size.width / 2 - text_size.width / 2,
+                   position_.y + button_size.height / 2 - text_size.height));
   sprite_.setPosition(position_);
-  title_.setPosition(position_);
 }
 
 bool Button::Contains(sf::Vector2f mouse_position) {
