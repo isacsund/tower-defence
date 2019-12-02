@@ -1,5 +1,8 @@
 #include "map.hpp"
+#include <boost/property_tree/ptree.hpp>
+#include "../configuration/configmanager.hpp"
 #include "pathfinder.hpp"
+
 Map::Map() {}
 
 void Map::Load(const std::string& filename) {
@@ -61,6 +64,10 @@ int Map::GetHeight() const { return tiles_.size(); }
 
 int Map::GetWidth() const { return tiles_[0].size(); }
 
+void Map::SetName(const std::string& name) { name_ = name; }
+
+std::string Map::GetName() { return name_; }
+
 const std::pair<int, int> Map::GetEnemySpawn() const { return enemy_spawn_; }
 
 const std::pair<int, int> Map::GetPlayerBase() const { return player_base_; }
@@ -81,6 +88,25 @@ bool Map::RecalculatePath() {
 }
 
 std::vector<std::pair<int, int>> Map::GetPath() { return path_; }
+
+std::vector<Enemy> Map::LoadWave(int wave) {
+  std::vector<Enemy> enemies;
+  for (boost::property_tree::ptree::value_type& monsters :
+       config_manager->GetSubTree("waves." + std::to_string(wave))) {
+    EnemyTypes enemy_type;
+    if (monsters.first == "basic") enemy_type = Standard;
+
+    for (boost::property_tree::ptree::value_type& monster : monsters.second) {
+      for (size_t i = 0; i < monster.second.get<int>("amount"); i++) {
+        enemies.push_back(Enemy(monster.second.get<int>("max_hp"),
+                                monster.second.get<int>("speed"),
+                                enemy_spawn_.first, enemy_spawn_.second,
+                                "sprites/basic_enemy.png", enemy_type));
+      }
+    }
+  }
+  return enemies;
+}
 
 std::ostream& operator<<(std::ostream& os, const Map& map) {
   for (auto row : map.GetTiles()) {

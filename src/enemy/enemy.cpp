@@ -78,7 +78,8 @@ std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
   return os;
 }
 
-void Enemy::Draw(sf::RenderWindow& window, Map map) {
+/*
+void Enemy::Draw(sf::RenderWindow& window) {
   auto windowsize = window.getSize();
   int enemy_size_x = (windowsize.x - 200) / map.GetWidth();
   int enemy_size_y = (windowsize.y) / map.GetHeight();
@@ -107,3 +108,4 @@ void Enemy::Draw(sf::RenderWindow& window, Map map) {
   window.draw(hp_bar_red);
   window.draw(hp_bar_green);
 }
+*/

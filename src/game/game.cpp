@@ -9,6 +9,11 @@ Game::Game() : map_(), view_() {
   window.create(sf::VideoMode(800, 600), "Tower Defence");
   window.setFramerateLimit(60);
 
+  std::string config_error;
+  if (!config_manager->ParseFile("settings.json", config_error)) {
+    std::cout << "Failed to parse configuration file." << std::endl;
+  }
+
   auto spawn = map_.GetEnemySpawn();
   enemies_.push_back(Enemy(200, 1, spawn.first + 0.5, spawn.second + 0.5));
   towers_.push_back(Tower(10, 10, 1, 1, 2));

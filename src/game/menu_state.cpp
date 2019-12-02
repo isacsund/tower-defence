@@ -1,5 +1,6 @@
 #include "menu_state.hpp"
 #include <iostream>
+#include "../configuration/configmanager.hpp"
 #include "play_state.hpp"
 #include "texturemanager.hpp"
 
@@ -61,14 +62,18 @@ void MenuState::HandleInput() {
             sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
         if (event.mouseButton.button == sf::Mouse::Left) {
           if (buttons_.at("Play").Contains(mouse_position)) {
-            this->game->PushState(new PlayState(this->game));
+            auto play_state = new PlayState(this->game);
+            play_state->map.SetName("01");
+            play_state->map.Load(config_manager->GetValueOrDefault<std::string>(
+                "maps/" + play_state->map.GetName() + "/file", "maps/01/file"));
+            this->game->PushState(play_state);
           }
         }
         break;
       }
       case sf::Event::KeyPressed: {
-        if (event.key.code == sf::Keyboard::Escape)
-          this->game->PushState(new PlayState(this->game));
+        if (event.key.code == sf::Keyboard::Escape) {
+        }
         break;
       }
       default:

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../map/map.hpp"
 #include "SFML/Graphics.hpp"
 
 enum EnemyTypes { Standard, Fast /*, Big, Boss*/ };
@@ -24,7 +23,7 @@ class Enemy {
       const std::vector<std::pair<int, int>>& path) const;
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
-  void Draw(sf::RenderWindow& window, Map map);
+  void Draw(sf::RenderWindow& window);
 
  private:
   float max_hp_;

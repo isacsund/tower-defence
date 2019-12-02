@@ -7,9 +7,9 @@ class PlayState : public GameState {
   PlayState(Game* game);
   virtual void Draw();
   virtual void HandleInput();
+  Map map;
 
  private:
   sf::View view_;
   sf::Sprite background_;
-  Map map_;
 };

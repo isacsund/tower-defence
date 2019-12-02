@@ -1,33 +1,22 @@
 #include "play_state.hpp"
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "../configuration/configmanager.hpp"
+#include "../enemy/enemy.hpp"
 #include "game_state.hpp"
 #include "menu_state.hpp"
-#include "texturemanager.hpp"
 
 PlayState::PlayState(Game* game) {
   this->game = game;
-
-  std::string config_error;
-  if (!config_manager->ParseFile("settings.json", config_error)) {
-    std::cout << "Failed to parse configuration file." << std::endl;
-  }
 
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
   sf::View view_(sf::FloatRect(0, 0, window_size.x, window_size.y));
   // view_.reset(sf::FloatRect(0, 0, window_size.x, window_size.y));
   game->window.setView(view_);
   this->game->window.setView(view_);
-  map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
-                                                           "maps/01/file"));
 }
 
-void PlayState::Draw() {
-  map_.Draw(this->game->window);
-  auto spawn = map_.GetEnemySpawn();
-  Enemy enemy = Enemy(200, 1, spawn.first + 0.5, spawn.second + 0.5);
-  enemy.Draw(this->game->window, map_);
-}
+void PlayState::Draw() { map.Draw(this->game->window); }
 
 void PlayState::HandleInput() {
   sf::Event event;
@@ -46,8 +35,12 @@ void PlayState::HandleInput() {
         break;
       }
       case sf::Event::KeyPressed: {
-        if (event.key.code == sf::Keyboard::Escape)
-          this->game->PushState(new MenuState(this->game));
+        if (event.key.code == sf::Keyboard::Escape) {
+          std::vector<Enemy> enemies = map.LoadWave(1);
+          for (auto enemy : enemies) {
+            std::cout << enemy << std::endl;
+          }
+        }
         break;
       }
       default:

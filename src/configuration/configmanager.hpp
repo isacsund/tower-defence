@@ -10,7 +10,6 @@ class ConfigManager {
     try {
       T value =
           (T)config_.get<T>(boost::property_tree::ptree::path_type(name, '/'));
-      std::cout << value;
       if (std::is_same<T, std::string>::value) {
         std::string* str_val = (std::string*)&value;
 
@@ -28,6 +27,10 @@ class ConfigManager {
 
     // If any errors occurred, return the default value
     return default_value;
+  }
+
+  boost::property_tree::ptree GetSubTree(const std::string& name) {
+    return config_.get_child(name);
   }
 
  private:

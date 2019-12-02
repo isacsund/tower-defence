@@ -9,6 +9,16 @@
                     "delay": 1
                 }
             }
+        },
+        "02": {
+            "monsters": {
+                "basic": {
+                    "max_hp": 100,
+                    "speed": 1,
+                    "amount": 20,
+                    "delay": 1
+                }
+            }
         }
     }
 }
