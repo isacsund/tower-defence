@@ -5,13 +5,13 @@
 #include "../game/texturemanager.hpp"
 
 Enemy::Enemy(float max_hp, float speed, float x, float y,
-             const std::string& texturename, EnemyTypes type)
+             const std::string& texture_name, EnemyTypes type)
     : max_hp_(max_hp),
       hp_(max_hp),
       speed_(speed),
       x_(x),
       y_(y),
-      texturename_(texturename),
+      texture_name_(texture_name),
       type_(type),
       target_tile_({-1, -1}) {
   sprite_ = sf::Sprite(GetTexture());
@@ -65,7 +65,7 @@ const std::pair<int, int> Enemy::FindNextTile(
 }
 
 sf::Texture& Enemy::GetTexture() const {
-  return texture_manager.GetTexture(texturename_);
+  return texture_manager.GetTexture(texture_name_);
 }
 
 sf::Sprite* Enemy::GetSprite() { return &sprite_; }
