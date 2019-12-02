@@ -9,6 +9,7 @@ class MenuState : public GameState {
   MenuState(Game* game);
   virtual void Draw();
   virtual void HandleInput();
+  void LoadGame();
 
  private:
   sf::View view_;

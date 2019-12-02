@@ -6,14 +6,15 @@
 
 class PlayState : public GameState {
  public:
-  PlayState(Game* game);
+  PlayState(Game* game, Map map);
   virtual void Draw();
   virtual void HandleInput();
-  Map map;
+
   int GetTileSize() const;
   void InitGUI();
 
  private:
+  Map map_;
   sf::View view_;
   sf::Sprite background_;
   sf::Font font_;
