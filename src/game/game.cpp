@@ -119,13 +119,6 @@ void Game::DrawTowers() {
   }
 }*/
 
-int Game::GetTileSize() const {
-  auto windowsize = window.getSize();
-  int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
-  int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
-  return std::min(tile_size_x, tile_size_y);
-}
-
 void Game::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
   float closest_distance = std::numeric_limits<float>::max();

@@ -8,6 +8,7 @@ class PlayState : public GameState {
   virtual void Draw();
   virtual void HandleInput();
   Map map;
+  int GetTileSize() const;
 
  private:
   sf::View view_;

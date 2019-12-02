@@ -24,7 +24,6 @@ class Game {
   void DrawTowers();
   void Tick();
   void FindEnemies();
-  int GetTileSize() const;
 
   sf::RenderWindow window;
 
