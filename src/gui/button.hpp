@@ -7,6 +7,7 @@ class Button : public sf::Drawable {
 
   sf::Vector2u GetSize();
   void SetPosition(sf::Vector2f position);
+  bool Contains(sf::Vector2f mouse_position);
 
  private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

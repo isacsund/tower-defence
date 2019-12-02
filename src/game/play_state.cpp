@@ -2,12 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include "../configuration/configmanager.hpp"
 #include "game_state.hpp"
+#include "menu_state.hpp"
 #include "texturemanager.hpp"
 
 PlayState::PlayState(Game* game) {
   this->game = game;
-  std::string config_error;
 
+  std::string config_error;
   if (!config_manager->ParseFile("settings.json", config_error)) {
     std::cout << "Failed to parse configuration file." << std::endl;
   }
@@ -38,7 +39,8 @@ void PlayState::HandleInput() {
         break;
       }
       case sf::Event::KeyPressed: {
-        if (event.key.code == sf::Keyboard::Escape) this->game->window.close();
+        if (event.key.code == sf::Keyboard::Escape)
+          this->game->PushState(new MenuState(this->game));
         break;
       }
       default:

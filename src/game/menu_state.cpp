@@ -5,6 +5,8 @@
 
 MenuState::MenuState(Game* game) {
   this->game = game;
+  sf::View view_(sf::FloatRect(0, 0, this->game->window.getSize().x,
+                               this->game->window.getSize().y));
   background_.setTexture(texture_manager.GetTexture("sprites/background.png"));
   background_.setScale(float(this->game->window.getSize().x) /
                            float(background_.getTexture()->getSize().x),
@@ -17,21 +19,24 @@ MenuState::MenuState(Game* game) {
 
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
 
-  buttons_.push_back(Button(
-      "Test", font_, sf::Vector2f(window_size.x / 2, window_size.y / 2)));
+  buttons_.emplace("Play",
+                   Button("Test", font_,
+                          sf::Vector2f(window_size.x / 2, window_size.y / 2)));
 }
 
 void MenuState::Draw() {
   this->game->window.setView(view_);
   this->game->window.draw(background_);
   for (auto& button : buttons_) {
-    this->game->window.draw(button);
+    this->game->window.draw(button.second);
   }
 }
 
 void MenuState::HandleInput() {
   sf::Event event;
 
+  sf::Vector2f mouse_position = this->game->window.mapPixelToCoords(
+      sf::Mouse::getPosition(this->game->window), view_);
   while (this->game->window.pollEvent(event)) {
     switch (event.type) {
       /* Close the window */
@@ -51,9 +56,17 @@ void MenuState::HandleInput() {
                                  float(background_.getTexture()->getSize().x),
                              float(event.size.height) /
                                  float(background_.getTexture()->getSize().y));
-        buttons_.at(0).SetPosition(
+        buttons_.at("Play").SetPosition(
             sf::Vector2f(event.size.width / 2, event.size.height / 2));
 
+        break;
+      }
+      case sf::Event::MouseButtonPressed: {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+          if (buttons_.at("Play").Contains(mouse_position)) {
+            this->game->PushState(new PlayState(this->game));
+          }
+        }
         break;
       }
       case sf::Event::KeyPressed: {

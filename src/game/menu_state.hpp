@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <map>
 #include "../gui/button.hpp"
 #include "game_state.hpp"
 
@@ -13,5 +13,5 @@ class MenuState : public GameState {
   sf::View view_;
   sf::Sprite background_;
   sf::Font font_;
-  std::vector<Button> buttons_;
+  std::map<std::string, Button> buttons_;
 };
