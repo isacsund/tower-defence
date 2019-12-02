@@ -26,6 +26,7 @@ bool Button::Contains(sf::Vector2f mouse_position) {
   return sprite_.getGlobalBounds().contains(mouse_position);
 }
 
+const sf::Vector2f Button::GetPosition() const { return position_; };
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(sprite_, states);
   target.draw(title_, states);

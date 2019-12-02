@@ -5,7 +5,7 @@
 
 MenuState::MenuState(Game* game) {
   this->game = game;
-  sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
+  sf::Vector2u window_size = this->game->window.getSize();
   sf::View view_(sf::FloatRect(0, 0, window_size.x, window_size.y));
   game->window.setView(view_);
   background_.setTexture(texture_manager.GetTexture("sprites/background.png"));
@@ -33,8 +33,6 @@ void MenuState::Draw() {
 void MenuState::HandleInput() {
   sf::Event event;
 
-  sf::Vector2f mouse_position = this->game->window.mapPixelToCoords(
-      sf::Mouse::getPosition(this->game->window), view_);
   while (this->game->window.pollEvent(event)) {
     switch (event.type) {
       /* Close the window */
@@ -59,6 +57,8 @@ void MenuState::HandleInput() {
         break;
       }
       case sf::Event::MouseButtonPressed: {
+        sf::Vector2f mouse_position =
+            sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
         if (event.mouseButton.button == sf::Mouse::Left) {
           if (buttons_.at("Play").Contains(mouse_position)) {
             this->game->PushState(new PlayState(this->game));

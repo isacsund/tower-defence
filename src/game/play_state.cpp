@@ -14,7 +14,9 @@ PlayState::PlayState(Game* game) {
   }
 
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
-  view_.reset(sf::FloatRect(0, 0, window_size.x, window_size.y));
+  sf::View view_(sf::FloatRect(0, 0, window_size.x, window_size.y));
+  // view_.reset(sf::FloatRect(0, 0, window_size.x, window_size.y));
+  game->window.setView(view_);
   this->game->window.setView(view_);
   map_.Load(config_manager->GetValueOrDefault<std::string>("maps/01/file",
                                                            "maps/01/file"));
