@@ -14,9 +14,24 @@ PlayState::PlayState(Game* game) {
   // view_.reset(sf::FloatRect(0, 0, window_size.x, window_size.y));
   game->window.setView(view_);
   this->game->window.setView(view_);
+  if (!font_.loadFromFile("sprites/Arial.ttf")) {
+    std::cout << "Failed to load font";
+  }
 }
 
-void PlayState::Draw() { map.Draw(this->game->window); }
+void PlayState::Draw() {
+  map.Draw(this->game->window);
+  for (auto& button : buttons_) {
+    this->game->window.draw(button.second);
+  }
+}
+
+void PlayState::InitGUI() {
+  buttons_.emplace(
+      "Tower1",
+      Button("Tower1", font_,
+             sf::Vector2f((GetTileSize() - 1) * map.GetHeight(), 50)));
+}
 
 void PlayState::HandleInput() {
   sf::Event event;
@@ -32,6 +47,8 @@ void PlayState::HandleInput() {
       case sf::Event::Resized: {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
+        buttons_.at("Tower1").SetPosition(
+            sf::Vector2f((GetTileSize() - 1) * map.GetHeight(), 50));
         break;
       }
       case sf::Event::MouseButtonPressed: {
@@ -44,6 +61,8 @@ void PlayState::HandleInput() {
           if (tile_x >= 0 && tile_y >= 0 && tile_x < map.GetWidth() &&
               tile_y < map.GetHeight()) {
             // TODO: Add tower placement
+          } else if (buttons_.at("Tower1").Contains(mouse_position)) {
+            std::cout << "Pressed Tower1 button" << std::endl;
           }
         }
         break;

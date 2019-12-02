@@ -64,8 +64,10 @@ void MenuState::HandleInput() {
           if (buttons_.at("Play").Contains(mouse_position)) {
             auto play_state = new PlayState(this->game);
             play_state->map.SetName("01");
+
             play_state->map.Load(config_manager->GetValueOrDefault<std::string>(
                 "maps/" + play_state->map.GetName() + "/file", "maps/01/file"));
+            play_state->InitGUI();
             this->game->PushState(play_state);
           }
         }
