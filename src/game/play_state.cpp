@@ -44,9 +44,9 @@ void PlayState::HandleInput() {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
         buttons_.at("Tower1").SetPosition(
-            sf::Vector2f((GetTileSize() - 1) * map_.GetHeight(), 50));
+            sf::Vector2f(GetTileSize() * (map_.GetWidth()), 0));
         buttons_.at("Tower2").SetPosition(
-            sf::Vector2f((GetTileSize() - 1) * map_.GetHeight(), 200));
+            sf::Vector2f(GetTileSize() * (map_.GetWidth()), 150));
         break;
       }
       case sf::Event::MouseButtonPressed: {
@@ -83,15 +83,14 @@ void PlayState::HandleInput() {
 }
 
 void PlayState::InitGUI() {
-  buttons_.emplace(
-      "Tower1", Button("Tower1", font_,
-                       sf::Vector2f((GetTileSize() - 1) * map_.GetHeight(), 50),
-                       "sprites/basic_tower.png"));
-  buttons_.emplace(
-      "Tower2",
-      Button("Tower2", font_,
-             sf::Vector2f((GetTileSize() - 1) * map_.GetHeight(), 200),
-             "sprites/round_tower.png"));
+  buttons_.emplace("Tower1",
+                   Button("Tower1", font_,
+                          sf::Vector2f(GetTileSize() * (map_.GetWidth()), 0),
+                          "sprites/basic_tower.png"));
+  buttons_.emplace("Tower2",
+                   Button("Tower2", font_,
+                          sf::Vector2f(GetTileSize() * (map_.GetWidth()), 150),
+                          "sprites/round_tower.png"));
 }
 
 int PlayState::GetTileSize() const {
