@@ -48,8 +48,7 @@ void Map::Draw(sf::RenderWindow& window) {
   auto windowsize = window.getSize();
   int tile_size_x = (windowsize.x - 200) / GetWidth();
   int tile_size_y = (windowsize.y) / GetHeight();
-  auto tile_size = std::min(tile_size_x, tile_size_y);
-
+  tile_size = std::min(tile_size_x, tile_size_y);
   for (int y = 0; y < GetHeight(); y++) {
     for (int x = 0; x < GetWidth(); x++) {
       Tile tile = tiles_[y][x];
@@ -98,9 +97,12 @@ std::vector<Enemy> Map::LoadWave(int wave) {
 
     for (boost::property_tree::ptree::value_type& monster : monsters.second) {
       for (int i = 0; i < monster.second.get<int>("amount"); i++) {
+        std::cout << enemy_spawn_.first << " " << enemy_spawn_.second
+                  << std::endl;
         enemies.push_back(Enemy(monster.second.get<int>("max_hp"),
-                                monster.second.get<int>("speed"),
-                                enemy_spawn_.first, enemy_spawn_.second,
+                                monster.second.get<float>("speed"),
+                                enemy_spawn_.first + 0.5,
+                                enemy_spawn_.second + 0.5, tile_size,
                                 "sprites/basic_enemy.png", enemy_type));
       }
     }

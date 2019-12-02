@@ -1,32 +1,32 @@
 {
-    "maps": {
-        "01": {
-            "name": "Map 01",
-            "file": "maps/01/map.txt",
-            "waves": {
-                "1": {
-                    "monsters": {
-                        "basic": {
-                            "max_hp": 100,
-                            "speed": 1,
-                            "amount": 20,
-                            "delay": 1
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "waves": {
+  "maps": {
+    "01": {
+      "name": "Map 01",
+      "file": "maps/01/map.txt",
+      "waves": {
         "1": {
-            "monsters": {
-                "basic": {
-                    "max_hp": 100,
-                    "speed": 1,
-                    "amount": 20,
-                    "delay": 1
-                }
+          "monsters": {
+            "basic": {
+              "max_hp": 100,
+              "speed": 1,
+              "amount": 20,
+              "delay": 1
             }
+          }
         }
+      }
     }
+  },
+  "waves": {
+    "1": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 0.5,
+          "amount": 20,
+          "delay": 1
+        }
+      }
+    }
+  }
 }

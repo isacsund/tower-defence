@@ -13,10 +13,6 @@ Game::Game() : map_(), view_() {
   if (!config_manager->ParseFile("settings.json", config_error)) {
     std::cout << "Failed to parse configuration file." << std::endl;
   }
-
-  auto spawn = map_.GetEnemySpawn();
-  enemies_.push_back(Enemy(200, 1, spawn.first + 0.5, spawn.second + 0.5));
-  towers_.push_back(Tower(10, 10, 1, 1, 2));
 }
 
 Game::~Game() {
@@ -64,45 +60,6 @@ void Game::Tick() {
 }
 
 /*
-void Game::DrawAll() {
-  DrawEnemies();
-  DrawTowers();
-}
-
-void Game::DrawEnemies() {
-  int enemy_size = GetTileSize();
-  const int hp_bar_width = enemy_size / 2;
-  const int hp_bar_height = enemy_size / 10;
-  sf::Sprite* sprite;
-  for (auto& enemy : enemies_) {
-    if (enemy.IsAlive()) {
-      // Draw hp bar
-      float hp_ratio = enemy.GetHp() / enemy.GetMaxHp();
-      sf::RectangleShape hp_bar_green;
-      sf::RectangleShape hp_bar_red;
-      hp_bar_green.setFillColor(sf::Color::Green);
-      hp_bar_red.setFillColor(sf::Color::Red);
-      hp_bar_red.setSize(sf::Vector2f(hp_bar_width, hp_bar_height));
-      hp_bar_green.setSize(
-          sf::Vector2f(hp_bar_width * hp_ratio, hp_bar_height));
-      hp_bar_green.setPosition(
-          enemy.GetPosition().first * enemy_size - hp_bar_width / 2,
-          enemy.GetPosition().second * enemy_size - enemy_size / 2);
-      hp_bar_red.setPosition(hp_bar_green.getPosition());
-      window.draw(hp_bar_red);
-      window.draw(hp_bar_green);
-
-      // Draw enemy
-      sprite = enemy.GetSprite();
-      sprite->setPosition(
-          enemy.GetPosition().first * enemy_size - enemy_size / 2,
-          enemy.GetPosition().second * enemy_size - enemy_size / 2);
-      sprite->setScale(enemy_size / (float)(*sprite->getTexture()).getSize().x,
-                       enemy_size / (float)(*sprite->getTexture()).getSize().y);
-      window.draw(*sprite);
-    }
-  }
-}
 
 void Game::DrawTowers() {
   int tower_size = GetTileSize();

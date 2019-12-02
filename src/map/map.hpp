@@ -23,10 +23,12 @@ class Map {
   bool RecalculatePath();
   std::vector<std::pair<int, int>> GetPath();
   std::vector<Enemy> LoadWave(int wave);
+  int tile_size;
 
  private:
   std::string name_;
   std::vector<std::vector<Tile>> tiles_;
+
   std::pair<int, int> enemy_spawn_;
   std::pair<int, int> player_base_;
   std::vector<std::pair<int, int>> path_;

@@ -84,5 +84,8 @@ void MenuState::LoadGame() {
   map.SetName("01");
   map.Load(config_manager->GetValueOrDefault<std::string>(
       "maps/" + map.GetName() + "/file", "maps/01/file"));
+  map.tile_size =
+      std::min((this->game->window.getSize().x - 200) / map.GetWidth(),
+               (this->game->window.getSize().y) / map.GetHeight());
   this->game->PushState(new PlayState(this->game, map));
 }

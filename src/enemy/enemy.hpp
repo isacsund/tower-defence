@@ -5,9 +5,9 @@
 
 enum EnemyTypes { Standard, Fast /*, Big, Boss*/ };
 
-class Enemy {
+class Enemy : public sf::Drawable {
  public:
-  Enemy(float max_hp, float speed, float x, float y,
+  Enemy(float max_hp, float speed, float x, float y, float size,
         const std::string& texture_name = "sprites/basic_enemy.png",
         EnemyTypes type = Standard);
   void Move(const std::vector<std::pair<int, int>>& path);
@@ -23,6 +23,8 @@ class Enemy {
       const std::vector<std::pair<int, int>>& path) const;
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
+  void SetPosition(float x, float y);
+  virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
   void Draw(sf::RenderWindow& window);
 
  private:
@@ -30,10 +32,16 @@ class Enemy {
   float hp_;
   float speed_;
   float x_, y_;
+  int size_;
   const std::string texture_name_;
   EnemyTypes type_;
   std::pair<int, int> target_tile_;
   sf::Sprite sprite_;
+  sf::RectangleShape hp_bar_green_;
+  sf::RectangleShape hp_bar_red_;
+
+  const int HP_BAR_WIDTH = size_ / 2;
+  const int HP_BAR_HEIGHT = size_ / 10;
 };
 
 std::ostream& operator<<(std::ostream& os, const Enemy& enemy);

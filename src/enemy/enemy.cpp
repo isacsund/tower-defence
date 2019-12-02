@@ -4,17 +4,27 @@
 #include <iostream>
 #include "../game/texturemanager.hpp"
 
-Enemy::Enemy(float max_hp, float speed, float x, float y,
+Enemy::Enemy(float max_hp, float speed, float x, float y, float size,
              const std::string& texture_name, EnemyTypes type)
     : max_hp_(max_hp),
       hp_(max_hp),
       speed_(speed),
       x_(x),
       y_(y),
+      size_(size),
       texture_name_(texture_name),
       type_(type),
       target_tile_({-1, -1}) {
   sprite_ = sf::Sprite(GetTexture());
+  sprite_.setScale(size / (float)(*sprite_.getTexture()).getSize().x,
+                   size / (float)(*sprite_.getTexture()).getSize().y);
+  hp_bar_green_.setFillColor(sf::Color::Green);
+  hp_bar_red_.setFillColor(sf::Color::Red);
+
+  float hp_ratio = hp_ / max_hp_;
+
+  hp_bar_red_.setSize(sf::Vector2f(HP_BAR_WIDTH, HP_BAR_HEIGHT));
+  hp_bar_green_.setSize(sf::Vector2f(HP_BAR_WIDTH * hp_ratio, HP_BAR_HEIGHT));
 }
 
 void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
@@ -70,6 +80,13 @@ sf::Texture& Enemy::GetTexture() const {
 
 sf::Sprite* Enemy::GetSprite() { return &sprite_; }
 
+void Enemy::SetPosition(float x, float y) {
+  sprite_.setPosition(x, y);
+  hp_bar_green_.setPosition(x_ * size_ - HP_BAR_WIDTH / 2,
+                            y_ * size_ - size_ / 2);
+  hp_bar_red_.setPosition(hp_bar_green_.getPosition());
+}
+
 // Debugging function
 std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
   os << "Enemy at: (" << enemy.GetPosition().first << ", "
@@ -78,34 +95,8 @@ std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
   return os;
 }
 
-/*
-void Enemy::Draw(sf::RenderWindow& window) {
-  auto windowsize = window.getSize();
-  int enemy_size_x = (windowsize.x - 200) / map.GetWidth();
-  int enemy_size_y = (windowsize.y) / map.GetHeight();
-  auto enemy_size = std::min(enemy_size_x, enemy_size_y);
-
-  sprite_.setPosition(x_ * enemy_size - enemy_size / 2,
-                      y_ * enemy_size - enemy_size / 2);
-  sprite_.setScale(enemy_size / (float)(*sprite_.getTexture()).getSize().x,
-                   enemy_size / (float)(*sprite_.getTexture()).getSize().y);
-  window.draw(sprite_);
-
-  // Hp bar
-  const int hp_bar_width = enemy_size / 2;
-  const int hp_bar_height = enemy_size / 10;
-  float hp_ratio = hp_ / max_hp_;
-  sf::RectangleShape hp_bar_green;
-  sf::RectangleShape hp_bar_red;
-
-  hp_bar_green.setFillColor(sf::Color::Green);
-  hp_bar_red.setFillColor(sf::Color::Red);
-  hp_bar_red.setSize(sf::Vector2f(hp_bar_width, hp_bar_height));
-  hp_bar_green.setSize(sf::Vector2f(hp_bar_width * hp_ratio, hp_bar_height));
-  hp_bar_green.setPosition(x_ * enemy_size - hp_bar_width / 2,
-                           y_ * enemy_size - enemy_size / 2);
-  hp_bar_red.setPosition(hp_bar_green.getPosition());
-  window.draw(hp_bar_red);
-  window.draw(hp_bar_green);
+void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  target.draw(sprite_, states);
+  target.draw(hp_bar_red_, states);
+  target.draw(hp_bar_green_, states);
 }
-*/
