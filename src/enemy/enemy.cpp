@@ -74,6 +74,16 @@ const std::pair<int, int> Enemy::FindNextTile(
   return target_tile;
 }
 
+void Enemy::SetPosition(float x, float y) {
+  sprite_.setPosition(x, y);
+  hp_bar_green_.setPosition(x + HP_BAR_WIDTH / 2, y);
+  hp_bar_red_.setPosition(x + HP_BAR_WIDTH / 2, y);
+}
+
+void Enemy::SetScale(float factor_x, float factor_y) {
+  sprite_.setScale(factor_x, factor_y);
+}
+
 sf::Texture& Enemy::GetTexture() const {
   return texture_manager.GetTexture(texture_name_);
 }

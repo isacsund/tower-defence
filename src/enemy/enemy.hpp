@@ -22,6 +22,8 @@ class Enemy : public sf::Drawable {
   const std::pair<int, int> FindNextTile(
       const std::vector<std::pair<int, int>>& path) const;
   sf::Texture& GetTexture() const;
+  void SetPosition(float x, float y);
+  void SetScale(float factor_x, float factor_y);
   sf::Sprite* GetSprite();
 
  private:

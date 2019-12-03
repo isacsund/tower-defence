@@ -31,12 +31,11 @@ void PlayState::Draw() {
   }
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
-      enemy.GetSprite()->setPosition(
+      enemy.SetPosition(
           enemy.GetPosition().first * map_.tile_size - map_.tile_size / 2,
           enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2);
-      enemy.GetSprite()->setScale(
-          map_.tile_size / (float)(enemy.GetTexture()).getSize().x,
-          map_.tile_size / (float)(enemy.GetTexture()).getSize().y);
+      enemy.SetScale(map_.tile_size / (float)(enemy.GetTexture()).getSize().x,
+                     map_.tile_size / (float)(enemy.GetTexture()).getSize().y);
       this->game->window.draw(enemy);
     }
   }
