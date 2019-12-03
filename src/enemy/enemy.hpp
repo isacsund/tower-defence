@@ -24,8 +24,6 @@ class Enemy : public sf::Drawable {
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
   void SetPosition(float x, float y, int size);
-  virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-  void Draw(sf::RenderWindow& window);
 
  private:
   float max_hp_;
@@ -42,6 +40,8 @@ class Enemy : public sf::Drawable {
 
   const int HP_BAR_WIDTH = size_ / 2;
   const int HP_BAR_HEIGHT = size_ / 10;
+
+  virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Enemy& enemy);

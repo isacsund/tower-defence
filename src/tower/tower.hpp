@@ -7,9 +7,9 @@ enum TowerTypes {
   Rapid /*, Sniper, Special*/
 };
 
-class Tower {
+class Tower : public sf::Drawable {
  public:
-  Tower(float range, float damage, float att_speed, int x, int y,
+  Tower(float range, float damage, float att_speed, int x, int y, float size,
         const std::string& texturename = "sprites/basic_tower.png",
         TowerTypes type = Basic);
   void Attack(Enemy& enemy) const;
@@ -27,8 +27,10 @@ class Tower {
   float damage_;
   float att_speed_;
   int x_, y_;
+  float size_;
   TowerTypes type_;
   std::string texturename_;
   float last_attack_;
   sf::Sprite sprite_;
+  virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

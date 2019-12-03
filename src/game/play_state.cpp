@@ -1,4 +1,5 @@
 #include "play_state.hpp"
+#include <math.h>
 #include <SFML/Graphics.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 #include <chrono>
@@ -20,7 +21,6 @@ PlayState::PlayState(Game* game, Map map) {
   if (!font_.loadFromFile("sprites/Arial.ttf")) {
     std::cout << "Failed to load font";
   }
-
   InitGUI();
 }
 
@@ -37,6 +37,11 @@ void PlayState::Draw() {
           map_.tile_size);
       this->game->window.draw(enemy);
     }
+  }
+  for (auto& tower : towers_) {
+    tower.GetSprite()->setPosition(tower.GetPosition().first * map_.tile_size,
+                                   tower.GetPosition().second * map_.tile_size);
+    this->game->window.draw(tower);
   }
   Tick();
 }
@@ -71,6 +76,8 @@ void PlayState::HandleInput() {
           if (tile_x >= 0 && tile_y >= 0 && tile_x < map_.GetWidth() &&
               tile_y < map_.GetHeight()) {
             // TODO: Add tower placement
+            towers_.push_back(
+                Tower(100, 10, 1, tile_x, tile_y, map_.tile_size));
           } else if (buttons_.at("Tower1").Contains(mouse_position)) {
             std::cout << "Pressed Tower1 button" << std::endl;
           } else if (buttons_.at("Wave").Contains(mouse_position)) {
@@ -121,7 +128,7 @@ void PlayState::InitGUI() {
                           sf::Vector2f(map_.tile_size * (map_.GetWidth()), 0),
                           "sprites/basic_tower.png"));
   buttons_.emplace("Wave",
-                   Button("Next vave", font_,
+                   Button("Next wave", font_,
                           sf::Vector2f(map_.tile_size * (map_.GetWidth()), 150),
                           "sprites/button.png"));
 }
