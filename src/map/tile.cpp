@@ -1,24 +1,30 @@
 #include "tile.hpp"
+#include "../game/texturemanager.hpp"
 
 Tile::Tile(TileTypes type) : type_(type) {
   switch (type) {
     case Path:
-      texture_ = "sprites/sand_tile.png";
+      texturename_ = "sprites/sand_tile.png";
       break;
     case PlayerBase:
-      texture_ = "sprites/sand_tile.png";
+      texturename_ = "sprites/sand_tile.png";
       break;
     case EnemySpawn:
-      texture_ = "sprites/sand_tile.png";
+      texturename_ = "sprites/sand_tile.png";
       break;
     default:
-      texture_ = "sprites/grass_tile_1.png";
+      texturename_ = "sprites/grass_tile_1.png";
   }
+  sprite_ = sf::Sprite(GetTexture());
 }
 
 TileTypes Tile::GetType() const { return type_; }
 
-const std::string& Tile::GetTexture() const { return texture_; }
+sf::Texture& Tile::GetTexture() const {
+  return texture_manager.GetTexture(texturename_);
+}
+
+sf::Sprite* Tile::GetSprite() { return &sprite_; }
 
 bool IsTraversable(TileTypes type) {
   switch (type) {
@@ -35,4 +41,14 @@ bool IsTraversable(TileTypes type) {
 std::ostream& operator<<(std::ostream& os, const Tile& tile) {
   os << tile.GetType();
   return os;
+}
+
+void Tile::SetPosition(float x, float y) { sprite_.setPosition(x, y); }
+void Tile::SetScale(float tile_size) {
+  sprite_.setScale(tile_size / (float)(*sprite_.getTexture()).getSize().x,
+                   tile_size / (float)(*sprite_.getTexture()).getSize().y);
+}
+
+void Tile::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  target.draw(sprite_, states);
 }
