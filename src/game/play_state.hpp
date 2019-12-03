@@ -13,6 +13,7 @@ class PlayState : public GameState {
   virtual void HandleInput();
   void Tick();
   void SpawnEnemies(std::vector<Enemy> enemies);
+  void FindEnemies();
   void DrawTowerAtMousePos();
   int GetTileSize() const;
   void InitGUI();

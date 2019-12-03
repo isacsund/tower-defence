@@ -127,13 +127,37 @@ void PlayState::Tick() {
       }
     }
   }
-  // FindEnemies();
+  FindEnemies();
 }
 
 void PlayState::SpawnEnemies(std::vector<Enemy> enemies) {
   // auto cur_time = clock_.getElapsedTime().asSeconds();
-  for (size_t i = 0; i < 20; i++) {
+  for (size_t i = 0; i < 1; i++) {
     enemies_.push_back(enemies[i]);
+  }
+}
+
+void PlayState::FindEnemies() {
+  auto cur_time = clock_.getElapsedTime().asSeconds();
+  float closest_distance = std::numeric_limits<float>::max();
+  Enemy* closest_enemy = nullptr;
+  for (auto& tower : towers_) {
+    float range = tower.GetRange();
+    auto tower_pos = tower.GetPosition();
+    for (auto& enemy : enemies_) {
+      auto enemy_pos = enemy.GetPosition();
+      float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
+                            pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
+      if (distance <= range && distance < closest_distance && enemy.IsAlive()) {
+        closest_enemy = &enemy;
+        closest_distance = distance;
+      }
+    }
+    if ((closest_enemy) &&
+        (cur_time - tower.GetLastAttack() > tower.GetAttSpeed())) {
+      tower.SetLastAttack(cur_time);
+      tower.Attack(*closest_enemy);
+    }
   }
 }
 

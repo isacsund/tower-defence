@@ -18,21 +18,9 @@ class Game {
   void ChangeState(GameState* state);
   GameState* PeekState();
   void Run();
-  void DrawAll();
-  void DrawMap();
-  void DrawEnemies();
-  void DrawTowers();
-  void Tick();
-  void FindEnemies();
 
   sf::RenderWindow window;
 
  private:
   std::stack<GameState*> states_;
-  Map map_;
-  sf::View view_;
-  std::map<const std::string, sf::Texture> textures_;
-  std::vector<Enemy> enemies_;
-  std::vector<Tower> towers_;
-  sf::Clock clock_;
 };
