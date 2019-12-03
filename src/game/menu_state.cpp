@@ -4,6 +4,7 @@
 #include "../map/map.hpp"
 #include "play_state.hpp"
 #include "texturemanager.hpp"
+#include "wavemanager.hpp"
 
 MenuState::MenuState(Game* game) {
   this->game = game;
@@ -87,5 +88,9 @@ void MenuState::LoadGame() {
   map.tile_size =
       std::min((this->game->window.getSize().x - 200) / map.GetWidth(),
                (this->game->window.getSize().y) / map.GetHeight());
+  wave_manager.ParseFile(
+      "maps/" + map.GetName() + "/" +
+      config_manager->GetValueOrDefault<std::string>(
+          "maps/" + map.GetName() + "/waves", "maps/01/waves"));
   this->game->PushState(new PlayState(this->game, map));
 }

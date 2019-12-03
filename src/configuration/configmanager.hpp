@@ -29,10 +29,6 @@ class ConfigManager {
     return default_value;
   }
 
-  boost::property_tree::ptree GetSubTree(const std::string& name) {
-    return config_.get_child(name);
-  }
-
  private:
   boost::property_tree::ptree config_;
 };

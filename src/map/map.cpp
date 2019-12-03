@@ -1,14 +1,16 @@
 #include "map.hpp"
 #include <boost/property_tree/ptree.hpp>
-#include "../configuration/configmanager.hpp"
+#include <iostream>
+#include "../game/wavemanager.hpp"
 #include "pathfinder.hpp"
 
 Map::Map() {}
 
 void Map::Load(const std::string& filename) {
-  std::ifstream is(filename);
+  std::string path = "maps/" + GetName() + "/" + filename;
+  std::ifstream is(path);
   if (!is.is_open()) {
-    std::cout << "Failed to open " << filename << std::endl;
+    std::cout << "Failed to open " << path << std::endl;
   } else {
     std::string line;
     int i = 0;
@@ -91,14 +93,12 @@ std::vector<std::pair<int, int>> Map::GetPath() { return path_; }
 std::vector<Enemy> Map::LoadWave(int wave) {
   std::vector<Enemy> enemies;
   for (boost::property_tree::ptree::value_type& monsters :
-       config_manager->GetSubTree("waves." + std::to_string(wave))) {
+       wave_manager.GetSubTree("waves." + std::to_string(wave))) {
     EnemyTypes enemy_type;
     if (monsters.first == "basic") enemy_type = Standard;
 
     for (boost::property_tree::ptree::value_type& monster : monsters.second) {
       for (int i = 0; i < monster.second.get<int>("amount"); i++) {
-        std::cout << enemy_spawn_.first << " " << enemy_spawn_.second
-                  << std::endl;
         enemies.push_back(Enemy(monster.second.get<int>("max_hp"),
                                 monster.second.get<float>("speed"),
                                 enemy_spawn_.first + 0.5,
