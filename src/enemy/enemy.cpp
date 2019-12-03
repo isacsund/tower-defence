@@ -80,17 +80,6 @@ sf::Texture& Enemy::GetTexture() const {
 
 sf::Sprite* Enemy::GetSprite() { return &sprite_; }
 
-void Enemy::SetScale(int size) {
-  sprite_.setScale(size / (float)(*sprite_.getTexture()).getSize().x,
-                   size / (float)(*sprite_.getTexture()).getSize().y);
-}
-
-void Enemy::SetPosition(float x, float y, int size) {
-  sprite_.setPosition(x, y);
-  hp_bar_green_.setPosition(x_ * size - HP_BAR_WIDTH / 2, y_ * size - size / 2);
-  hp_bar_red_.setPosition(hp_bar_green_.getPosition());
-}
-
 // Debugging function
 std::ostream& operator<<(std::ostream& os, const Enemy& enemy) {
   os << "Enemy at: (" << enemy.GetPosition().first << ", "

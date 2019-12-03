@@ -31,19 +31,30 @@ void PlayState::Draw() {
   }
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
-      enemy.SetPosition(
+      enemy.GetSprite()->setPosition(
           enemy.GetPosition().first * map_.tile_size - map_.tile_size / 2,
-          enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2,
-          map_.tile_size);
-      enemy.SetScale(map_.tile_size);
+          enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2);
+      enemy.GetSprite()->setScale(
+          map_.tile_size / (float)(enemy.GetTexture()).getSize().x,
+          map_.tile_size / (float)(enemy.GetTexture()).getSize().y);
       this->game->window.draw(enemy);
     }
   }
   for (auto& tower : towers_) {
     tower.GetSprite()->setPosition(tower.GetPosition().first * map_.tile_size,
                                    tower.GetPosition().second * map_.tile_size);
+    tower.GetSprite()->setScale(
+        map_.tile_size / (float)(tower.GetTexture()).getSize().x,
+        map_.tile_size / (float)(tower.GetTexture()).getSize().y);
     this->game->window.draw(tower);
   }
+  if (active_tower_.has_value()) {
+    active_tower_->GetSprite()->setPosition(
+        sf::Mouse::getPosition(this->game->window).x - map_.tile_size / 2,
+        sf::Mouse::getPosition(this->game->window).y - map_.tile_size / 2);
+    this->game->window.draw(active_tower_.get());
+  }
+
   Tick();
 }
 
@@ -76,10 +87,14 @@ void PlayState::HandleInput() {
           int tile_y = mouse_position.y / tile_size;
           if (tile_x >= 0 && tile_y >= 0 && tile_x < map_.GetWidth() &&
               tile_y < map_.GetHeight()) {
-            // TODO: Add tower placement
-            towers_.push_back(
-                Tower(100, 10, 1, tile_x, tile_y, map_.tile_size));
+            if (active_tower_.has_value()) {
+              towers_.push_back(
+                  Tower(300, 10, 1, tile_x, tile_y, map_.tile_size));
+            }
+            active_tower_ = boost::none;
           } else if (buttons_.at("Tower1").Contains(mouse_position)) {
+            active_tower_ = Tower(300, 10, 1, mouse_position.x,
+                                  mouse_position.y, map_.tile_size);
             std::cout << "Pressed Tower1 button" << std::endl;
           } else if (buttons_.at("Wave").Contains(mouse_position)) {
             SpawnEnemies(map_.LoadWave(1));

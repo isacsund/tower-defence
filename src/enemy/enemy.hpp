@@ -23,8 +23,6 @@ class Enemy : public sf::Drawable {
       const std::vector<std::pair<int, int>>& path) const;
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
-  void SetScale(int size);
-  void SetPosition(float x, float y, int size);
 
  private:
   float max_hp_;
