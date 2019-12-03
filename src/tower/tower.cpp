@@ -2,7 +2,7 @@
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
-             const std::string& texturename, TowerTypes type)
+             float size, const std::string& texturename, TowerTypes type)
     : range_(range),
       damage_(damage),
       att_speed_(att_speed),
@@ -12,6 +12,8 @@ Tower::Tower(float range, float damage, float att_speed, int x, int y,
       texturename_(texturename),
       last_attack_(0) {
   sprite_ = sf::Sprite(GetTexture());
+  sprite_.setScale(size / (float)(*sprite_.getTexture()).getSize().x,
+                   size / (float)(*sprite_.getTexture()).getSize().y);
 }
 
 const std::pair<int, int> Tower::GetPosition() const { return {x_, y_}; }
@@ -24,3 +26,6 @@ sf::Texture& Tower::GetTexture() const {
   return texture_manager.GetTexture(texturename_);
 }
 sf::Sprite* Tower::GetSprite() { return &sprite_; }
+void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  target.draw(sprite_, states);
+}
