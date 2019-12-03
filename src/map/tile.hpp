@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-enum TileTypes { Path, Empty, EnemySpawn, PlayerBase };
+enum TileTypes { Path, Empty, Tree, EnemySpawn, PlayerBase };
 
 class Tile : public sf::Drawable {
  public:

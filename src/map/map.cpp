@@ -25,6 +25,9 @@ void Map::Load(const std::string& filename) {
           case '#':
             tiles_[i].push_back(Tile(Path));
             break;
+          case 'T':
+            tiles_[i].push_back(Tile(Tree));
+            break;
           case 'B':
             tiles_[i].push_back(Tile(PlayerBase));
             player_base_ = std::pair<int, int>(j, i);

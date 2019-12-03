@@ -9,6 +9,9 @@ Tile::Tile(TileTypes type) : type_(type) {
     case PlayerBase:
       texturename_ = "sprites/sand_tile.png";
       break;
+    case Tree:
+      texturename_ = "sprites/grass_and_tree.png";
+      break;
     case EnemySpawn:
       texturename_ = "sprites/sand_tile.png";
       break;
