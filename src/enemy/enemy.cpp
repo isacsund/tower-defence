@@ -82,6 +82,10 @@ void Enemy::SetPosition(float x, float y) {
 
 void Enemy::SetScale(float factor_x, float factor_y) {
   sprite_.setScale(factor_x, factor_y);
+  float hp_ratio = hp_ / max_hp_;
+
+  hp_bar_red_.setSize(sf::Vector2f(HP_BAR_WIDTH, HP_BAR_HEIGHT));
+  hp_bar_green_.setSize(sf::Vector2f(HP_BAR_WIDTH * hp_ratio, HP_BAR_HEIGHT));
 }
 
 sf::Texture& Enemy::GetTexture() const {
