@@ -11,6 +11,7 @@ class PlayState : public GameState {
   virtual void Draw();
   virtual void HandleInput();
   void Tick();
+  void SpawnEnemies(std::vector<Enemy> enemies);
 
   int GetTileSize() const;
   void InitGUI();
@@ -19,6 +20,7 @@ class PlayState : public GameState {
   Map map_;
   std::vector<Enemy> enemies_;
   sf::View view_;
+  sf::Clock clock_;
   sf::Sprite background_;
   sf::Font font_;
   std::map<std::string, Button> buttons_;

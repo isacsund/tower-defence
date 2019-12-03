@@ -1,6 +1,9 @@
 #include "play_state.hpp"
 #include <SFML/Graphics.hpp>
+#include <boost/range/adaptor/reversed.hpp>
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include <vector>
 #include "../configuration/configmanager.hpp"
 #include "../enemy/enemy.hpp"
@@ -26,11 +29,12 @@ void PlayState::Draw() {
   for (auto& button : buttons_) {
     this->game->window.draw(button.second);
   }
-  for (auto& enemy : enemies_) {
+  for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
       enemy.SetPosition(
           enemy.GetPosition().first * map_.tile_size - map_.tile_size / 2,
-          enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2);
+          enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2,
+          map_.tile_size);
       this->game->window.draw(enemy);
     }
   }
@@ -70,7 +74,7 @@ void PlayState::HandleInput() {
           } else if (buttons_.at("Tower1").Contains(mouse_position)) {
             std::cout << "Pressed Tower1 button" << std::endl;
           } else if (buttons_.at("Wave").Contains(mouse_position)) {
-            enemies_ = map_.LoadWave(1);
+            SpawnEnemies(map_.LoadWave(1));
           }
         }
         break;
@@ -102,6 +106,13 @@ void PlayState::Tick() {
     }
   }
   // FindEnemies();
+}
+
+void PlayState::SpawnEnemies(std::vector<Enemy> enemies) {
+  // auto cur_time = clock_.getElapsedTime().asSeconds();
+  for (size_t i = 0; i < 20; i++) {
+    enemies_.push_back(enemies[i]);
+  }
 }
 
 void PlayState::InitGUI() {

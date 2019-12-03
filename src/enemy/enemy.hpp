@@ -23,7 +23,7 @@ class Enemy : public sf::Drawable {
       const std::vector<std::pair<int, int>>& path) const;
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
-  void SetPosition(float x, float y);
+  void SetPosition(float x, float y, int size);
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
   void Draw(sf::RenderWindow& window);
 

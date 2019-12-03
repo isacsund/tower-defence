@@ -80,10 +80,9 @@ sf::Texture& Enemy::GetTexture() const {
 
 sf::Sprite* Enemy::GetSprite() { return &sprite_; }
 
-void Enemy::SetPosition(float x, float y) {
+void Enemy::SetPosition(float x, float y, int size) {
   sprite_.setPosition(x, y);
-  hp_bar_green_.setPosition(x_ * size_ - HP_BAR_WIDTH / 2,
-                            y_ * size_ - size_ / 2);
+  hp_bar_green_.setPosition(x_ * size - HP_BAR_WIDTH / 2, y_ * size - size / 2);
   hp_bar_red_.setPosition(hp_bar_green_.getPosition());
 }
 
