@@ -35,6 +35,7 @@ void PlayState::Draw() {
           enemy.GetPosition().first * map_.tile_size - map_.tile_size / 2,
           enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2,
           map_.tile_size);
+      enemy.SetScale(map_.tile_size);
       this->game->window.draw(enemy);
     }
   }
