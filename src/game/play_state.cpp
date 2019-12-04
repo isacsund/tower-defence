@@ -140,6 +140,8 @@ void PlayState::FindEnemies() {
   float closest_distance = std::numeric_limits<float>::max();
   Enemy* closest_enemy = nullptr;
   for (auto& tower : towers_) {
+    closest_enemy = nullptr;
+    closest_distance = std::numeric_limits<float>::max();
     float range = tower.second.GetRange();
     auto tower_pos = tower.second.GetPosition();
     for (auto& enemy : enemies_) {
@@ -155,6 +157,9 @@ void PlayState::FindEnemies() {
                             tower.second.GetAttSpeed())) {
       tower.second.SetLastAttack(cur_time);
       tower.second.Attack(*closest_enemy);
+      auto dist = sqrt(
+          pow(tower_pos.first + 0.5 - closest_enemy->GetPosition().first, 2) +
+          pow(tower_pos.second + 0.5 - closest_enemy->GetPosition().second, 2));
     }
   }
 }
