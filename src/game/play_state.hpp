@@ -2,8 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <boost/optional.hpp>
 #include <vector>
+#include "../enemy/enemy.hpp"
 #include "../gui/button.hpp"
 #include "../map/map.hpp"
+#include "../tower/tower.hpp"
 #include "game_state.hpp"
 
 class PlayState : public GameState {
