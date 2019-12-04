@@ -11,7 +11,7 @@
 #include "game_state.hpp"
 #include "menu_state.hpp"
 
-PlayState::PlayState(Game* game, Map map) {
+PlayState::PlayState(Game* game, Map map) : last_spawn_(0), wave_(1) {
   this->game = game;
   map_ = map;
 
@@ -22,7 +22,6 @@ PlayState::PlayState(Game* game, Map map) {
     std::cout << "Failed to load font";
   }
   InitGUI();
-  last_spawn_ = 0;
 }
 
 void PlayState::Draw() {
@@ -197,7 +196,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     active_tower_->SetActive();
     std::cout << "Pressed Tower1 button" << std::endl;
   } else if (buttons_.at("Wave").Contains(mouse_position)) {
-    AddToSpawnQueue(map_.LoadWave(3));
+    std::cout << "Spawning wave " << wave_ << std::endl;
+    AddToSpawnQueue(map_.LoadWave(wave_));
+    wave_++;
   }
 };
 

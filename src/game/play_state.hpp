@@ -33,4 +33,5 @@ class PlayState : public GameState {
   boost::optional<Tower> active_tower_;
   sf::Clock clock_;
   float last_spawn_;
+  int wave_;
 };
