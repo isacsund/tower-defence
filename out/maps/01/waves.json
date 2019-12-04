@@ -5,14 +5,8 @@
         "basic": {
           "max_hp": 100,
           "speed": 1,
-          "amount": 20,
-          "delay": 1
-        },
-        "hard": {
-          "max_hp": 100,
-          "speed": 1,
-          "amount": 20,
-          "delay": 1
+          "amount": 10,
+          "delay": 3
         }
       }
     },
@@ -21,8 +15,50 @@
         "basic": {
           "max_hp": 100,
           "speed": 1,
-          "amount": 20,
-          "delay": 1
+          "amount": 10,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 1,
+          "delay": 10
+        }
+      }
+    },
+    "3": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 15,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 2,
+          "delay": 10
+        }
+      }
+    },
+    "4": {
+      "monsters": {
+        "boss": {
+          "max_hp": 1000,
+          "speed": 1,
+          "amount": 1,
+          "delay": 3
+        }
+      }
+    },
+    "5": {
+      "monsters": {
+        "magic": {
+          "max_hp": 300,
+          "speed": 1,
+          "amount": 10,
+          "delay": 3
         }
       }
     }
