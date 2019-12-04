@@ -99,18 +99,20 @@ std::vector<Enemy> Map::LoadWave(int wave) {
     for (boost::property_tree::ptree::value_type& monsters :
          wave_manager.GetSubTree("waves." + std::to_string(wave))) {
       EnemyTypes enemy_type;
-      if (monsters.first == "basic")
-        enemy_type = Standard;
-      else if (monsters.first == "fast")
-        enemy_type = Fast;
-      else if (monsters.first == "big")
-        enemy_type = Big;
-      else if (monsters.first == "magic")
-        enemy_type = Magic;
-      else if (monsters.first == "boss")
-        enemy_type = Boss;
-
       for (boost::property_tree::ptree::value_type& monster : monsters.second) {
+        if (monster.first == "basic")
+          enemy_type = Standard;
+        else if (monster.first == "fast")
+          enemy_type = Fast;
+        else if (monster.first == "big")
+          enemy_type = Big;
+        else if (monster.first == "magic")
+          enemy_type = Magic;
+        else if (monster.first == "boss")
+          enemy_type = Boss;
+        else {
+          enemy_type = Standard;
+        }
         for (int i = 0; i < monster.second.get<int>("amount"); i++) {
           enemies.push_back(Enemy(
               monster.second.get<int>("max_hp"),
