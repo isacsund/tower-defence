@@ -17,8 +17,8 @@ class PlayState : public GameState {
   void SpawnEnemies(std::vector<Enemy> enemies);
   void FindEnemies();
   void DrawTowerAtMousePos();
-  int GetTileSize() const;
   void InitGUI();
+  int GetTileSize() const;
 
  private:
   Map map_;

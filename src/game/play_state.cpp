@@ -32,25 +32,25 @@ void PlayState::Draw() {
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
       enemy.SetPosition(
-          enemy.GetPosition().first * map_.tile_size - map_.tile_size / 2,
-          enemy.GetPosition().second * map_.tile_size - map_.tile_size / 2);
-      enemy.SetScale(map_.tile_size / (float)(enemy.GetTexture()).getSize().x,
-                     map_.tile_size / (float)(enemy.GetTexture()).getSize().y);
+          enemy.GetPosition().first * GetTileSize() - GetTileSize() / 2,
+          enemy.GetPosition().second * GetTileSize() - GetTileSize() / 2);
+      enemy.SetScale(GetTileSize() / (float)(enemy.GetTexture()).getSize().x,
+                     GetTileSize() / (float)(enemy.GetTexture()).getSize().y);
       this->game->window.draw(enemy);
     }
   }
   for (auto& tower : towers_) {
-    tower.GetSprite()->setPosition(tower.GetPosition().first * map_.tile_size,
-                                   tower.GetPosition().second * map_.tile_size);
+    tower.GetSprite()->setPosition(tower.GetPosition().first * GetTileSize(),
+                                   tower.GetPosition().second * GetTileSize());
     tower.GetSprite()->setScale(
-        map_.tile_size / (float)(tower.GetTexture()).getSize().x,
-        map_.tile_size / (float)(tower.GetTexture()).getSize().y);
+        GetTileSize() / (float)(tower.GetTexture()).getSize().x,
+        GetTileSize() / (float)(tower.GetTexture()).getSize().y);
     this->game->window.draw(tower);
   }
   if (active_tower_.has_value()) {
     active_tower_->GetSprite()->setPosition(
-        sf::Mouse::getPosition(this->game->window).x - map_.tile_size / 2,
-        sf::Mouse::getPosition(this->game->window).y - map_.tile_size / 2);
+        sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
+        sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
     this->game->window.draw(active_tower_.get());
   }
 
@@ -72,28 +72,28 @@ void PlayState::HandleInput() {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
         buttons_.at("Tower1").SetPosition(
-            sf::Vector2f((map_.tile_size) * map_.GetHeight(), 0));
+            sf::Vector2f(GetTileSize() * map_.GetWidth(), 0));
         buttons_.at("Wave").SetPosition(
-            sf::Vector2f((map_.tile_size) * map_.GetHeight(), 150));
+            sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
         break;
       }
       case sf::Event::MouseButtonPressed: {
         sf::Vector2f mouse_position =
             sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
         if (event.mouseButton.button == sf::Mouse::Left) {
-          int tile_size = map_.tile_size;
+          int tile_size = GetTileSize();
           int tile_x = mouse_position.x / tile_size;
           int tile_y = mouse_position.y / tile_size;
           if (tile_x >= 0 && tile_y >= 0 && tile_x < map_.GetWidth() &&
               tile_y < map_.GetHeight()) {
             if (active_tower_.has_value()) {
               towers_.push_back(
-                  Tower(300, 10, 1, tile_x, tile_y, map_.tile_size));
+                  Tower(300, 10, 1, tile_x, tile_y, GetTileSize()));
             }
             active_tower_ = boost::none;
           } else if (buttons_.at("Tower1").Contains(mouse_position)) {
             active_tower_ = Tower(300, 10, 1, mouse_position.x,
-                                  mouse_position.y, map_.tile_size);
+                                  mouse_position.y, GetTileSize());
             std::cout << "Pressed Tower1 button" << std::endl;
           } else if (buttons_.at("Wave").Contains(mouse_position)) {
             SpawnEnemies(map_.LoadWave(1));
@@ -170,4 +170,11 @@ void PlayState::InitGUI() {
                    Button("Next wave", font_,
                           sf::Vector2f(map_.tile_size * (map_.GetWidth()), 150),
                           "sprites/button.png"));
+}
+
+int PlayState::GetTileSize() const {
+  auto windowsize = this->game->window.getSize();
+  int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
+  int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
+  return std::min(tile_size_x, tile_size_y);
 }
