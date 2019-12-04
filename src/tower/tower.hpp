@@ -21,6 +21,11 @@ class Tower : public sf::Drawable {
   void SetLastAttack(float att_time);
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
+  void SetPosition(float x, float y);
+  void SetScale(float factor_x, float factor_y);
+  void SetActive();
+  void SetInactive();
+  bool IsActive() const;
 
  private:
   float range_;
@@ -32,5 +37,7 @@ class Tower : public sf::Drawable {
   std::string texturename_;
   float last_attack_;
   sf::Sprite sprite_;
+  sf::CircleShape radius_;
+  bool active_;
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };

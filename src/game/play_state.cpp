@@ -40,15 +40,15 @@ void PlayState::Draw() {
     }
   }
   for (auto& tower : towers_) {
-    tower.GetSprite()->setPosition(tower.GetPosition().first * GetTileSize(),
-                                   tower.GetPosition().second * GetTileSize());
-    tower.GetSprite()->setScale(
-        GetTileSize() / (float)(tower.GetTexture()).getSize().x,
-        GetTileSize() / (float)(tower.GetTexture()).getSize().y);
-    this->game->window.draw(tower);
+    tower.second.SetPosition(tower.second.GetPosition().first * GetTileSize(),
+                             tower.second.GetPosition().second * GetTileSize());
+    tower.second.SetScale(
+        GetTileSize() / (float)(tower.second.GetTexture()).getSize().x,
+        GetTileSize() / (float)(tower.second.GetTexture()).getSize().y);
+    this->game->window.draw(tower.second);
   }
   if (active_tower_.has_value()) {
-    active_tower_->GetSprite()->setPosition(
+    active_tower_->SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
         sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
     this->game->window.draw(active_tower_.get());
@@ -86,17 +86,9 @@ void PlayState::HandleInput() {
           int tile_y = mouse_position.y / tile_size;
           if (tile_x >= 0 && tile_y >= 0 && tile_x < map_.GetWidth() &&
               tile_y < map_.GetHeight()) {
-            if (active_tower_.has_value()) {
-              towers_.push_back(
-                  Tower(300, 10, 1, tile_x, tile_y, GetTileSize()));
-            }
-            active_tower_ = boost::none;
-          } else if (buttons_.at("Tower1").Contains(mouse_position)) {
-            active_tower_ = Tower(300, 10, 1, mouse_position.x,
-                                  mouse_position.y, GetTileSize());
-            std::cout << "Pressed Tower1 button" << std::endl;
-          } else if (buttons_.at("Wave").Contains(mouse_position)) {
-            SpawnEnemies(map_.LoadWave(1));
+            HandleMapClick(tile_x, tile_y);
+          } else {
+            HandleGuiClick(mouse_position);
           }
         }
         break;
@@ -142,8 +134,8 @@ void PlayState::FindEnemies() {
   float closest_distance = std::numeric_limits<float>::max();
   Enemy* closest_enemy = nullptr;
   for (auto& tower : towers_) {
-    float range = tower.GetRange();
-    auto tower_pos = tower.GetPosition();
+    float range = tower.second.GetRange();
+    auto tower_pos = tower.second.GetPosition();
     for (auto& enemy : enemies_) {
       auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
@@ -153,11 +145,42 @@ void PlayState::FindEnemies() {
         closest_distance = distance;
       }
     }
-    if ((closest_enemy) &&
-        (cur_time - tower.GetLastAttack() > tower.GetAttSpeed())) {
-      tower.SetLastAttack(cur_time);
-      tower.Attack(*closest_enemy);
+    if ((closest_enemy) && (cur_time - tower.second.GetLastAttack() >
+                            tower.second.GetAttSpeed())) {
+      tower.second.SetLastAttack(cur_time);
+      tower.second.Attack(*closest_enemy);
     }
+  }
+}
+
+void PlayState::HandleMapClick(int x, int y) {
+  if (active_tower_.has_value()) {
+    auto tower = Tower(300, 10, 1, x, y, GetTileSize());
+    towers_.insert({{x, y}, tower});
+    tower.SetActive();
+    active_tower_ = boost::none;
+  } else if (towers_.count({x, y})) {
+    for (auto& tower : towers_) {
+      tower.second.SetInactive();
+    }
+    towers_.at({x, y}).SetActive();
+  } else {
+    for (auto& tower : towers_) {
+      tower.second.SetInactive();
+    }
+  }
+}
+void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
+  if (buttons_.at("Tower1").Contains(mouse_position)) {
+    for (auto& tower : towers_) {
+      tower.second.SetInactive();
+    }
+    active_tower_ =
+        Tower(300, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
+    active_tower_->SetActive();
+    std::cout << "Pressed Tower1 button" << std::endl;
+  } else if (buttons_.at("Wave").Contains(mouse_position)) {
+    SpawnEnemies(map_.LoadWave(1));
   }
 }
 

@@ -16,14 +16,15 @@ class PlayState : public GameState {
   void Tick();
   void SpawnEnemies(std::vector<Enemy> enemies);
   void FindEnemies();
-  void DrawTowerAtMousePos();
+  void HandleMapClick(int x, int y);
+  void HandleGuiClick(sf::Vector2f mouse_position);
   void InitGUI();
   int GetTileSize() const;
 
  private:
   Map map_;
   std::vector<Enemy> enemies_;
-  std::vector<Tower> towers_;
+  std::map<std::pair<int, int>, Tower> towers_;
   sf::View view_;
   sf::Sprite background_;
   sf::Font font_;

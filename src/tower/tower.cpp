@@ -1,4 +1,5 @@
 #include "tower.hpp"
+#include <iostream>
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
@@ -8,12 +9,15 @@ Tower::Tower(float range, float damage, float att_speed, int x, int y,
       att_speed_(att_speed),
       x_(x),
       y_(y),
+      size_(size),
       type_(type),
       texturename_(texturename),
       last_attack_(0) {
   sprite_ = sf::Sprite(GetTexture());
   sprite_.setScale(size / (float)(*sprite_.getTexture()).getSize().x,
                    size / (float)(*sprite_.getTexture()).getSize().y);
+  radius_.setRadius(range);
+  radius_.setFillColor(sf::Color(255, 255, 255, 100));
 }
 
 const std::pair<int, int> Tower::GetPosition() const { return {x_, y_}; }
@@ -26,6 +30,21 @@ sf::Texture& Tower::GetTexture() const {
   return texture_manager.GetTexture(texturename_);
 }
 sf::Sprite* Tower::GetSprite() { return &sprite_; }
+
+void Tower::SetPosition(float x, float y) {
+  sprite_.setPosition(x, y);
+  radius_.setPosition(x - range_ + size_ / 2, y - range_ + size_ / 2);
+}
+
+void Tower::SetScale(float factor_x, float factor_y) {
+  sprite_.setScale(factor_x, factor_y);
+}
+
 void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  if (active_) target.draw(radius_);
   target.draw(sprite_, states);
 }
+
+void Tower::SetActive() { active_ = true; }
+void Tower::SetInactive() { active_ = false; }
+bool Tower::IsActive() const { return active_; }
