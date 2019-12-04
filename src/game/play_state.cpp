@@ -212,6 +212,6 @@ void PlayState::InitGUI() {
 int PlayState::GetTileSize() const {
   auto windowsize = this->game->window.getSize();
   int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
-  int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
+  int tile_size_y = (windowsize.y) / map_.GetHeight();
   return std::min(tile_size_x, tile_size_y);
 }
