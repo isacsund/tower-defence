@@ -154,7 +154,7 @@ void PlayState::FindEnemies() {
 }
 
 void PlayState::HandleMapClick(int x, int y) {
-  if (active_tower_.has_value()) {
+  if (active_tower_.has_value() && map_(x, y).GetType() == Empty) {
     auto tower = Tower(300, 10, 1, x, y, GetTileSize());
     towers_.insert({{x, y}, tower});
     tower.SetActive();
