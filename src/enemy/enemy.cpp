@@ -11,7 +11,6 @@ Enemy::Enemy(float max_hp, float speed, float x, float y, float size,
       speed_(speed),
       x_(x),
       y_(y),
-      size_(size),
       texture_name_(texture_name),
       type_(type),
       target_tile_({-1, -1}) {
@@ -76,16 +75,22 @@ const std::pair<int, int> Enemy::FindNextTile(
 
 void Enemy::SetPosition(float x, float y) {
   sprite_.setPosition(x, y);
-  hp_bar_green_.setPosition(x + HP_BAR_WIDTH / 2, y);
-  hp_bar_red_.setPosition(x + HP_BAR_WIDTH / 2, y);
+  auto hp_bar_offset = hp_bar_red_.getSize().x;
+  hp_bar_green_.setPosition(x + hp_bar_offset / 2, y);
+  hp_bar_red_.setPosition(x + hp_bar_offset / 2, y);
 }
 
 void Enemy::SetScale(float factor_x, float factor_y) {
   sprite_.setScale(factor_x, factor_y);
   float hp_ratio = hp_ / max_hp_;
 
-  hp_bar_red_.setSize(sf::Vector2f(HP_BAR_WIDTH, HP_BAR_HEIGHT));
-  hp_bar_green_.setSize(sf::Vector2f(HP_BAR_WIDTH * hp_ratio, HP_BAR_HEIGHT));
+  auto sprite_size = sprite_.getLocalBounds();
+  auto sprite_width = sprite_size.width * factor_x;
+
+  hp_bar_red_.setSize(sf::Vector2f(sprite_width / 2, sprite_width / 10));
+
+  hp_bar_green_.setSize(
+      sf::Vector2f(sprite_width / 2 * hp_ratio, sprite_width / 10));
 }
 
 sf::Texture& Enemy::GetTexture() const {
