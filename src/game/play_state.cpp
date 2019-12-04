@@ -125,7 +125,6 @@ void PlayState::Tick() {
   if (cur_time - last_spawn_ > 1 && spawn_queue_.size() > 0) {
     enemies_.push_back(spawn_queue_.front());
     spawn_queue_.pop_front();
-    std::cout << spawn_queue_.size() << std::endl;
     last_spawn_ = cur_time;
   }
 }
