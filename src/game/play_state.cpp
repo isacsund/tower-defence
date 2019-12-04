@@ -138,6 +138,7 @@ void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
 void PlayState::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
   float closest_distance = std::numeric_limits<float>::max();
+  auto player_base = map_.GetPlayerBase();
   Enemy* closest_enemy = nullptr;
   for (auto& tower : towers_) {
     closest_enemy = nullptr;
@@ -148,18 +149,20 @@ void PlayState::FindEnemies() {
       auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
                             pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
-      if (distance <= range && distance < closest_distance && enemy.IsAlive()) {
+      float base_distance =
+          sqrt(pow(player_base.first + 0.5 - enemy_pos.first, 2) +
+               pow(player_base.second + 0.5 - enemy_pos.second, 2));
+
+      if (distance <= range && base_distance < closest_distance &&
+          enemy.IsAlive()) {
         closest_enemy = &enemy;
-        closest_distance = distance;
+        closest_distance = base_distance;
       }
     }
     if ((closest_enemy) && (cur_time - tower.second.GetLastAttack() >
                             tower.second.GetAttSpeed())) {
       tower.second.SetLastAttack(cur_time);
       tower.second.Attack(*closest_enemy);
-      auto dist = sqrt(
-          pow(tower_pos.first + 0.5 - closest_enemy->GetPosition().first, 2) +
-          pow(tower_pos.second + 0.5 - closest_enemy->GetPosition().second, 2));
     }
   }
 }
