@@ -161,7 +161,7 @@ void PlayState::FindEnemies() {
 
 void PlayState::HandleMapClick(int x, int y) {
   if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty) {
-    auto tower = Tower(300, 10, 1, x, y, GetTileSize());
+    auto tower = Tower(5, 10, 1, x, y, GetTileSize());
     towers_.insert({{x, y}, tower});
     tower.SetActive();
     active_tower_ = boost::none;
@@ -182,7 +182,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
       tower.second.SetInactive();
     }
     active_tower_ =
-        Tower(300, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
+        Tower(5, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
     active_tower_->SetActive();
     std::cout << "Pressed Tower1 button" << std::endl;
   } else if (buttons_.at("Wave").Contains(mouse_position)) {
