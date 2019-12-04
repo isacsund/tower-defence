@@ -5,15 +5,31 @@
 #include "../game/texturemanager.hpp"
 
 Enemy::Enemy(float max_hp, float speed, float x, float y, float size,
-             const std::string& texture_name, EnemyTypes type)
+             EnemyTypes type)
     : max_hp_(max_hp),
       hp_(max_hp),
       speed_(speed),
       x_(x),
       y_(y),
-      texture_name_(texture_name),
       type_(type),
       target_tile_({-1, -1}) {
+    switch (type) {
+    case Fast:
+      texture_name_ = "sprites/enemy_2.png";
+      break;
+    case Big:
+      texture_name_ = "sprites/enemy_3.png";
+      break;
+    case Magic:
+      texture_name_ = "sprites/enemy_4.png";
+      break;
+    case Boss:
+      texture_name_ = "sprites/enemy_5.png";
+      break;
+    default:
+      texture_name_ = "sprites/enemy_1.png";
+  }
+
   sprite_ = sf::Sprite(GetTexture());
   sprite_.setScale(size / (float)(*sprite_.getTexture()).getSize().x,
                    size / (float)(*sprite_.getTexture()).getSize().y);
