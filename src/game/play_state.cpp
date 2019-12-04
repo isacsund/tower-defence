@@ -52,6 +52,9 @@ void PlayState::Draw() {
     active_tower_->SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
         sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
+    active_tower_->SetScale(
+        GetTileSize() / (float)(active_tower_->GetTexture()).getSize().x,
+        GetTileSize() / (float)(active_tower_->GetTexture()).getSize().y);
     this->game->window.draw(active_tower_.get());
   }
 
@@ -194,7 +197,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     active_tower_->SetActive();
     std::cout << "Pressed Tower1 button" << std::endl;
   } else if (buttons_.at("Wave").Contains(mouse_position)) {
-    AddToSpawnQueue(map_.LoadWave(1));
+    AddToSpawnQueue(map_.LoadWave(3));
   }
 };
 
