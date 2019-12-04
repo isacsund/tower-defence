@@ -22,6 +22,7 @@ PlayState::PlayState(Game* game, Map map) {
     std::cout << "Failed to load font";
   }
   InitGUI();
+  last_spawn_ = 0;
 }
 
 void PlayState::Draw() {
@@ -47,7 +48,7 @@ void PlayState::Draw() {
         GetTileSize() / (float)(tower.second.GetTexture()).getSize().y);
     this->game->window.draw(tower.second);
   }
-  if (active_tower_.has_value()) {
+  if (active_tower_.get_ptr() != 0) {
     active_tower_->SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
         sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
@@ -120,12 +121,18 @@ void PlayState::Tick() {
     }
   }
   FindEnemies();
+  auto cur_time = clock_.getElapsedTime().asSeconds();
+  if (cur_time - last_spawn_ > 1 && spawn_queue_.size() > 0) {
+    enemies_.push_back(spawn_queue_.front());
+    spawn_queue_.pop_front();
+    std::cout << spawn_queue_.size() << std::endl;
+    last_spawn_ = cur_time;
+  }
 }
 
-void PlayState::SpawnEnemies(std::vector<Enemy> enemies) {
-  // auto cur_time = clock_.getElapsedTime().asSeconds();
-  for (size_t i = 0; i < 1; i++) {
-    enemies_.push_back(enemies[i]);
+void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
+  for (auto& enemy : enemies) {
+    spawn_queue_.push_back(enemy);
   }
 }
 
@@ -154,7 +161,7 @@ void PlayState::FindEnemies() {
 }
 
 void PlayState::HandleMapClick(int x, int y) {
-  if (active_tower_.has_value() && map_(x, y).GetType() == Empty) {
+  if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty) {
     auto tower = Tower(300, 10, 1, x, y, GetTileSize());
     towers_.insert({{x, y}, tower});
     tower.SetActive();
@@ -180,9 +187,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     active_tower_->SetActive();
     std::cout << "Pressed Tower1 button" << std::endl;
   } else if (buttons_.at("Wave").Contains(mouse_position)) {
-    SpawnEnemies(map_.LoadWave(1));
+    AddToSpawnQueue(map_.LoadWave(1));
   }
-}
+};
 
 void PlayState::InitGUI() {
   buttons_.emplace("Tower1",

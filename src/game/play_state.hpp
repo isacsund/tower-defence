@@ -14,7 +14,7 @@ class PlayState : public GameState {
   virtual void Draw();
   virtual void HandleInput();
   void Tick();
-  void SpawnEnemies(std::vector<Enemy> enemies);
+  void AddToSpawnQueue(std::vector<Enemy> enemies);
   void FindEnemies();
   void HandleMapClick(int x, int y);
   void HandleGuiClick(sf::Vector2f mouse_position);
@@ -24,6 +24,7 @@ class PlayState : public GameState {
  private:
   Map map_;
   std::vector<Enemy> enemies_;
+  std::deque<Enemy> spawn_queue_;
   std::map<std::pair<int, int>, Tower> towers_;
   sf::View view_;
   sf::Sprite background_;
@@ -31,4 +32,5 @@ class PlayState : public GameState {
   std::map<std::string, Button> buttons_;
   boost::optional<Tower> active_tower_;
   sf::Clock clock_;
+  float last_spawn_;
 };
