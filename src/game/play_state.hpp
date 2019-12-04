@@ -4,6 +4,7 @@
 #include <vector>
 #include "../enemy/enemy.hpp"
 #include "../gui/button.hpp"
+#include "../gui/gui.hpp"
 #include "../map/map.hpp"
 #include "../tower/tower.hpp"
 #include "game_state.hpp"
@@ -29,6 +30,7 @@ class PlayState : public GameState {
   sf::Sprite background_;
   sf::Font font_;
   std::map<std::string, Button> buttons_;
+  Gui sidegui_;
   boost::optional<Tower> active_tower_;
   sf::Clock clock_;
 };

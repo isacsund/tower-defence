@@ -21,16 +21,14 @@ MenuState::MenuState(Game* game) {
     std::cout << "Failed to load font";
   }
 
-  buttons_.emplace("Play",
-                   Button("Test", font_,
-                          sf::Vector2f(window_size.x / 2, window_size.y / 2)));
+  menu_.Add("Play", GuiEntry(sf::Vector2f(window_size.x / 2, window_size.y / 2),
+                             std::string("Play"),
+                             std::string("sprites/button.png"), font_));
 }
 
 void MenuState::Draw() {
   this->game->window.draw(background_);
-  for (auto& button : buttons_) {
-    this->game->window.draw(button.second);
-  }
+  this->game->window.draw(menu_);
 }
 
 void MenuState::HandleInput() {
@@ -54,7 +52,7 @@ void MenuState::HandleInput() {
                                  float(background_.getTexture()->getSize().x),
                              float(event.size.height) /
                                  float(background_.getTexture()->getSize().y));
-        buttons_.at("Play").SetPosition(
+        menu_.Get("Play").SetPosition(
             sf::Vector2f(event.size.width / 2, event.size.height / 2));
 
         break;
@@ -63,7 +61,7 @@ void MenuState::HandleInput() {
         sf::Vector2f mouse_position =
             sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
         if (event.mouseButton.button == sf::Mouse::Left) {
-          if (buttons_.at("Play").Contains(mouse_position)) {
+          if (menu_.Get("Play").Contains(mouse_position)) {
             LoadGame();
           }
         }

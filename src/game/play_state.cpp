@@ -26,9 +26,7 @@ PlayState::PlayState(Game* game, Map map) {
 
 void PlayState::Draw() {
   map_.Draw(this->game->window);
-  for (auto& button : buttons_) {
-    this->game->window.draw(button.second);
-  }
+  this->game->window.draw(sidegui_);
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
       enemy.SetPosition(
@@ -71,10 +69,10 @@ void PlayState::HandleInput() {
       case sf::Event::Resized: {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
-        buttons_.at("Tower1").SetPosition(
+        sidegui_.Get("Tower1").SetPosition(
             sf::Vector2f(GetTileSize() * map_.GetWidth(), 0));
-        buttons_.at("Wave").SetPosition(
-            sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
+        sidegui_.Get("NextWave")
+            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
         break;
       }
       case sf::Event::MouseButtonPressed: {
@@ -171,28 +169,28 @@ void PlayState::HandleMapClick(int x, int y) {
   }
 }
 void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
-  if (buttons_.at("Tower1").Contains(mouse_position)) {
+  if (sidegui_.Get("Tower1").Contains(mouse_position)) {
     for (auto& tower : towers_) {
       tower.second.SetInactive();
     }
     active_tower_ =
         Tower(300, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
     active_tower_->SetActive();
-    std::cout << "Pressed Tower1 button" << std::endl;
-  } else if (buttons_.at("Wave").Contains(mouse_position)) {
+  } else if (sidegui_.Get("NextWave").Contains(mouse_position)) {
     SpawnEnemies(map_.LoadWave(1));
   }
 }
 
 void PlayState::InitGUI() {
-  buttons_.emplace("Tower1",
-                   Button("Tower1", font_,
-                          sf::Vector2f(map_.tile_size * (map_.GetWidth()), 0),
-                          "sprites/basic_tower.png"));
-  buttons_.emplace("Wave",
-                   Button("Next wave", font_,
-                          sf::Vector2f(map_.tile_size * (map_.GetWidth()), 150),
-                          "sprites/button.png"));
+  sidegui_.Add(
+      "Tower1",
+      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 0), boost::none,
+               std::string("sprites/basic_tower.png"), boost::none));
+
+  sidegui_.Add("NextWave",
+               GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150),
+                        std::string("Next wave"),
+                        std::string("sprites/button.png"), font_));
 }
 
 int PlayState::GetTileSize() const {

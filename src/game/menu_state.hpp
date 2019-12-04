@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <map>
-#include "../gui/button.hpp"
+#include "../gui/gui.hpp"
 #include "game_state.hpp"
 
 class MenuState : public GameState {
@@ -15,5 +15,5 @@ class MenuState : public GameState {
   sf::View view_;
   sf::Sprite background_;
   sf::Font font_;
-  std::map<std::string, Button> buttons_;
+  Gui menu_;
 };
