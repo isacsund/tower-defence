@@ -31,7 +31,7 @@ class PlayState : public GameState {
   sf::Sprite background_;
   sf::Font font_;
   std::map<std::string, Button> buttons_;
-  Gui sidegui_;
+  std::map<std::string, Gui> gui_;
   boost::optional<Tower> active_tower_;
   sf::Clock clock_;
   float last_spawn_;

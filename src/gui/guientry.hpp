@@ -7,6 +7,7 @@ class GuiEntry : public sf::Drawable {
            boost::optional<std::string> texture_name,
            boost::optional<sf::Font&> font);
   void SetPosition(sf::Vector2f position);
+  void SetTitle(const std::string& title);
   bool Contains(sf::Vector2f mouse_position);
 
  private:
