@@ -21,9 +21,10 @@ MenuState::MenuState(Game* game) {
     std::cout << "Failed to load font";
   }
 
-  menu_.Add("Play", GuiEntry(sf::Vector2f(window_size.x / 2, window_size.y / 2),
-                             std::string("Play"),
-                             std::string("sprites/button.png"), font_));
+  menu_.Add("Play",
+            GuiEntry(sf::Vector2f(window_size.x / 2, window_size.y / 2),
+                     std::string("Play"),
+                     texture_manager.GetTexture("sprites/button.png"), font_));
 }
 
 void MenuState::Draw() {

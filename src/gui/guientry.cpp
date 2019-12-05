@@ -2,7 +2,7 @@
 #include "../game/texturemanager.hpp"
 
 GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
-                   boost::optional<std::string> texture_name,
+                   boost::optional<sf::Texture&> texture,
                    boost::optional<sf::Font&> font)
     : position_(position) {
   if (title.get_ptr() != 0) {
@@ -13,9 +13,9 @@ GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
     title_->setStyle(sf::Text::Regular);
     title_->setFillColor(sf::Color::White);
   }
-  if (texture_name.get_ptr() != 0) {
+  if (texture.get_ptr() != 0) {
     sprite_ = sf::Sprite();
-    sprite_->setTexture(texture_manager.GetTexture(texture_name.get()));
+    sprite_->setTexture(texture.get());
   }
   SetPosition(position_);
 }

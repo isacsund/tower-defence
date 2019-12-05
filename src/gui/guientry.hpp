@@ -4,7 +4,7 @@
 class GuiEntry : public sf::Drawable {
  public:
   GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
-           boost::optional<std::string> texture_name,
+           boost::optional<sf::Texture&> texture,
            boost::optional<sf::Font&> font);
   void SetPosition(sf::Vector2f position);
   void SetTitle(const std::string& title);

@@ -10,6 +10,7 @@
 #include "../enemy/enemy.hpp"
 #include "game_state.hpp"
 #include "menu_state.hpp"
+#include "texturemanager.hpp"
 
 PlayState::PlayState(Game* game, Map map)
     : last_spawn_(0), wave_(1), player_(Player("Pelle")) {
@@ -249,10 +250,12 @@ void PlayState::InitGUI() {
                            "\nMoney: " + std::to_string(player_.GetMoney()) +
                            "\nLives: " + std::to_string(player_.GetLives()),
                        boost::none, font_));
-  sidegui.Add("nextwave",
-              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 350),
-                       std::string("Next wave"),
-                       std::string("sprites/button.png"), font_));
+
+  sidegui.Add(
+      "nextwave",
+      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 250),
+               std::string("Next wave"),
+               texture_manager.GetTexture("sprites/button.png"), font_));
 
   gui_.insert({"sidegui", sidegui});
 }
