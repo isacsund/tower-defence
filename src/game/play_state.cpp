@@ -87,7 +87,7 @@ void PlayState::HandleInput() {
             sf::Vector2f(GetTileSize() * map_.GetWidth(), 250));
         gui_.at("sidegui")
             .Get("nextwave")
-            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 350));
+            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 400));
 
         break;
       }
@@ -273,7 +273,7 @@ void PlayState::InitGUI() {
 
   sidegui.Add(
       "nextwave",
-      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 250),
+      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 400),
                std::string("Next wave"),
                texture_manager.GetTexture("sprites/button.png"), font_));
 

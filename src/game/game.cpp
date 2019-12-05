@@ -10,10 +10,10 @@ Game::Game() {
     std::cout << "Failed to parse configuration file." << std::endl;
   }
 
-  if (!music.openFromFile("audio/medieval_music.ogg"))
+  if (!music.openFromFile("audio/rs_music.ogg"))
     std::cout << "Could not load music" << std::endl;
   music.setLoop(true);
-  music.setVolume(5.f);
+  music.setVolume(40.f);
 }
 
 Game::~Game() {
