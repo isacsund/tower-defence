@@ -21,6 +21,7 @@ class PlayState : public GameState {
   void HandleMapClick(int x, int y);
   void HandleGuiClick(sf::Vector2f mouse_position);
   void InitGUI();
+  void InitTowerGUI();
   int GetTileSize() const;
 
  private:
@@ -34,6 +35,7 @@ class PlayState : public GameState {
   std::map<std::string, Button> buttons_;
   std::map<std::string, Gui> gui_;
   boost::optional<Tower> active_tower_;
+  Tower* selected_tower_;
   sf::Clock clock_;
   float last_spawn_;
   int wave_;

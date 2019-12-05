@@ -13,7 +13,10 @@
 #include "texturemanager.hpp"
 
 PlayState::PlayState(Game* game, Map map)
-    : last_spawn_(0), wave_(1), player_(Player("Pelle")) {
+    : selected_tower_(nullptr),
+      last_spawn_(0),
+      wave_(1),
+      player_(Player("Pelle")) {
   this->game = game;
   map_ = map;
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
@@ -27,9 +30,8 @@ PlayState::PlayState(Game* game, Map map)
 
 void PlayState::Draw() {
   map_.Draw(this->game->window);
-  for (auto& gui : gui_) {
-    this->game->window.draw(gui.second);
-  }
+  this->game->window.draw(gui_.at("sidegui"));
+  if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
 
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
@@ -200,20 +202,31 @@ void PlayState::FindEnemies() {
 }
 
 void PlayState::HandleMapClick(int x, int y) {
-  if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty) {
-    auto tower = Tower(5, 10, 1, x, y, GetTileSize());
-    towers_.insert({{x, y}, tower});
-    tower.SetActive();
+  // Click on a buildable tile with an active tower
+  if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty &&
+      !towers_.count({x, y})) {
+    auto tower = towers_.insert({{x, y}, Tower(5, 10, 1, x, y, GetTileSize())});
+    selected_tower_ = &tower.first->second;
+    selected_tower_->SetActive();
     active_tower_ = boost::none;
-  } else if (towers_.count({x, y})) {
-    for (auto& tower : towers_) {
-      tower.second.SetInactive();
+    InitTowerGUI();
+  }
+  // Click on a tower
+  else if (towers_.count({x, y}) && active_tower_.get_ptr() == 0) {
+    if (selected_tower_ != nullptr) {
+      selected_tower_->SetInactive();
     }
-    towers_.at({x, y}).SetActive();
-  } else {
-    for (auto& tower : towers_) {
-      tower.second.SetInactive();
+    auto tower = towers_.find({x, y});
+    selected_tower_ = &tower->second;
+    selected_tower_->SetActive();
+    InitTowerGUI();
+  }
+  // Click on a tile without any towers
+  else {
+    if (selected_tower_ != nullptr) {
+      selected_tower_->SetInactive();
     }
+    selected_tower_ = nullptr;
   }
 }
 void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
@@ -261,9 +274,31 @@ void PlayState::InitGUI() {
   gui_.insert({"sidegui", sidegui});
 }
 
+void PlayState::InitTowerGUI() {
+  Gui towergui = Gui();
+
+  towergui.Add(
+      "tower",
+      GuiEntry(sf::Vector2f(0, GetTileSize() * map_.GetHeight()), boost::none,
+               selected_tower_->GetTexture(), boost::none));
+
+  towergui.Add(
+      "tower_stats",
+      GuiEntry(
+          sf::Vector2f(selected_tower_->GetSprite()->getLocalBounds().width,
+                       GetTileSize() * map_.GetHeight()),
+          "Range: " + std::to_string(selected_tower_->GetRange()) +
+              "\nDamage: " + std::to_string(selected_tower_->GetDamage()) +
+              "\nAttack speed: " +
+              std::to_string(selected_tower_->GetAttSpeed()),
+          boost::none, font_));
+
+  gui_["towergui"] = towergui;
+}
+
 int PlayState::GetTileSize() const {
   auto windowsize = this->game->window.getSize();
   int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
-  int tile_size_y = (windowsize.y) / map_.GetHeight();
+  int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
   return std::min(tile_size_x, tile_size_y);
 }
