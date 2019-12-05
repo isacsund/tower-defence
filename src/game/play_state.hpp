@@ -23,6 +23,7 @@ class PlayState : public GameState {
   void InitGUI();
   void InitTowerGUI();
   int GetTileSize() const;
+  void UpdatePlayerStats();
 
  private:
   Map map_;

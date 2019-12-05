@@ -3,13 +3,15 @@
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
-             float size, const std::string& texturename, TowerTypes type)
+             float size, int price, const std::string& texturename,
+             TowerTypes type)
     : range_(range),
       damage_(damage),
       att_speed_(att_speed),
       x_(x),
       y_(y),
       size_(size),
+      price_(price),
       type_(type),
       texturename_(texturename),
       last_attack_(0) {
@@ -56,3 +58,4 @@ void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 void Tower::SetActive() { active_ = true; }
 void Tower::SetInactive() { active_ = false; }
 bool Tower::IsActive() const { return active_; }
+int Tower::GetPrice() const { return price_; }

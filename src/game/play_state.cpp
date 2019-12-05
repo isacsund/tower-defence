@@ -165,10 +165,7 @@ void PlayState::Tick() {
         it->SetHp(0);
         if (player_.GetLives() > 0) {
           player_.RemoveLives(1);
-          gui_.at("sidegui").Get("player").SetTitle(
-              "Player: " + player_.GetName() +
-              "\nMoney: " + std::to_string(player_.GetMoney()) +
-              "\nLives: " + std::to_string(player_.GetLives()));
+          UpdatePlayerStats();
         }
       }
     }
@@ -224,7 +221,8 @@ void PlayState::HandleMapClick(int x, int y) {
   // Click on a buildable tile with an active tower
   if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty &&
       !towers_.count({x, y})) {
-    auto tower = towers_.insert({{x, y}, Tower(5, 10, 1, x, y, GetTileSize())});
+    auto tower =
+        towers_.insert({{x, y}, Tower(5, 10, 1, x, y, GetTileSize(), 250)});
     selected_tower_ = &tower.first->second;
     selected_tower_->SetActive();
     active_tower_ = boost::none;
@@ -251,14 +249,19 @@ void PlayState::HandleMapClick(int x, int y) {
 }
 void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
   if (gui_.at("sidegui").Get("tower1").Contains(mouse_position)) {
-    for (auto& tower : towers_) {
-      tower.second.SetInactive();
+    if (player_.GetMoney() >= 250) {
+      player_.AddMoney(-250);
+      UpdatePlayerStats();
+      for (auto& tower : towers_) {
+        tower.second.SetInactive();
+      }
+      active_tower_ = Tower(5, 10, 1, mouse_position.x, mouse_position.y,
+                            GetTileSize(), 250);
+      active_tower_->SetActive();
+      gui_.at("sidegui").Get("cancelbuy").Show();
+      std::cout << "Pressed Tower1 button" << std::endl;
     }
-    active_tower_ =
-        Tower(5, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
-    active_tower_->SetActive();
-    gui_.at("sidegui").Get("cancelbuy").Show();
-    std::cout << "Pressed Tower1 button" << std::endl;
+
   } else if (gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));
@@ -266,9 +269,13 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
                                             std::to_string(wave_ - 1));
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position)) {
+    player_.AddMoney(250);
+    UpdatePlayerStats();
     active_tower_ = boost::none;
     gui_.at("sidegui").Get("cancelbuy").Hide();
   } else if (gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
+    player_.AddMoney(selected_tower_->GetPrice() / 2);
+    UpdatePlayerStats();
     towers_.erase(selected_tower_->GetPosition());
     selected_tower_ = nullptr;
   }
@@ -356,4 +363,11 @@ int PlayState::GetTileSize() const {
   int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
   int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
   return std::min(tile_size_x, tile_size_y);
+}
+
+void PlayState::UpdatePlayerStats() {
+  gui_.at("sidegui").Get("player").SetTitle(
+      "Player: " + player_.GetName() +
+      "\nMoney: " + std::to_string(player_.GetMoney()) +
+      "\nLives: " + std::to_string(player_.GetLives()));
 }
