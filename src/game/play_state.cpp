@@ -1,6 +1,7 @@
 #include "play_state.hpp"
 #include <math.h>
 #include <SFML/Graphics.hpp>
+#include <boost/format.hpp>
 #include <boost/range/adaptor/reversed.hpp>
 #include <chrono>
 #include <iostream>
@@ -287,10 +288,13 @@ void PlayState::InitTowerGUI() {
       GuiEntry(
           sf::Vector2f(selected_tower_->GetSprite()->getLocalBounds().width,
                        GetTileSize() * map_.GetHeight()),
-          "Range: " + std::to_string(selected_tower_->GetRange()) +
-              "\nDamage: " + std::to_string(selected_tower_->GetDamage()) +
+          "Range: " +
+              boost::str(boost::format("%.1f") % selected_tower_->GetRange()) +
+              "\nDamage: " +
+              boost::str(boost::format("%.1f") % selected_tower_->GetDamage()) +
               "\nAttack speed: " +
-              std::to_string(selected_tower_->GetAttSpeed()),
+              boost::str(boost::format("%.1f") %
+                         selected_tower_->GetAttSpeed()),
           boost::none, font_));
 
   gui_["towergui"] = towergui;
