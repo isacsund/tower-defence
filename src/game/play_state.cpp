@@ -280,7 +280,8 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     UpdatePlayerStats();
     active_tower_ = boost::none;
     gui_.at("sidegui").Get("cancelbuy").Hide();
-  } else if (gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
+  } else if (gui_.find("towergui") != gui_.end() &&
+             gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
     player_.AddMoney(selected_tower_->GetPrice() / 2);
     UpdatePlayerStats();
     towers_.erase(selected_tower_->GetPosition());
