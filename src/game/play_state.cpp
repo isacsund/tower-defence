@@ -253,6 +253,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position)) {
     active_tower_ = boost::none;
     gui_.at("sidegui").Get("cancelbuy").Hide();
+  } else if (gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
+    towers_.erase(selected_tower_->GetPosition());
+    selected_tower_ = nullptr;
   }
 }
 
@@ -310,6 +313,11 @@ void PlayState::InitTowerGUI() {
               boost::str(boost::format("%.1f") %
                          selected_tower_->GetAttSpeed()),
           boost::none, font_));
+  towergui.Add(
+      "sell_tower",
+      GuiEntry(sf::Vector2f(400, GetTileSize() * map_.GetHeight()),
+               std::string("Sell"),
+               texture_manager.GetTexture("sprites/button.png"), font_));
 
   gui_["towergui"] = towergui;
 }
