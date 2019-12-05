@@ -30,11 +30,7 @@ void GuiEntry::SetPosition(sf::Vector2f position) {
           position_.x + button_size.width / 2 - text_size.width / 2,
           position_.y + button_size.height / 2 - text_size.height));
     } else {
-      title_->setPosition(
-          sf::Vector2f(position_.x + title_->getLocalBounds().width / 2 -
-                           text_size.width / 2,
-                       position_.y + title_->getLocalBounds().height / 2 -
-                           text_size.height));
+      title_->setPosition(sf::Vector2f(position_.x, position_.y));
     }
   }
   if (sprite_.get_ptr() != 0) {
