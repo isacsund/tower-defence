@@ -11,7 +11,7 @@
 #include "game_state.hpp"
 #include "menu_state.hpp"
 
-PlayState::PlayState(Game* game, Map map) {
+PlayState::PlayState(Game* game, Map map) : last_spawn_(0), wave_(1) {
   this->game = game;
   map_ = map;
 
@@ -45,10 +45,13 @@ void PlayState::Draw() {
         GetTileSize() / (float)(tower.second.GetTexture()).getSize().y);
     this->game->window.draw(tower.second);
   }
-  if (active_tower_.has_value()) {
+  if (active_tower_.get_ptr() != 0) {
     active_tower_->SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
         sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
+    active_tower_->SetScale(
+        GetTileSize() / (float)(active_tower_->GetTexture()).getSize().x,
+        GetTileSize() / (float)(active_tower_->GetTexture()).getSize().y);
     this->game->window.draw(active_tower_.get());
   }
 
@@ -118,29 +121,42 @@ void PlayState::Tick() {
     }
   }
   FindEnemies();
+  auto cur_time = clock_.getElapsedTime().asSeconds();
+  if (cur_time - last_spawn_ > 1 && spawn_queue_.size() > 0) {
+    enemies_.push_back(spawn_queue_.front());
+    spawn_queue_.pop_front();
+    last_spawn_ = cur_time;
+  }
 }
 
-void PlayState::SpawnEnemies(std::vector<Enemy> enemies) {
-  // auto cur_time = clock_.getElapsedTime().asSeconds();
-  for (size_t i = 0; i < 1; i++) {
-    enemies_.push_back(enemies[i]);
+void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
+  for (auto& enemy : enemies) {
+    spawn_queue_.push_back(enemy);
   }
 }
 
 void PlayState::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
   float closest_distance = std::numeric_limits<float>::max();
+  auto player_base = map_.GetPlayerBase();
   Enemy* closest_enemy = nullptr;
   for (auto& tower : towers_) {
+    closest_enemy = nullptr;
+    closest_distance = std::numeric_limits<float>::max();
     float range = tower.second.GetRange();
     auto tower_pos = tower.second.GetPosition();
     for (auto& enemy : enemies_) {
       auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
                             pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
-      if (distance <= range && distance < closest_distance && enemy.IsAlive()) {
+      float base_distance =
+          sqrt(pow(player_base.first + 0.5 - enemy_pos.first, 2) +
+               pow(player_base.second + 0.5 - enemy_pos.second, 2));
+
+      if (distance <= range && base_distance < closest_distance &&
+          enemy.IsAlive()) {
         closest_enemy = &enemy;
-        closest_distance = distance;
+        closest_distance = base_distance;
       }
     }
     if ((closest_enemy) && (cur_time - tower.second.GetLastAttack() >
@@ -152,8 +168,8 @@ void PlayState::FindEnemies() {
 }
 
 void PlayState::HandleMapClick(int x, int y) {
-  if (active_tower_.has_value() && map_(x, y).GetType() == Empty) {
-    auto tower = Tower(300, 10, 1, x, y, GetTileSize());
+  if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty) {
+    auto tower = Tower(5, 10, 1, x, y, GetTileSize());
     towers_.insert({{x, y}, tower});
     tower.SetActive();
     active_tower_ = boost::none;
@@ -174,10 +190,13 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
       tower.second.SetInactive();
     }
     active_tower_ =
-        Tower(300, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
+        Tower(5, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
     active_tower_->SetActive();
+    std::cout << "Pressed Tower1 button" << std::endl;
   } else if (sidegui_.Get("NextWave").Contains(mouse_position)) {
-    SpawnEnemies(map_.LoadWave(1));
+    std::cout << "Spawning wave " << wave_ << std::endl;
+    AddToSpawnQueue(map_.LoadWave(wave_));
+    wave_++;
   }
 }
 
@@ -196,6 +215,6 @@ void PlayState::InitGUI() {
 int PlayState::GetTileSize() const {
   auto windowsize = this->game->window.getSize();
   int tile_size_x = (windowsize.x - 200) / map_.GetWidth();
-  int tile_size_y = (windowsize.y - 200) / map_.GetHeight();
+  int tile_size_y = (windowsize.y) / map_.GetHeight();
   return std::min(tile_size_x, tile_size_y);
 }

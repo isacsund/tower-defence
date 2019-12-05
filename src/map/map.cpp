@@ -52,7 +52,7 @@ void Map::Load(const std::string& filename) {
 void Map::Draw(sf::RenderWindow& window) {
   auto windowsize = window.getSize();
   int tile_size_x = (windowsize.x - 200) / GetWidth();
-  int tile_size_y = (windowsize.y - 200) / GetHeight();
+  int tile_size_y = (windowsize.y) / GetHeight();
   tile_size = std::min(tile_size_x, tile_size_y);
   for (int y = 0; y < GetHeight(); y++) {
     for (int x = 0; x < GetWidth(); x++) {
@@ -95,20 +95,34 @@ std::vector<std::pair<int, int>> Map::GetPath() { return path_; }
 
 std::vector<Enemy> Map::LoadWave(int wave) {
   std::vector<Enemy> enemies;
-  for (boost::property_tree::ptree::value_type& monsters :
-       wave_manager.GetSubTree("waves." + std::to_string(wave))) {
-    EnemyTypes enemy_type;
-    if (monsters.first == "basic") enemy_type = Standard;
-
-    for (boost::property_tree::ptree::value_type& monster : monsters.second) {
-      for (int i = 0; i < monster.second.get<int>("amount"); i++) {
-        enemies.push_back(Enemy(monster.second.get<int>("max_hp"),
-                                monster.second.get<float>("speed"),
-                                enemy_spawn_.first + 0.5,
-                                enemy_spawn_.second + 0.5, tile_size,
-                                "sprites/basic_enemy.png", enemy_type));
+  try {
+    for (boost::property_tree::ptree::value_type& monsters :
+         wave_manager.GetSubTree("waves." + std::to_string(wave))) {
+      EnemyTypes enemy_type;
+      for (boost::property_tree::ptree::value_type& monster : monsters.second) {
+        if (monster.first == "basic")
+          enemy_type = Standard;
+        else if (monster.first == "fast")
+          enemy_type = Fast;
+        else if (monster.first == "big")
+          enemy_type = Big;
+        else if (monster.first == "magic")
+          enemy_type = Magic;
+        else if (monster.first == "boss")
+          enemy_type = Boss;
+        else {
+          enemy_type = Standard;
+        }
+        for (int i = 0; i < monster.second.get<int>("amount"); i++) {
+          enemies.push_back(Enemy(
+              monster.second.get<int>("max_hp"),
+              monster.second.get<float>("speed"), enemy_spawn_.first + 0.5,
+              enemy_spawn_.second + 0.5, tile_size, enemy_type));
+        }
       }
     }
+  } catch (boost::property_tree::ptree_bad_path e) {
+    std::cout << "No such wave found" << std::endl;
   }
   return enemies;
 }

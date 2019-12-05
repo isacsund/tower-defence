@@ -33,11 +33,18 @@ sf::Sprite* Tower::GetSprite() { return &sprite_; }
 
 void Tower::SetPosition(float x, float y) {
   sprite_.setPosition(x, y);
-  radius_.setPosition(x - range_ + size_ / 2, y - range_ + size_ / 2);
+
+  // radius_.setPosition(x - range_ + size_ / 2, y - range_ + size_ / 2);
 }
 
 void Tower::SetScale(float factor_x, float factor_y) {
   sprite_.setScale(factor_x, factor_y);
+  auto tile_size = factor_x * GetTexture().getSize().x;
+  float radius = tile_size * range_;
+  radius_.setRadius(radius);
+  radius_.setPosition(
+      sprite_.getPosition() +
+      sf::Vector2f(-radius + tile_size / 2, -radius + tile_size / 2));
 }
 
 void Tower::draw(sf::RenderTarget& target, sf::RenderStates states) const {
