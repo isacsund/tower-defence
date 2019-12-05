@@ -239,7 +239,8 @@ void PlayState::InitGUI() {
   sidegui.Add(
       "tower1",
       GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 0), boost::none,
-               std::string("sprites/basic_tower.png"), boost::none));
+               texture_manager.GetTexture("sprites/basic_tower.png"),
+               boost::none));
   sidegui.Add("wave",
               GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150),
                        std::string("Wave: " + std::to_string(wave_ - 1)),
