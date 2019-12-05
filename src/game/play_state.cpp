@@ -88,6 +88,9 @@ void PlayState::HandleInput() {
         gui_.at("sidegui")
             .Get("nextwave")
             .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 400));
+        gui_.at("sidegui")
+            .Get("cancelbuy")
+            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 500));
 
         break;
       }
