@@ -210,6 +210,7 @@ void PlayState::HandleMapClick(int x, int y) {
     selected_tower_ = &tower.first->second;
     selected_tower_->SetActive();
     active_tower_ = boost::none;
+    gui_.at("sidegui").Get("cancelbuy").Hide();
     InitTowerGUI();
   }
   // Click on a tower
@@ -238,6 +239,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     active_tower_ =
         Tower(5, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
     active_tower_->SetActive();
+    gui_.at("sidegui").Get("cancelbuy").Show();
     std::cout << "Pressed Tower1 button" << std::endl;
   } else if (gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
@@ -245,6 +247,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     wave_++;
     gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
                                             std::to_string(wave_ - 1));
+  } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position)) {
+    active_tower_ = boost::none;
+    gui_.at("sidegui").Get("cancelbuy").Hide();
   }
 }
 
@@ -271,6 +276,12 @@ void PlayState::InitGUI() {
       GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 250),
                std::string("Next wave"),
                texture_manager.GetTexture("sprites/button.png"), font_));
+
+  sidegui.Add(
+      "cancelbuy",
+      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 350),
+               std::string("Cancel buy"),
+               texture_manager.GetTexture("sprites/button.png"), font_, false));
 
   gui_.insert({"sidegui", sidegui});
 }

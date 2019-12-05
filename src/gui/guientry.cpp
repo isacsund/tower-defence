@@ -3,8 +3,8 @@
 
 GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
                    boost::optional<sf::Texture&> texture,
-                   boost::optional<sf::Font&> font)
-    : position_(position) {
+                   boost::optional<sf::Font&> font, bool visible)
+    : position_(position), visible_(visible) {
   if (title.get_ptr() != 0) {
     title_ = sf::Text();
     title_->setFont(font.get());
@@ -44,7 +44,12 @@ bool GuiEntry::Contains(sf::Vector2f mouse_position) {
   return sprite_->getGlobalBounds().contains(mouse_position);
 }
 
+void GuiEntry::Show() { visible_ = true; }
+void GuiEntry::Hide() { visible_ = false; }
+
 void GuiEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-  if (sprite_.get_ptr() != 0) target.draw(sprite_.get(), states);
-  if (title_.get_ptr() != 0) target.draw(title_.get(), states);
+  if (visible_) {
+    if (sprite_.get_ptr() != 0) target.draw(sprite_.get(), states);
+    if (title_.get_ptr() != 0) target.draw(title_.get(), states);
+  }
 }
