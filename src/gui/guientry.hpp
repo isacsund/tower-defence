@@ -8,6 +8,8 @@ class GuiEntry : public sf::Drawable {
            boost::optional<sf::Font&> font, bool visible = true);
   void SetPosition(sf::Vector2f position);
   void SetTitle(const std::string& title);
+  float GetWidth() const;
+  float GetHeight() const;
   bool Contains(sf::Vector2f mouse_position);
   void Show();
   void Hide();

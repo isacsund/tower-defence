@@ -81,16 +81,31 @@ void PlayState::HandleInput() {
         this->game->window.setView(view_);
         gui_.at("sidegui").Get("tower1").SetPosition(
             sf::Vector2f(GetTileSize() * map_.GetWidth(), 0));
+
         gui_.at("sidegui").Get("wave").SetPosition(
-            sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
+            sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                         gui_.at("sidegui").Get("tower1").GetHeight()));
+
         gui_.at("sidegui").Get("player").SetPosition(
-            sf::Vector2f(GetTileSize() * map_.GetWidth(), 250));
+            sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                         gui_.at("sidegui").Get("tower1").GetHeight() +
+                             gui_.at("sidegui").Get("wave").GetHeight()));
+
         gui_.at("sidegui")
             .Get("nextwave")
-            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 400));
+            .SetPosition(
+                sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                             gui_.at("sidegui").Get("tower1").GetHeight() +
+                                 gui_.at("sidegui").Get("wave").GetHeight() +
+                                 gui_.at("sidegui").Get("player").GetHeight()));
         gui_.at("sidegui")
             .Get("cancelbuy")
-            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 500));
+            .SetPosition(sf::Vector2f(
+                GetTileSize() * map_.GetWidth(),
+                gui_.at("sidegui").Get("tower1").GetHeight() +
+                    gui_.at("sidegui").Get("wave").GetHeight() +
+                    gui_.at("sidegui").Get("player").GetHeight() +
+                    gui_.at("sidegui").Get("nextwave").GetHeight()));
 
         break;
       }
@@ -267,11 +282,15 @@ void PlayState::InitGUI() {
                texture_manager.GetTexture("sprites/basic_tower.png"),
                boost::none));
   sidegui.Add("wave",
-              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150),
+              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                                    sidegui.Get("tower1").GetHeight()),
                        std::string("Wave: " + std::to_string(wave_ - 1)),
                        boost::none, font_));
+
   sidegui.Add("player",
-              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 250),
+              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                                    sidegui.Get("tower1").GetHeight() +
+                                        sidegui.Get("wave").GetHeight()),
                        "Player: " + player_.GetName() +
                            "\nMoney: " + std::to_string(player_.GetMoney()) +
                            "\nLives: " + std::to_string(player_.GetLives()),
@@ -279,13 +298,20 @@ void PlayState::InitGUI() {
 
   sidegui.Add(
       "nextwave",
-      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 400),
+      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                            sidegui.Get("tower1").GetHeight() +
+                                sidegui.Get("wave").GetHeight() +
+                                sidegui.Get("player").GetHeight()),
                std::string("Next wave"),
                texture_manager.GetTexture("sprites/button.png"), font_));
 
   sidegui.Add(
       "cancelbuy",
-      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 350),
+      GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(),
+                            sidegui.Get("tower1").GetHeight() +
+                                sidegui.Get("wave").GetHeight() +
+                                sidegui.Get("player").GetHeight() +
+                                sidegui.Get("nextwave").GetHeight()),
                std::string("Cancel buy"),
                texture_manager.GetTexture("sprites/button.png"), font_, false));
 
@@ -303,7 +329,7 @@ void PlayState::InitTowerGUI() {
   towergui.Add(
       "tower_stats",
       GuiEntry(
-          sf::Vector2f(selected_tower_->GetSprite()->getLocalBounds().width,
+          sf::Vector2f(towergui.Get("tower").GetWidth(),
                        GetTileSize() * map_.GetHeight()),
           "Range: " +
               boost::str(boost::format("%.1f") % selected_tower_->GetRange()) +
@@ -313,9 +339,12 @@ void PlayState::InitTowerGUI() {
               boost::str(boost::format("%.1f") %
                          selected_tower_->GetAttSpeed()),
           boost::none, font_));
+
   towergui.Add(
       "sell_tower",
-      GuiEntry(sf::Vector2f(400, GetTileSize() * map_.GetHeight()),
+      GuiEntry(sf::Vector2f(towergui.Get("tower").GetWidth() +
+                                towergui.Get("tower_stats").GetWidth(),
+                            GetTileSize() * map_.GetHeight()),
                std::string("Sell"),
                texture_manager.GetTexture("sprites/button.png"), font_));
 

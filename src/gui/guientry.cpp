@@ -40,6 +40,22 @@ void GuiEntry::SetPosition(sf::Vector2f position) {
 
 void GuiEntry::SetTitle(const std::string& title) { title_->setString(title); }
 
+float GuiEntry::GetWidth() const {
+  if (sprite_.get_ptr() != 0) {
+    return sprite_->getLocalBounds().width;
+  } else {
+    title_->getLocalBounds().width;
+  }
+}
+
+float GuiEntry::GetHeight() const {
+  if (sprite_.get_ptr() != 0) {
+    return sprite_->getLocalBounds().height;
+  } else {
+    title_->getLocalBounds().height;
+  }
+}
+
 bool GuiEntry::Contains(sf::Vector2f mouse_position) {
   return sprite_->getGlobalBounds().contains(mouse_position);
 }
