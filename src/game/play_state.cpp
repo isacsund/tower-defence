@@ -26,7 +26,10 @@ PlayState::PlayState(Game* game, Map map) : last_spawn_(0), wave_(1) {
 
 void PlayState::Draw() {
   map_.Draw(this->game->window);
-  this->game->window.draw(sidegui_);
+  for (auto& gui : gui_) {
+    this->game->window.draw(gui.second);
+  }
+
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
       enemy.SetPosition(
@@ -72,10 +75,13 @@ void PlayState::HandleInput() {
       case sf::Event::Resized: {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
-        sidegui_.Get("Tower1").SetPosition(
+        gui_.at("sidegui").Get("tower1").SetPosition(
             sf::Vector2f(GetTileSize() * map_.GetWidth(), 0));
-        sidegui_.Get("NextWave")
+        gui_.at("sidegui")
+            .Get("nextwave")
             .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
+        gui_.at("sidegui").Get("wave").SetPosition(
+            sf::Vector2f(GetTileSize() * map_.GetWidth(), 250));
         break;
       }
       case sf::Event::MouseButtonPressed: {
@@ -185,7 +191,7 @@ void PlayState::HandleMapClick(int x, int y) {
   }
 }
 void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
-  if (sidegui_.Get("Tower1").Contains(mouse_position)) {
+  if (gui_.at("sidegui").Get("tower1").Contains(mouse_position)) {
     for (auto& tower : towers_) {
       tower.second.SetInactive();
     }
@@ -193,23 +199,33 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
         Tower(5, 10, 1, mouse_position.x, mouse_position.y, GetTileSize());
     active_tower_->SetActive();
     std::cout << "Pressed Tower1 button" << std::endl;
-  } else if (sidegui_.Get("NextWave").Contains(mouse_position)) {
+  } else if (gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));
     wave_++;
+    gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
+                                            std::to_string(wave_ - 1));
   }
 }
 
 void PlayState::InitGUI() {
-  sidegui_.Add(
-      "Tower1",
+  Gui sidegui = Gui();
+  sidegui.Add(
+      "tower1",
       GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 0), boost::none,
                std::string("sprites/basic_tower.png"), boost::none));
 
-  sidegui_.Add("NextWave",
-               GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150),
-                        std::string("Next wave"),
-                        std::string("sprites/button.png"), font_));
+  sidegui.Add("wave",
+              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150),
+                       std::string("Wave: " + std::to_string(wave_ - 1)),
+                       boost::none, font_));
+
+  sidegui.Add("nextwave",
+              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 250),
+                       std::string("Next wave"),
+                       std::string("sprites/button.png"), font_));
+
+  gui_.insert({"sidegui", sidegui});
 }
 
 int PlayState::GetTileSize() const {

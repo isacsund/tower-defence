@@ -30,14 +30,19 @@ void GuiEntry::SetPosition(sf::Vector2f position) {
           position_.x + button_size.width / 2 - text_size.width / 2,
           position_.y + button_size.height / 2 - text_size.height));
     } else {
-      title_->setPosition(sf::Vector2f(position_.x - text_size.width / 2,
-                                       position_.y - text_size.height));
+      title_->setPosition(
+          sf::Vector2f(position_.x + title_->getLocalBounds().width / 2 -
+                           text_size.width / 2,
+                       position_.y + title_->getLocalBounds().height / 2 -
+                           text_size.height));
     }
   }
   if (sprite_.get_ptr() != 0) {
     sprite_->setPosition(position_);
   }
 }
+
+void GuiEntry::SetTitle(const std::string& title) { title_->setString(title); }
 
 bool GuiEntry::Contains(sf::Vector2f mouse_position) {
   return sprite_->getGlobalBounds().contains(mouse_position);
