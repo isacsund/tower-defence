@@ -26,7 +26,13 @@ void Map::Load(const std::string& filename) {
             tiles_[i].push_back(Tile(Path));
             break;
           case 'T':
-            tiles_[i].push_back(Tile(Tree));
+            tiles_[i].push_back(Tile(Tree1));
+            break;
+          case 't':
+            tiles_[i].push_back(Tile(Tree2));
+            break;
+          case 'd':
+            tiles_[i].push_back(Tile(Tree3));
             break;
           case 'W':
             tiles_[i].push_back(Tile(Water1));
