@@ -17,6 +17,7 @@ class Tower : public sf::Drawable {
 
   float GetRange() const;
   float GetAttSpeed() const;
+  float GetDamage() const;
   float GetLastAttack() const;
   void SetLastAttack(float att_time);
   sf::Texture& GetTexture() const;

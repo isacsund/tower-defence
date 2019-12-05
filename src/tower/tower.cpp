@@ -24,6 +24,7 @@ const std::pair<int, int> Tower::GetPosition() const { return {x_, y_}; }
 float Tower::GetRange() const { return range_; }
 void Tower::Attack(Enemy& enemy) const { enemy.SetHp(enemy.GetHp() - damage_); }
 float Tower::GetAttSpeed() const { return att_speed_; }
+float Tower::GetDamage() const { return damage_; }
 float Tower::GetLastAttack() const { return last_attack_; }
 void Tower::SetLastAttack(float att_time) { last_attack_ = att_time; }
 sf::Texture& Tower::GetTexture() const {
