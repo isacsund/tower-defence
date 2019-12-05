@@ -95,11 +95,26 @@ void PlayState::HandleInput() {
         break;
       }
       case sf::Event::KeyPressed: {
-        if (event.key.code == sf::Keyboard::Escape) {
-          std::vector<Enemy> enemies = map_.LoadWave(1);
-          for (auto enemy : enemies) {
-            std::cout << enemy << std::endl;
-          }
+        float vol = game->music.getVolume();
+        std::cout << vol << std::endl;
+        switch (event.key.code) {
+          case sf::Keyboard::M:
+            if (game->music.getStatus() != sf::Music::Status::Paused) {
+              game->music.pause();
+            } else {
+              game->music.play();
+            }
+            break;
+          case sf::Keyboard::Add:
+            if (vol + 5 <= 100) vol += 5;
+            game->music.setVolume(vol);
+            break;
+          case sf::Keyboard::Subtract:
+            if (vol - 5 >= 0) vol -= 5;
+            game->music.setVolume(vol);
+            break;
+          default:
+            break;
         }
         break;
       }

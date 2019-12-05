@@ -9,6 +9,11 @@ Game::Game() {
   if (!config_manager->ParseFile("settings.json", config_error)) {
     std::cout << "Failed to parse configuration file." << std::endl;
   }
+
+  if (!music.openFromFile("audio/medieval_music.ogg"))
+    std::cout << "Could not load music" << std::endl;
+  music.setLoop(true);
+  music.setVolume(5.f);
 }
 
 Game::~Game() {
@@ -30,6 +35,7 @@ GameState* Game::PeekState() {
 }
 
 void Game::Run() {
+  music.play();
   while (window.isOpen()) {
     if (PeekState() == nullptr) continue;
     PeekState()->HandleInput();
