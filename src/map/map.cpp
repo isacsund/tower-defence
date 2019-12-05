@@ -28,6 +28,15 @@ void Map::Load(const std::string& filename) {
           case 'T':
             tiles_[i].push_back(Tile(Tree));
             break;
+          case 'W':
+            tiles_[i].push_back(Tile(Water1));
+            break;
+          case 'V':
+            tiles_[i].push_back(Tile(Water2));
+            break;
+          case 'w':
+            tiles_[i].push_back(Tile(Water3));
+            break;
           case 'B':
             tiles_[i].push_back(Tile(PlayerBase));
             player_base_ = std::pair<int, int>(j, i);

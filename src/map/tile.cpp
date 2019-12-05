@@ -15,6 +15,15 @@ Tile::Tile(TileTypes type) : type_(type) {
     case EnemySpawn:
       texturename_ = "sprites/sand_tile.png";
       break;
+    case Water1:
+      texturename_ = "sprites/water_1.png";
+      break;
+    case Water2:
+      texturename_ = "sprites/water_2.png";
+      break;
+    case Water3:
+      texturename_ = "sprites/water_3.png";
+      break;
     default:
       texturename_ = "sprites/grass_tile_1.png";
   }

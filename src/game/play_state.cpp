@@ -26,10 +26,17 @@ PlayState::PlayState(Game* game, Map map)
   if (!font_.loadFromFile("sprites/Arial.ttf")) {
     std::cout << "Failed to load font";
   }
+  background_.setTexture(
+      texture_manager.GetTexture("sprites/gui_background.png"));
+  background_.setScale(float(this->game->window.getSize().x) /
+                           float(background_.getTexture()->getSize().x),
+                       float(this->game->window.getSize().y) /
+                           float(background_.getTexture()->getSize().y));
   InitGUI();
 }
 
 void PlayState::Draw() {
+  this->game->window.draw(background_);
   map_.Draw(this->game->window);
   this->game->window.draw(gui_.at("sidegui"));
   if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
