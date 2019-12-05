@@ -2,7 +2,7 @@
 
 class Player {
  public:
-  Player(const std::string& name, int lives = 10, int money = 500,
+  Player(const std::string& name, int lives = 3, int money = 500,
          int score = 0);
   int GetMoney() const;
   int GetScore() const;

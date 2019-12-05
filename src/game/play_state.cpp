@@ -11,10 +11,10 @@
 #include "game_state.hpp"
 #include "menu_state.hpp"
 
-PlayState::PlayState(Game* game, Map map) : last_spawn_(0), wave_(1) {
+PlayState::PlayState(Game* game, Map map)
+    : last_spawn_(0), wave_(1), player_(Player("Pelle")) {
   this->game = game;
   map_ = map;
-
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
   sf::View view_(sf::FloatRect(0, 0, window_size.x, window_size.y));
   this->game->window.setView(view_);
@@ -77,11 +77,14 @@ void PlayState::HandleInput() {
         this->game->window.setView(view_);
         gui_.at("sidegui").Get("tower1").SetPosition(
             sf::Vector2f(GetTileSize() * map_.GetWidth(), 0));
+        gui_.at("sidegui").Get("wave").SetPosition(
+            sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
+        gui_.at("sidegui").Get("player").SetPosition(
+            sf::Vector2f(GetTileSize() * map_.GetWidth(), 250));
         gui_.at("sidegui")
             .Get("nextwave")
-            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150));
-        gui_.at("sidegui").Get("wave").SetPosition(
-            sf::Vector2f(GetTileSize() * map_.GetWidth(), 250));
+            .SetPosition(sf::Vector2f(GetTileSize() * map_.GetWidth(), 350));
+
         break;
       }
       case sf::Event::MouseButtonPressed: {
@@ -138,6 +141,13 @@ void PlayState::Tick() {
       it->Move(path);
       if (it->GetTile() == player_base) {
         it->SetHp(0);
+        if (player_.GetLives() > 0) {
+          player_.RemoveLives(1);
+          gui_.at("sidegui").Get("player").SetTitle(
+              "Player: " + player_.GetName() +
+              "\nMoney: " + std::to_string(player_.GetMoney()) +
+              "\nLives: " + std::to_string(player_.GetLives()));
+        }
       }
     }
   }
@@ -229,14 +239,18 @@ void PlayState::InitGUI() {
       "tower1",
       GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 0), boost::none,
                std::string("sprites/basic_tower.png"), boost::none));
-
   sidegui.Add("wave",
               GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 150),
                        std::string("Wave: " + std::to_string(wave_ - 1)),
                        boost::none, font_));
-
-  sidegui.Add("nextwave",
+  sidegui.Add("player",
               GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 250),
+                       "Player: " + player_.GetName() +
+                           "\nMoney: " + std::to_string(player_.GetMoney()) +
+                           "\nLives: " + std::to_string(player_.GetLives()),
+                       boost::none, font_));
+  sidegui.Add("nextwave",
+              GuiEntry(sf::Vector2f(GetTileSize() * map_.GetWidth(), 350),
                        std::string("Next wave"),
                        std::string("sprites/button.png"), font_));
 

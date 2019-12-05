@@ -6,6 +6,7 @@
 #include "../gui/button.hpp"
 #include "../gui/gui.hpp"
 #include "../map/map.hpp"
+#include "../player/player.hpp"
 #include "../tower/tower.hpp"
 #include "game_state.hpp"
 
@@ -36,4 +37,5 @@ class PlayState : public GameState {
   sf::Clock clock_;
   float last_spawn_;
   int wave_;
+  Player player_;
 };
