@@ -282,9 +282,10 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
     gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
 
-                                            std::to_string(wave_ - 1));
+                                            std::to_string(wave_ - 1) + "\nEnemies: " + 
+                                            std::to_string(spawn_queue_.size() + enemies));
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position) &&
-             active_tower_.has_value()) {
+             active_tower_.get_ptr() != 0) {
     player_.AddMoney(250);
     UpdatePlayerStats();
     active_tower_ = boost::none;
