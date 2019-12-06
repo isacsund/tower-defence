@@ -47,6 +47,11 @@ void PlayState::Draw() {
   gui_.at("sidegui").Get("wave").SetTitle(
       "Wave: " + std::to_string(wave_ - 1) +
       "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
+
+  // Check if we should enable the next wave button
+  if (enemies_.size() == 0 && spawn_queue_.size() == 0)
+    gui_.at("sidegui").Get("nextwave").Enable();
+
   if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
@@ -210,20 +215,12 @@ void PlayState::Tick() {
     enemies_.push_back(spawn_queue_.front());
     spawn_queue_.pop_front();
     last_spawn_ = cur_time;
-    if (spawn_queue_.size() == 0) {
-      gui_.at("sidegui").Get("nextwave").Enable();
-    }
   }
 }
 
 void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
   for (auto& enemy : enemies) {
     spawn_queue_.push_back(enemy);
-  }
-  if (spawn_queue_.size() > 0) {
-    gui_.at("sidegui").Get("nextwave").Disable();
-  } else {
-    gui_.at("sidegui").Get("nextwave").Enable();
   }
 }
 
@@ -388,6 +385,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
              gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));
+    gui_.at("sidegui").Get("nextwave").Disable();
     wave_++;
 
     int enemies = std::count_if(enemies_.begin(), enemies_.end(),
