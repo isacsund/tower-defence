@@ -25,6 +25,7 @@ class Enemy : public sf::Drawable {
   void SetPosition(float x, float y);
   void SetScale(float factor_x, float factor_y);
   sf::Sprite* GetSprite();
+  Enemy& operator=(const Enemy& enemy);
 
  private:
   float max_hp_;

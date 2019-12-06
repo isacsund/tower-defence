@@ -187,7 +187,8 @@ void PlayState::HandleInput() {
 void PlayState::Tick() {
   auto path = map_.GetPath();
   auto player_base = map_.GetPlayerBase();
-  for (auto it = enemies_.begin(); it != enemies_.end(); it++) {
+  std::vector<Enemy>::iterator it = enemies_.begin();
+  while (it != enemies_.end()) {
     if (it->IsAlive()) {
       it->Move(path);
       if (it->GetTile() == player_base) {
@@ -197,6 +198,9 @@ void PlayState::Tick() {
           UpdatePlayerStats();
         }
       }
+      it++;
+    } else {
+      it = enemies_.erase(it);
     }
   }
   FindEnemies();
