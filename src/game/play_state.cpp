@@ -423,6 +423,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     selected_tower_->Upgrade();
     if (!selected_tower_->IsUpgradeable())
       gui_.at("towergui").Get("upgrade_tower").Disable();
+    UpdateTowerStats();
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
     player_.AddMoney(selected_tower_->GetPrice() / 2);
