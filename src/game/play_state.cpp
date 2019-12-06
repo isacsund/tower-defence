@@ -9,6 +9,7 @@
 #include <vector>
 #include "../configuration/configmanager.hpp"
 #include "../enemy/enemy.hpp"
+#include "../tower/ship_tower.hpp"
 #include "game_state.hpp"
 #include "menu_state.hpp"
 #include "texturemanager.hpp"
@@ -39,10 +40,11 @@ void PlayState::Draw() {
   this->game->window.draw(background_);
   map_.Draw(this->game->window);
   this->game->window.draw(gui_.at("sidegui"));
-  int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
-   gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
-                                            std::to_string(wave_ - 1) +
-                        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
+  int enemies = std::count_if(enemies_.begin(), enemies_.end(),
+                              [](Enemy e) { return e.IsAlive(); });
+  gui_.at("sidegui").Get("wave").SetTitle(
+      "Wave: " + std::to_string(wave_ - 1) +
+      "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
   if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
 
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
@@ -64,13 +66,14 @@ void PlayState::Draw() {
     this->game->window.draw(tower.second);
   }
   if (active_tower_.get_ptr() != 0) {
-    active_tower_->SetPosition(
+    active_tower_->second.SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
         sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
-    active_tower_->SetScale(
-        GetTileSize() / (float)(active_tower_->GetTexture()).getSize().x,
-        GetTileSize() / (float)(active_tower_->GetTexture()).getSize().y);
-    this->game->window.draw(active_tower_.get());
+    active_tower_->second.SetScale(
+        GetTileSize() / (float)(active_tower_->second.GetTexture()).getSize().x,
+        GetTileSize() /
+            (float)(active_tower_->second.GetTexture()).getSize().y);
+    this->game->window.draw(active_tower_.get().second);
   }
 
   Tick();
@@ -95,6 +98,11 @@ void PlayState::HandleInput() {
         gui_.at("sidegui").Get("tower1").SetPosition(sf::Vector2f(map_size, 0));
 
         int tower_height = gui_.at("sidegui").Get("tower1").GetHeight();
+
+        gui_.at("sidegui").Get("tower2").SetPosition(
+            sf::Vector2f(map_size, tower_height + margin));
+
+        tower_height += gui_.at("sidegui").Get("tower2").GetHeight();
         gui_.at("sidegui").Get("wave").SetPosition(
             sf::Vector2f(map_size, tower_height + margin));
 
@@ -242,13 +250,28 @@ void PlayState::HandleMapClick(int x, int y) {
   // Click on a buildable tile with an active tower
   if (active_tower_.get_ptr() != 0 && map_(x, y).GetType() == Empty &&
       !towers_.count({x, y})) {
-    auto tower =
-        towers_.insert({{x, y}, Tower(5, 10, 1, x, y, GetTileSize(), 250)});
-    selected_tower_ = &tower.first->second;
-    selected_tower_->SetActive();
-    active_tower_ = boost::none;
-    gui_.at("sidegui").Get("cancelbuy").Hide();
-    InitTowerGUI();
+    if (active_tower_.get().first == "basic") {
+      auto tower =
+          towers_.insert({{x, y}, Tower(5, 10, 1, x, y, GetTileSize(), 250)});
+      selected_tower_ = &tower.first->second;
+      selected_tower_->SetActive();
+      active_tower_ = boost::none;
+      gui_.at("sidegui").Get("cancelbuy").Hide();
+      InitTowerGUI();
+    }
+  } else if ((active_tower_.get_ptr() != 0) &&
+             (map_(x, y).GetType() == Water1 ||
+              map_(x, y).GetType() == Water2) &&
+             !towers_.count({x, y})) {
+    if (active_tower_.get().first == "ship") {
+      auto tower = towers_.insert(
+          {{x, y}, ShipTower(7, 20, 0.2, x, y, GetTileSize(), 500)});
+      selected_tower_ = &tower.first->second;
+      selected_tower_->SetActive();
+      active_tower_ = boost::none;
+      gui_.at("sidegui").Get("cancelbuy").Hide();
+      InitTowerGUI();
+    }
   }
   // Click on a tower
   else if (towers_.count({x, y}) && active_tower_.get_ptr() == 0) {
@@ -270,31 +293,52 @@ void PlayState::HandleMapClick(int x, int y) {
 }
 void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
   if (gui_.at("sidegui").Get("tower1").Contains(mouse_position)) {
-    if (player_.GetMoney() >= 250) {
-      player_.AddMoney(-250);
+    active_tower_ =
+        std::make_pair("basic", Tower(5, 10, 1, mouse_position.x,
+                                      mouse_position.y, GetTileSize(), 250));
+    active_tower_->second.SetActive();
+    if (player_.GetMoney() >= active_tower_.get().second.GetPrice()) {
+      player_.AddMoney(-active_tower_.get().second.GetPrice());
       UpdatePlayerStats();
       for (auto& tower : towers_) {
         tower.second.SetInactive();
       }
-      active_tower_ = Tower(5, 10, 1, mouse_position.x, mouse_position.y,
-                            GetTileSize(), 250);
-      active_tower_->SetActive();
+
       gui_.at("sidegui").Get("cancelbuy").Show();
       std::cout << "Pressed Tower1 button" << std::endl;
     }
 
-  } else if (gui_.at("sidegui").Get("nextwave").IsVisible() && gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
+  } else if (gui_.at("sidegui").Get("tower2").Contains(mouse_position)) {
+    active_tower_ =
+        std::make_pair("ship", ShipTower(7, 20, 0.2, mouse_position.x,
+                                         mouse_position.y, GetTileSize(), 500));
+    active_tower_->second.SetActive();
+    if (player_.GetMoney() >= active_tower_.get().second.GetPrice()) {
+      player_.AddMoney(-active_tower_.get().second.GetPrice());
+      UpdatePlayerStats();
+      for (auto& tower : towers_) {
+        tower.second.SetInactive();
+      }
+
+      gui_.at("sidegui").Get("cancelbuy").Show();
+      std::cout << "Pressed Tower2 button" << std::endl;
+    }
+
+  } else if (gui_.at("sidegui").Get("nextwave").IsVisible() &&
+             gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));
     wave_++;
-    int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
-    gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
+    int enemies = std::count_if(enemies_.begin(), enemies_.end(),
+                                [](Enemy e) { return e.IsAlive(); });
+    gui_.at("sidegui").Get("wave").SetTitle(
+        "Wave: " +
 
-                                            std::to_string(wave_ - 1) + "\nEnemies: " + 
-                                            std::to_string(spawn_queue_.size() + enemies));
+        std::to_string(wave_ - 1) +
+        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position) &&
              active_tower_.get_ptr() != 0) {
-    player_.AddMoney(250);
+    player_.AddMoney(active_tower_.get().second.GetPrice());
     UpdatePlayerStats();
     active_tower_ = boost::none;
     gui_.at("sidegui").Get("cancelbuy").Hide();
@@ -309,7 +353,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
 
 void PlayState::InitGUI() {
   Gui sidegui = Gui();
-  int margin = 10;
+  const int margin = 10;
   int map_size = GetTileSize() * map_.GetWidth();
   sidegui.Add("tower1",
               GuiEntry(sf::Vector2f(map_size, 0), boost::none,
@@ -317,14 +361,25 @@ void PlayState::InitGUI() {
                        boost::none));
 
   int tower_height = sidegui.Get("tower1").GetHeight();
-  int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
-  sidegui.Add("wave",
-              GuiEntry(sf::Vector2f(map_size,
-                                    tower_height+margin),
-                       std::string("Wave: " + std::to_string(wave_ - 1) +
-                        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies)),
+  int enemies = std::count_if(enemies_.begin(), enemies_.end(),
+                              [](Enemy e) { return e.IsAlive(); });
 
-                       boost::none, font_));
+  sidegui.Add(
+      "tower2",
+      GuiEntry(sf::Vector2f(map_size, tower_height + margin), boost::none,
+               texture_manager.GetTexture("sprites/ship_tower.png"),
+               boost::none));
+
+  tower_height += sidegui.Get("tower2").GetHeight();
+
+  sidegui.Add(
+      "wave",
+      GuiEntry(
+          sf::Vector2f(map_size, tower_height + margin),
+          std::string("Wave: " + std::to_string(wave_ - 1) + "\nEnemies: " +
+                      std::to_string(spawn_queue_.size() + enemies)),
+
+          boost::none, font_));
   int wave_height = sidegui.Get("wave").GetHeight();
 
   sidegui.Add(

@@ -3,8 +3,7 @@
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
-             float size, int price, const std::string& texturename,
-             TowerTypes type)
+             float size, int price, const std::string& texturename)
     : range_(range),
       damage_(damage),
       att_speed_(att_speed),
@@ -12,7 +11,6 @@ Tower::Tower(float range, float damage, float att_speed, int x, int y,
       y_(y),
       size_(size),
       price_(price),
-      type_(type),
       texturename_(texturename),
       last_attack_(0) {
   sprite_ = sf::Sprite(GetTexture());

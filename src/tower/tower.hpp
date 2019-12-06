@@ -1,17 +1,12 @@
+#pragma once
 #include <string>
 #include "../enemy/enemy.hpp"
 #include "SFML/Graphics.hpp"
 
-enum TowerTypes {
-  Basic,
-  Rapid /*, Sniper, Special*/
-};
-
 class Tower : public sf::Drawable {
  public:
   Tower(float range, float damage, float att_speed, int x, int y, float size,
-        int price, const std::string& texturename = "sprites/basic_tower.png",
-        TowerTypes type = Basic);
+        int price, const std::string& texturename = "sprites/basic_tower.png");
   void Attack(Enemy& enemy) const;
   const std::pair<int, int> GetPosition() const;
 
@@ -36,7 +31,6 @@ class Tower : public sf::Drawable {
   int x_, y_;
   float size_;
   int price_;
-  TowerTypes type_;
   std::string texturename_;
   float last_attack_;
   sf::Sprite sprite_;
