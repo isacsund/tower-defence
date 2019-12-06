@@ -264,7 +264,7 @@ void PlayState::HandleMapClick(int x, int y) {
       selected_tower_->SetActive();
       active_tower_ = boost::none;
       gui_.at("sidegui").Get("cancelbuy").Hide();
-      InitTowerGUI();
+      InitTowerGUI(selected_tower_);
     }
   } else if ((active_tower_.get_ptr() != 0) &&
              (map_(x, y).GetType() == Water1 ||
@@ -282,7 +282,7 @@ void PlayState::HandleMapClick(int x, int y) {
       selected_tower_->SetActive();
       active_tower_ = boost::none;
       gui_.at("sidegui").Get("cancelbuy").Hide();
-      InitTowerGUI();
+      InitTowerGUI(selected_tower_);
     }
   }
   // Click on a tower
@@ -293,7 +293,7 @@ void PlayState::HandleMapClick(int x, int y) {
     auto tower = towers_.find({x, y});
     selected_tower_ = tower->second.get();
     selected_tower_->SetActive();
-    InitTowerGUI();
+    InitTowerGUI(selected_tower_);
   }
   // Click on a tile without any towers
   else {
@@ -365,8 +365,11 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui")
                  .Get("upgrade_tower")
-                 .Contains(mouse_position)) {
+                 .Contains(mouse_position) &&
+             gui_.at("towergui").Get("upgrade_tower").IsEnabled()) {
     selected_tower_->Upgrade();
+    if (!selected_tower_->IsUpgradeable())
+      gui_.at("towergui").Get("upgrade_tower").Disable();
     UpdateTowerStats();
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
@@ -435,7 +438,7 @@ void PlayState::InitGUI() {
   gui_.insert({"sidegui", sidegui});
 }
 
-void PlayState::InitTowerGUI() {
+void PlayState::InitTowerGUI(Tower* selected_tower) {
   Gui towergui = Gui();
   const int margin = 10;
   int map_size = GetTileSize() * map_.GetHeight();
@@ -467,6 +470,7 @@ void PlayState::InitTowerGUI() {
           sf::Vector2f(tower_width + tower_stats_width + 2 * margin, map_size),
           std::string("Upgrade"),
           texture_manager.GetTexture("sprites/button.png"), font_));
+  if (!selected_tower->IsUpgradeable()) towergui.Get("upgrade_tower").Disable();
   int upgrade_tower_width = towergui.Get("upgrade_tower").GetWidth();
 
   towergui.Add(

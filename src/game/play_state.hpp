@@ -21,7 +21,7 @@ class PlayState : public GameState {
   void HandleMapClick(int x, int y);
   void HandleGuiClick(sf::Vector2f mouse_position);
   void InitGUI();
-  void InitTowerGUI();
+  void InitTowerGUI(Tower* selected_tower);
   int GetTileSize() const;
   void UpdatePlayerStats();
   void UpdateTowerStats();
