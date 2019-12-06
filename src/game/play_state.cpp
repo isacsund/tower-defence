@@ -39,6 +39,10 @@ void PlayState::Draw() {
   this->game->window.draw(background_);
   map_.Draw(this->game->window);
   this->game->window.draw(gui_.at("sidegui"));
+  int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
+   gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
+                                            std::to_string(wave_ - 1) +
+                        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
   if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
 
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
@@ -284,8 +288,10 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));
     wave_++;
+    int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
     gui_.at("sidegui").Get("wave").SetTitle("Wave: " +
-                                            std::to_string(wave_ - 1));
+                                            std::to_string(wave_ - 1) +
+                        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position)) {
     player_.AddMoney(250);
     UpdatePlayerStats();
@@ -311,11 +317,12 @@ void PlayState::InitGUI() {
                boost::none));
   
   int tower_height = sidegui.Get("tower1").GetHeight();
-  
+  int enemies = std::count_if(enemies_.begin(), enemies_.end(), [](Enemy e){return e.IsAlive();});
   sidegui.Add("wave",
               GuiEntry(sf::Vector2f(map_size,
                                     tower_height+margin),
-                       std::string("Wave: " + std::to_string(wave_ - 1)),
+                       std::string("Wave: " + std::to_string(wave_ - 1) +
+                        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies)),
                        boost::none, font_));
   int wave_height = sidegui.Get("wave").GetHeight();
 
