@@ -33,9 +33,9 @@ class Tower : public sf::Drawable {
   float range_;
   float damage_;
   int current_upgrade_;
+  float att_speed_;
 
  private:
-  float att_speed_;
   int x_, y_;
   float size_;
   int price_;

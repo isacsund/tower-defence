@@ -83,7 +83,7 @@ void PlayState::Draw() {
             (float)(active_tower_->second->GetTexture()).getSize().y);
     this->game->window.draw(*active_tower_.get().second);
   }
-
+  UpdatePlayerStats();
   Tick();
 }
 
@@ -253,6 +253,25 @@ void PlayState::FindEnemies() {
       tower.second->SetLastAttack(cur_time);
       bool dead = tower.second->Attack(*closest_enemy);
       if (dead) {
+        switch (closest_enemy->GetType()) {
+          case Standard:
+            player_.AddMoney(20);
+            break;
+          case Fast:
+            player_.AddMoney(35);
+            break;
+          case Big:
+            player_.AddMoney(50);
+            break;
+          case Boss:
+            player_.AddMoney(100);
+            break;
+          case Magic:
+            player_.AddMoney(40);
+            break;
+          default:
+            break;
+        }
       }
     }
   }
@@ -340,7 +359,6 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
           std::make_pair("basic", std::make_unique<BasicTower>(tower));
       active_tower_->second->SetActive();
       player_.AddMoney(-active_tower_.get().second->GetPrice());
-      UpdatePlayerStats();
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
   } else if (gui_.at("sidegui").Get("tower2").Contains(mouse_position)) {
@@ -359,7 +377,6 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
           std::make_pair("ship", std::make_unique<ShipTower>(tower));
       active_tower_->second->SetActive();
       player_.AddMoney(-active_tower_.get().second->GetPrice());
-      UpdatePlayerStats();
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
   } else if (gui_.at("sidegui").Get("tower3").Contains(mouse_position)) {
@@ -378,7 +395,6 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
           std::make_pair("money", std::make_unique<MoneyTower>(tower));
       active_tower_->second->SetActive();
       player_.AddMoney(-active_tower_.get().second->GetPrice());
-      UpdatePlayerStats();
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
   } else if (gui_.at("sidegui").Get("nextwave").IsEnabled() &&
@@ -394,11 +410,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     gui_.at("sidegui").Get("wave").SetTitle(
         "Wave: " + std::to_string(wave_ - 1) +
         "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
-
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position) &&
              active_tower_.get_ptr() != 0) {
     player_.AddMoney(active_tower_.get().second->GetPrice());
-    UpdatePlayerStats();
     active_tower_ = boost::none;
     gui_.at("sidegui").Get("cancelbuy").Hide();
   } else if (gui_.find("towergui") != gui_.end() &&
@@ -409,11 +423,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     selected_tower_->Upgrade();
     if (!selected_tower_->IsUpgradeable())
       gui_.at("towergui").Get("upgrade_tower").Disable();
-    UpdateTowerStats();
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
     player_.AddMoney(selected_tower_->GetPrice() / 2);
-    UpdatePlayerStats();
     towers_.erase(selected_tower_->GetPosition());
     selected_tower_ = nullptr;
   }
