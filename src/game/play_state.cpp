@@ -250,7 +250,9 @@ void PlayState::FindEnemies() {
     if ((closest_enemy) && (cur_time - tower.second->GetLastAttack() >
                             (1 / tower.second->GetAttSpeed()))) {
       tower.second->SetLastAttack(cur_time);
-      tower.second->Attack(*closest_enemy);
+      bool dead = tower.second->Attack(*closest_enemy);
+      if (dead) {
+      }
     }
   }
 }

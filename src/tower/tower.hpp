@@ -7,7 +7,7 @@ class Tower : public sf::Drawable {
  public:
   Tower(float range, float damage, float att_speed, int x, int y, float size,
         int price, const std::string& texturename = "sprites/basic_tower.png");
-  void Attack(Enemy& enemy) const;
+  bool Attack(Enemy& enemy) const;
   const std::pair<int, int> GetPosition() const;
 
   float GetRange() const;
