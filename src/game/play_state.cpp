@@ -200,7 +200,7 @@ void PlayState::Tick() {
     spawn_queue_.pop_front();
     last_spawn_ = cur_time;
     if (spawn_queue_.size() == 0) {
-      gui_.at("sidegui").Get("nextwave").Show();
+      gui_.at("sidegui").Get("nextwave").Enable();
     }
   }
 }
@@ -210,9 +210,9 @@ void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
     spawn_queue_.push_back(enemy);
   }
   if (spawn_queue_.size() > 0) {
-    gui_.at("sidegui").Get("nextwave").Hide();
+    gui_.at("sidegui").Get("nextwave").Disable();
   } else {
-    gui_.at("sidegui").Get("nextwave").Show();
+    gui_.at("sidegui").Get("nextwave").Enable();
   }
 }
 
@@ -343,7 +343,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
 
-  } else if (gui_.at("sidegui").Get("nextwave").IsVisible() &&
+  } else if (gui_.at("sidegui").Get("nextwave").IsEnabled() &&
              gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));

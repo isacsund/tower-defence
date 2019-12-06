@@ -14,10 +14,15 @@ class GuiEntry : public sf::Drawable {
   void Show();
   void Hide();
   bool IsVisible();
+  void Enable();
+  void Disable();
+  bool IsEnabled();
+
  private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
   boost::optional<sf::Text> title_;
   boost::optional<sf::Sprite> sprite_;
   sf::Vector2f position_;
   bool visible_;
+  bool enabled_;
 };
