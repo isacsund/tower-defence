@@ -1,6 +1,7 @@
 #include "guientry.hpp"
-#include "../game/texturemanager.hpp"
 #include <iostream>
+#include "../game/texturemanager.hpp"
+
 GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
                    boost::optional<sf::Texture&> texture,
                    boost::optional<sf::Font&> font, bool visible)
@@ -9,7 +10,7 @@ GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
     title_ = sf::Text();
     title_->setFont(font.get());
     title_->setString(title.get());
-    title_->setCharacterSize(30);
+    title_->setCharacterSize(20);
     title_->setStyle(sf::Text::Regular);
     title_->setFillColor(sf::Color::White);
   }
@@ -69,4 +70,3 @@ void GuiEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (title_.get_ptr() != 0) target.draw(title_.get(), states);
   }
 }
-

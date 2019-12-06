@@ -2,7 +2,7 @@
 #include "../configuration/configmanager.hpp"
 
 Game::Game() {
-  window.create(sf::VideoMode(800, 600), "Tower Defence");
+  window.create(sf::VideoMode(1280, 720), "Tower Defence");
   window.setFramerateLimit(60);
 
   std::string config_error;

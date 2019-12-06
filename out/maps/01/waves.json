@@ -5,12 +5,32 @@
         "basic": {
           "max_hp": 100,
           "speed": 1,
-          "amount": 10,
+          "amount": 3,
           "delay": 3
         }
       }
     },
     "2": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 5,
+          "delay": 3
+        }
+      }
+    },
+    "3": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 10,
+          "delay": 3
+        }
+      }
+    },
+    "4": {
       "monsters": {
         "basic": {
           "max_hp": 100,
@@ -26,7 +46,23 @@
         }
       }
     },
-    "3": {
+    "5": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 10,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 3,
+          "delay": 10
+        }
+      }
+    },
+    "6": {
       "monsters": {
         "basic": {
           "max_hp": 100,
@@ -37,28 +73,150 @@
         "fast": {
           "max_hp": 100,
           "speed": 3,
-          "amount": 2,
+          "amount": 3,
           "delay": 10
         }
       }
     },
-    "4": {
+    "7": {
       "monsters": {
-        "boss": {
-          "max_hp": 1000,
+        "basic": {
+          "max_hp": 100,
           "speed": 1,
-          "amount": 1,
+          "amount": 20,
           "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 3,
+          "delay": 10
         }
       }
     },
-    "5": {
+    "8": {
       "monsters": {
+        "boss": {
+          "max_hp": 3000,
+          "speed": 1,
+          "amount": 1,
+          "delay": 5
+        }
+      }
+    },
+    "9": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 20,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 3,
+          "delay": 10
+        },
         "magic": {
           "max_hp": 300,
           "speed": 1,
-          "amount": 10,
+          "amount": 1,
+          "delay": 5
+        }
+      }
+    },
+    "10": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 20,
           "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 3,
+          "delay": 10
+        },
+        "magic": {
+          "max_hp": 300,
+          "speed": 1,
+          "amount": 3,
+          "delay": 5
+        }
+      }
+    },
+    "11": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 20,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 3,
+          "delay": 10
+        },
+        "magic": {
+          "max_hp": 300,
+          "speed": 1,
+          "amount": 3,
+          "delay": 5
+        }
+      }
+    },
+    "12": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 25,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 5,
+          "delay": 10
+        },
+        "magic": {
+          "max_hp": 300,
+          "speed": 1,
+          "amount": 5,
+          "delay": 5
+        }
+      }
+    },
+    "13": {
+      "monsters": {
+        "basic": {
+          "max_hp": 100,
+          "speed": 1,
+          "amount": 25,
+          "delay": 3
+        },
+        "fast": {
+          "max_hp": 100,
+          "speed": 3,
+          "amount": 5,
+          "delay": 10
+        },
+        "magic": {
+          "max_hp": 300,
+          "speed": 1,
+          "amount": 5,
+          "delay": 5
+        },
+        "boss": {
+          "max_hp": 3000,
+          "speed": 1,
+          "amount": 1,
+          "delay": 10
         }
       }
     }
