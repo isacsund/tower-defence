@@ -5,8 +5,8 @@
         "basic": {
           "max_hp": 100,
           "speed": 1,
-          "amount": 3,
-          "delay": 3
+          "amount": 5,
+          "delay": 1
         }
       }
     },

@@ -201,7 +201,8 @@ void PlayState::Tick() {
   }
   FindEnemies();
   auto cur_time = clock_.getElapsedTime().asSeconds();
-  if (cur_time - last_spawn_ > 1 && spawn_queue_.size() > 0) {
+  int delay = spawn_queue_.front().GetDelay();
+  if (cur_time - last_spawn_ > delay && spawn_queue_.size() > 0) {
     enemies_.push_back(spawn_queue_.front());
     spawn_queue_.pop_front();
     last_spawn_ = cur_time;

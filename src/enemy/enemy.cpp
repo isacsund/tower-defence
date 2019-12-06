@@ -4,16 +4,17 @@
 #include <iostream>
 #include "../game/texturemanager.hpp"
 
-Enemy::Enemy(float max_hp, float speed, float x, float y, float size,
+Enemy::Enemy(float max_hp, float speed, float x, float y, float size, int delay,
              EnemyTypes type)
     : max_hp_(max_hp),
       hp_(max_hp),
       speed_(speed),
       x_(x),
       y_(y),
+      delay_(delay),
       type_(type),
       target_tile_({-1, -1}) {
-    switch (type) {
+  switch (type) {
     case Fast:
       texture_name_ = "sprites/enemy_2.png";
       break;
@@ -64,6 +65,7 @@ void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
 float Enemy::GetHp() const { return hp_; }
 float Enemy::GetMaxHp() const { return max_hp_; }
 float Enemy::GetSpeed() const { return speed_; }
+int Enemy::GetDelay() const { return delay_; }
 const std::pair<float, float> Enemy::GetPosition() const { return {x_, y_}; }
 const std::pair<int, int> Enemy::GetTile() const { return {int(x_), int(y_)}; }
 EnemyTypes Enemy::GetType() const { return type_; }
