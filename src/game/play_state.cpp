@@ -10,6 +10,7 @@
 #include "../configuration/configmanager.hpp"
 #include "../enemy/enemy.hpp"
 #include "../tower/basic_tower.hpp"
+#include "../tower/money_tower.hpp"
 #include "../tower/ship_tower.hpp"
 #include "game_state.hpp"
 #include "menu_state.hpp"
@@ -105,6 +106,11 @@ void PlayState::HandleInput() {
             sf::Vector2f(map_size, tower_height + margin));
 
         tower_height += gui_.at("sidegui").Get("tower2").GetHeight();
+
+        gui_.at("sidegui").Get("tower3").SetPosition(
+            sf::Vector2f(map_size, tower_height + margin));
+
+        tower_height += gui_.at("sidegui").Get("tower3").GetHeight();
         gui_.at("sidegui").Get("wave").SetPosition(
             sf::Vector2f(map_size, tower_height + margin));
 
@@ -150,7 +156,7 @@ void PlayState::HandleInput() {
       }
       case sf::Event::KeyPressed: {
         float vol = game->music.getVolume();
-        std::cout << vol << std::endl;
+        std::cout << "Volume: " << vol << std::endl;
         switch (event.key.code) {
           case sf::Keyboard::M:
             if (game->music.getStatus() != sf::Music::Status::Paused) {
@@ -265,6 +271,16 @@ void PlayState::HandleMapClick(int x, int y) {
       active_tower_ = boost::none;
       gui_.at("sidegui").Get("cancelbuy").Hide();
       InitTowerGUI(selected_tower_);
+    } else if (active_tower_.get().first == "money") {
+      auto tower = towers_.insert(
+          {{x, y},
+           std::make_unique<MoneyTower>(x, y, GetTileSize(),
+                                        active_tower_->second->GetPrice())});
+      selected_tower_ = tower.first->second.get();
+      selected_tower_->SetActive();
+      active_tower_ = boost::none;
+      gui_.at("sidegui").Get("cancelbuy").Hide();
+      InitTowerGUI(selected_tower_);
     }
   } else if ((active_tower_.get_ptr() != 0) &&
              (map_(x, y).GetType() == Water1 ||
@@ -342,7 +358,25 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
       UpdatePlayerStats();
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
+  } else if (gui_.at("sidegui").Get("tower3").Contains(mouse_position)) {
+    for (auto& tower : towers_) {
+      tower.second->SetInactive();
+    }
+    // If we have an selected tower, remove the selection
+    if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
+    auto tower =
+        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 250);
+
+    // Check if the player has enough money
+    if (player_.GetMoney() >= tower.GetPrice()) {
+      active_tower_ =
+          std::make_pair("money", std::make_unique<MoneyTower>(tower));
+      active_tower_->second->SetActive();
+      player_.AddMoney(-active_tower_.get().second->GetPrice());
+      UpdatePlayerStats();
+      gui_.at("sidegui").Get("cancelbuy").Show();
+    }
   } else if (gui_.at("sidegui").Get("nextwave").IsEnabled() &&
              gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
@@ -400,6 +434,14 @@ void PlayState::InitGUI() {
                boost::none));
 
   tower_height += sidegui.Get("tower2").GetHeight();
+
+  sidegui.Add(
+      "tower3",
+      GuiEntry(sf::Vector2f(map_size, tower_height + margin), boost::none,
+               texture_manager.GetTexture("sprites/money_tower.png"),
+               boost::none));
+
+  tower_height += sidegui.Get("tower3").GetHeight();
 
   sidegui.Add(
       "wave",
