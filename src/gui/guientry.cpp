@@ -1,6 +1,6 @@
 #include "guientry.hpp"
 #include "../game/texturemanager.hpp"
-
+#include <iostream>
 GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
                    boost::optional<sf::Texture&> texture,
                    boost::optional<sf::Font&> font, bool visible)
@@ -44,7 +44,7 @@ float GuiEntry::GetWidth() const {
   if (sprite_.get_ptr() != 0) {
     return sprite_->getLocalBounds().width;
   } else {
-    title_->getLocalBounds().width;
+    return title_->getLocalBounds().width;
   }
 }
 
@@ -52,7 +52,7 @@ float GuiEntry::GetHeight() const {
   if (sprite_.get_ptr() != 0) {
     return sprite_->getLocalBounds().height;
   } else {
-    title_->getLocalBounds().height;
+    return title_->getLocalBounds().height;
   }
 }
 
