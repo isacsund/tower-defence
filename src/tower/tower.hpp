@@ -23,6 +23,7 @@ class Tower : public sf::Drawable {
   void SetInactive();
   bool IsActive() const;
   int GetPrice() const;
+  int GetCurrentUpgrade() const;
   bool IsUpgradeable() const;
   virtual void Upgrade() = 0;
   virtual ~Tower(){};

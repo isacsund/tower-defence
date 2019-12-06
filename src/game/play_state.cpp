@@ -448,7 +448,10 @@ void PlayState::InitTowerGUI() {
       "tower_stats",
       GuiEntry(
           sf::Vector2f(tower_width + margin, map_size),
-          "Range: " +
+          "Level: " +
+              boost::str(boost::format("%.1f") %
+                         selected_tower_->GetCurrentUpgrade()) +
+              "\nRange: " +
               boost::str(boost::format("%.1f") % selected_tower_->GetRange()) +
               "\nDamage: " +
               boost::str(boost::format("%.1f") % selected_tower_->GetDamage()) +
@@ -495,7 +498,10 @@ void PlayState::UpdateTowerStats() {
   gui_.at("towergui")
       .Get("tower_stats")
       .SetTitle(
-          "Range: " +
+          "Level: " +
+          boost::str(boost::format("%.1f") %
+                     selected_tower_->GetCurrentUpgrade()) +
+          "\nRange: " +
           boost::str(boost::format("%.1f") % selected_tower_->GetRange()) +
           "\nDamage: " +
           boost::str(boost::format("%.1f") % selected_tower_->GetDamage()) +
