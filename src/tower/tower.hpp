@@ -23,10 +23,17 @@ class Tower : public sf::Drawable {
   void SetInactive();
   bool IsActive() const;
   int GetPrice() const;
+  bool IsUpgradeable() const;
+  virtual void Upgrade() = 0;
+  virtual ~Tower(){};
 
- private:
+ protected:
+  int max_upgrade_;
   float range_;
   float damage_;
+  int current_upgrade_;
+
+ private:
   float att_speed_;
   int x_, y_;
   float size_;

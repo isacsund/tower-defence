@@ -6,6 +6,7 @@ Tower::Tower(float range, float damage, float att_speed, int x, int y,
              float size, int price, const std::string& texturename)
     : range_(range),
       damage_(damage),
+      current_upgrade_(1),
       att_speed_(att_speed),
       x_(x),
       y_(y),
@@ -57,3 +58,5 @@ void Tower::SetActive() { active_ = true; }
 void Tower::SetInactive() { active_ = false; }
 bool Tower::IsActive() const { return active_; }
 int Tower::GetPrice() const { return price_; }
+
+bool Tower::IsUpgradeable() const { return (current_upgrade_ < max_upgrade_); }

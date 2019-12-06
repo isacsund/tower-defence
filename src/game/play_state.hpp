@@ -24,18 +24,19 @@ class PlayState : public GameState {
   void InitTowerGUI();
   int GetTileSize() const;
   void UpdatePlayerStats();
+  void UpdateTowerStats();
 
  private:
   Map map_;
   std::vector<Enemy> enemies_;
   std::deque<Enemy> spawn_queue_;
-  std::map<std::pair<int, int>, Tower> towers_;
+  std::map<std::pair<int, int>, std::unique_ptr<Tower>> towers_;
   sf::View view_;
   sf::Sprite background_;
   sf::Font font_;
   std::map<std::string, Button> buttons_;
   std::map<std::string, Gui> gui_;
-  boost::optional<std::pair<std::string, Tower>> active_tower_;
+  boost::optional<std::pair<std::string, std::unique_ptr<Tower>>> active_tower_;
   Tower* selected_tower_;
   sf::Clock clock_;
   float last_spawn_;

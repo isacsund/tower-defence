@@ -9,6 +9,7 @@
 #include <vector>
 #include "../configuration/configmanager.hpp"
 #include "../enemy/enemy.hpp"
+#include "../tower/basic_tower.hpp"
 #include "../tower/ship_tower.hpp"
 #include "game_state.hpp"
 #include "menu_state.hpp"
@@ -46,7 +47,6 @@ void PlayState::Draw() {
       "Wave: " + std::to_string(wave_ - 1) +
       "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
   if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
-
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
       enemy.SetPosition(
@@ -58,22 +58,24 @@ void PlayState::Draw() {
     }
   }
   for (auto& tower : towers_) {
-    tower.second.SetPosition(tower.second.GetPosition().first * GetTileSize(),
-                             tower.second.GetPosition().second * GetTileSize());
-    tower.second.SetScale(
-        GetTileSize() / (float)(tower.second.GetTexture()).getSize().x,
-        GetTileSize() / (float)(tower.second.GetTexture()).getSize().y);
-    this->game->window.draw(tower.second);
+    tower.second->SetPosition(
+        tower.second->GetPosition().first * GetTileSize(),
+        tower.second->GetPosition().second * GetTileSize());
+    tower.second->SetScale(
+        GetTileSize() / (float)(tower.second->GetTexture()).getSize().x,
+        GetTileSize() / (float)(tower.second->GetTexture()).getSize().y);
+    this->game->window.draw(*tower.second);
   }
   if (active_tower_.get_ptr() != 0) {
-    active_tower_->second.SetPosition(
+    active_tower_->second->SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
         sf::Mouse::getPosition(this->game->window).y - GetTileSize() / 2);
-    active_tower_->second.SetScale(
-        GetTileSize() / (float)(active_tower_->second.GetTexture()).getSize().x,
+    active_tower_->second->SetScale(
         GetTileSize() /
-            (float)(active_tower_->second.GetTexture()).getSize().y);
-    this->game->window.draw(active_tower_.get().second);
+            (float)(active_tower_->second->GetTexture()).getSize().x,
+        GetTileSize() /
+            (float)(active_tower_->second->GetTexture()).getSize().y);
+    this->game->window.draw(*active_tower_.get().second);
   }
 
   Tick();
@@ -222,8 +224,8 @@ void PlayState::FindEnemies() {
   for (auto& tower : towers_) {
     closest_enemy = nullptr;
     closest_distance = std::numeric_limits<float>::max();
-    float range = tower.second.GetRange();
-    auto tower_pos = tower.second.GetPosition();
+    float range = tower.second->GetRange();
+    auto tower_pos = tower.second->GetPosition();
     for (auto& enemy : enemies_) {
       auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
@@ -238,10 +240,10 @@ void PlayState::FindEnemies() {
         closest_distance = base_distance;
       }
     }
-    if ((closest_enemy) && (cur_time - tower.second.GetLastAttack() >
-                            (1 / tower.second.GetAttSpeed()))) {
-      tower.second.SetLastAttack(cur_time);
-      tower.second.Attack(*closest_enemy);
+    if ((closest_enemy) && (cur_time - tower.second->GetLastAttack() >
+                            (1 / tower.second->GetAttSpeed()))) {
+      tower.second->SetLastAttack(cur_time);
+      tower.second->Attack(*closest_enemy);
     }
   }
 }
@@ -253,11 +255,12 @@ void PlayState::HandleMapClick(int x, int y) {
     if (active_tower_.get().first == "basic") {
       auto tower = towers_.insert(
           {{x, y},
-           Tower(active_tower_->second.GetRange(),
-                 active_tower_->second.GetDamage(),
-                 active_tower_->second.GetAttSpeed(), x, y, GetTileSize(),
-                 active_tower_->second.GetPrice())});
-      selected_tower_ = &tower.first->second;
+           std::make_unique<BasicTower>(active_tower_->second->GetRange(),
+                                        active_tower_->second->GetDamage(),
+                                        active_tower_->second->GetAttSpeed(), x,
+                                        y, GetTileSize(),
+                                        active_tower_->second->GetPrice())});
+      selected_tower_ = tower.first->second.get();
       selected_tower_->SetActive();
       active_tower_ = boost::none;
       gui_.at("sidegui").Get("cancelbuy").Hide();
@@ -270,11 +273,12 @@ void PlayState::HandleMapClick(int x, int y) {
     if (active_tower_.get().first == "ship") {
       auto tower = towers_.insert(
           {{x, y},
-           ShipTower(active_tower_->second.GetRange(),
-                     active_tower_->second.GetDamage(),
-                     active_tower_->second.GetAttSpeed(), x, y, GetTileSize(),
-                     active_tower_->second.GetPrice())});
-      selected_tower_ = &tower.first->second;
+           std::make_unique<ShipTower>(active_tower_->second->GetRange(),
+                                       active_tower_->second->GetDamage(),
+                                       active_tower_->second->GetAttSpeed(), x,
+                                       y, GetTileSize(),
+                                       active_tower_->second->GetPrice())});
+      selected_tower_ = tower.first->second.get();
       selected_tower_->SetActive();
       active_tower_ = boost::none;
       gui_.at("sidegui").Get("cancelbuy").Hide();
@@ -287,7 +291,7 @@ void PlayState::HandleMapClick(int x, int y) {
       selected_tower_->SetInactive();
     }
     auto tower = towers_.find({x, y});
-    selected_tower_ = &tower->second;
+    selected_tower_ = tower->second.get();
     selected_tower_->SetActive();
     InitTowerGUI();
   }
@@ -302,39 +306,39 @@ void PlayState::HandleMapClick(int x, int y) {
 void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
   if (gui_.at("sidegui").Get("tower1").Contains(mouse_position)) {
     for (auto& tower : towers_) {
-      tower.second.SetInactive();
+      tower.second->SetInactive();
     }
     // If we have an selected tower, remove the selection
     if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
-    auto tower =
-        std::make_pair("basic", Tower(5, 10, 1, mouse_position.x,
-                                      mouse_position.y, GetTileSize(), 250));
+    auto tower = BasicTower(5, 10, 1, mouse_position.x, mouse_position.y,
+                            GetTileSize(), 250);
 
     // Check if the player has enough money
-    if (player_.GetMoney() >= tower.second.GetPrice()) {
-      active_tower_ = tower;
-      active_tower_->second.SetActive();
-      player_.AddMoney(-active_tower_.get().second.GetPrice());
+    if (player_.GetMoney() >= tower.GetPrice()) {
+      active_tower_ =
+          std::make_pair("basic", std::make_unique<BasicTower>(tower));
+      active_tower_->second->SetActive();
+      player_.AddMoney(-active_tower_.get().second->GetPrice());
       UpdatePlayerStats();
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
   } else if (gui_.at("sidegui").Get("tower2").Contains(mouse_position)) {
     for (auto& tower : towers_) {
-      tower.second.SetInactive();
+      tower.second->SetInactive();
     }
     // If we have an selected tower, remove the selection
     if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
-    auto tower =
-        std::make_pair("ship", ShipTower(8, 5, 1, mouse_position.x,
-                                         mouse_position.y, GetTileSize(), 250));
+    auto tower = ShipTower(8, 5, 1, mouse_position.x, mouse_position.y,
+                           GetTileSize(), 250);
 
     // Check if the player has enough money
-    if (player_.GetMoney() >= tower.second.GetPrice()) {
-      active_tower_ = tower;
-      active_tower_->second.SetActive();
-      player_.AddMoney(-active_tower_.get().second.GetPrice());
+    if (player_.GetMoney() >= tower.GetPrice()) {
+      active_tower_ =
+          std::make_pair("ship", std::make_unique<ShipTower>(tower));
+      active_tower_->second->SetActive();
+      player_.AddMoney(-active_tower_.get().second->GetPrice());
       UpdatePlayerStats();
       gui_.at("sidegui").Get("cancelbuy").Show();
     }
@@ -354,10 +358,16 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
 
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position) &&
              active_tower_.get_ptr() != 0) {
-    player_.AddMoney(active_tower_.get().second.GetPrice());
+    player_.AddMoney(active_tower_.get().second->GetPrice());
     UpdatePlayerStats();
     active_tower_ = boost::none;
     gui_.at("sidegui").Get("cancelbuy").Hide();
+  } else if (gui_.find("towergui") != gui_.end() &&
+             gui_.at("towergui")
+                 .Get("upgrade_tower")
+                 .Contains(mouse_position)) {
+    selected_tower_->Upgrade();
+    UpdateTowerStats();
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
     player_.AddMoney(selected_tower_->GetPrice() / 2);
@@ -427,17 +437,17 @@ void PlayState::InitGUI() {
 
 void PlayState::InitTowerGUI() {
   Gui towergui = Gui();
+  const int margin = 10;
+  int map_size = GetTileSize() * map_.GetHeight();
+  towergui.Add("tower", GuiEntry(sf::Vector2f(0, map_size), boost::none,
+                                 selected_tower_->GetTexture(), boost::none));
 
-  towergui.Add(
-      "tower",
-      GuiEntry(sf::Vector2f(0, GetTileSize() * map_.GetHeight()), boost::none,
-               selected_tower_->GetTexture(), boost::none));
+  int tower_width = towergui.Get("tower").GetWidth();
 
   towergui.Add(
       "tower_stats",
       GuiEntry(
-          sf::Vector2f(towergui.Get("tower").GetWidth(),
-                       GetTileSize() * map_.GetHeight()),
+          sf::Vector2f(tower_width + margin, map_size),
           "Range: " +
               boost::str(boost::format("%.1f") % selected_tower_->GetRange()) +
               "\nDamage: " +
@@ -446,12 +456,21 @@ void PlayState::InitTowerGUI() {
               boost::str(boost::format("%.1f") %
                          selected_tower_->GetAttSpeed()),
           boost::none, font_));
+  int tower_stats_width = towergui.Get("tower_stats").GetWidth();
+
+  towergui.Add(
+      "upgrade_tower",
+      GuiEntry(
+          sf::Vector2f(tower_width + tower_stats_width + 2 * margin, map_size),
+          std::string("Upgrade"),
+          texture_manager.GetTexture("sprites/button.png"), font_));
+  int upgrade_tower_width = towergui.Get("upgrade_tower").GetWidth();
 
   towergui.Add(
       "sell_tower",
-      GuiEntry(sf::Vector2f(towergui.Get("tower").GetWidth() +
-                                towergui.Get("tower_stats").GetWidth(),
-                            GetTileSize() * map_.GetHeight()),
+      GuiEntry(sf::Vector2f(tower_width + tower_stats_width +
+                                upgrade_tower_width + 3 * margin,
+                            map_size),
                std::string("Sell"),
                texture_manager.GetTexture("sprites/button.png"), font_));
 
@@ -470,4 +489,16 @@ void PlayState::UpdatePlayerStats() {
       "Player: " + player_.GetName() +
       "\nMoney: " + std::to_string(player_.GetMoney()) +
       "\nLives: " + std::to_string(player_.GetLives()));
+}
+
+void PlayState::UpdateTowerStats() {
+  gui_.at("towergui")
+      .Get("tower_stats")
+      .SetTitle(
+          "Range: " +
+          boost::str(boost::format("%.1f") % selected_tower_->GetRange()) +
+          "\nDamage: " +
+          boost::str(boost::format("%.1f") % selected_tower_->GetDamage()) +
+          "\nAttack speed: " +
+          boost::str(boost::format("%.1f") % selected_tower_->GetAttSpeed()));
 }
