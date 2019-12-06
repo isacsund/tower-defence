@@ -130,3 +130,20 @@ void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(hp_bar_red_, states);
   target.draw(hp_bar_green_, states);
 }
+
+Enemy& Enemy::operator=(const Enemy& enemy) {
+  max_hp_ = enemy.max_hp_;
+  speed_ = enemy.speed_;
+  x_ = enemy.x_;
+  y_ = enemy.y_;
+  size_ = enemy.size_;
+  delay_ = enemy.delay_;
+  sprite_ = enemy.sprite_;
+  type_ = enemy.type_;
+  target_tile_ = enemy.target_tile_;
+  texture_name_ = enemy.texture_name_;
+  hp_bar_green_ = enemy.hp_bar_green_;
+  hp_bar_red_ = enemy.hp_bar_red_;
+  hp_ = enemy.hp_;
+  return *this;
+}

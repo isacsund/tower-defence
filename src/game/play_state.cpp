@@ -192,11 +192,14 @@ void PlayState::Tick() {
       it->Move(path);
       if (it->GetTile() == player_base) {
         it->SetHp(0);
+        it = enemies_.erase(it);
         if (player_.GetLives() > 0) {
           player_.RemoveLives(1);
           UpdatePlayerStats();
         }
       }
+    } else {
+      it = enemies_.erase(it);
     }
   }
   FindEnemies();
