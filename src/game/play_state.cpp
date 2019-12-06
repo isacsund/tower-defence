@@ -189,12 +189,20 @@ void PlayState::Tick() {
     enemies_.push_back(spawn_queue_.front());
     spawn_queue_.pop_front();
     last_spawn_ = cur_time;
+    if (spawn_queue_.size() == 0) {
+      gui_.at("sidegui").Get("nextwave").Show();
+    }
   }
 }
 
 void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
   for (auto& enemy : enemies) {
     spawn_queue_.push_back(enemy);
+  }
+  if (spawn_queue_.size() > 0) {
+    gui_.at("sidegui").Get("nextwave").Hide();
+  } else {
+    gui_.at("sidegui").Get("nextwave").Show();
   }
 }
 
@@ -275,7 +283,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
       std::cout << "Pressed Tower1 button" << std::endl;
     }
 
-  } else if (gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
+  } else if (gui_.at("sidegui").Get("nextwave").IsVisible() && gui_.at("sidegui").Get("nextwave").Contains(mouse_position)) {
     std::cout << "Spawning wave " << wave_ << std::endl;
     AddToSpawnQueue(map_.LoadWave(wave_));
     wave_++;

@@ -13,7 +13,7 @@ class GuiEntry : public sf::Drawable {
   bool Contains(sf::Vector2f mouse_position);
   void Show();
   void Hide();
-
+  bool IsVisible();
  private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
   boost::optional<sf::Text> title_;

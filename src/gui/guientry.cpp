@@ -62,10 +62,11 @@ bool GuiEntry::Contains(sf::Vector2f mouse_position) {
 
 void GuiEntry::Show() { visible_ = true; }
 void GuiEntry::Hide() { visible_ = false; }
-
+bool GuiEntry::IsVisible() { return visible_; }
 void GuiEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   if (visible_) {
     if (sprite_.get_ptr() != 0) target.draw(sprite_.get(), states);
     if (title_.get_ptr() != 0) target.draw(title_.get(), states);
   }
 }
+
