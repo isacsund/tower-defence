@@ -239,7 +239,7 @@ void PlayState::FindEnemies() {
       }
     }
     if ((closest_enemy) && (cur_time - tower.second.GetLastAttack() >
-                            tower.second.GetAttSpeed())) {
+                            (1 / tower.second.GetAttSpeed()))) {
       tower.second.SetLastAttack(cur_time);
       tower.second.Attack(*closest_enemy);
     }
@@ -265,7 +265,7 @@ void PlayState::HandleMapClick(int x, int y) {
              !towers_.count({x, y})) {
     if (active_tower_.get().first == "ship") {
       auto tower = towers_.insert(
-          {{x, y}, ShipTower(7, 20, 0.2, x, y, GetTileSize(), 500)});
+          {{x, y}, ShipTower(7, 20, 5, x, y, GetTileSize(), 500)});
       selected_tower_ = &tower.first->second;
       selected_tower_->SetActive();
       active_tower_ = boost::none;
@@ -310,7 +310,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
 
   } else if (gui_.at("sidegui").Get("tower2").Contains(mouse_position)) {
     active_tower_ =
-        std::make_pair("ship", ShipTower(7, 20, 0.2, mouse_position.x,
+        std::make_pair("ship", ShipTower(7, 20, 5, mouse_position.x,
                                          mouse_position.y, GetTileSize(), 500));
     active_tower_->second.SetActive();
     if (player_.GetMoney() >= active_tower_.get().second.GetPrice()) {
