@@ -33,3 +33,9 @@ bool ConfigManager::ParseFile(const std::string& file_path,
   }
   return true;
 }
+
+boost::property_tree::ptree ConfigManager::GetSubTree(const std::string& name) {
+  return config_.get_child(name);
+}
+
+boost::property_tree::ptree ConfigManager::GetConfig() { return config_; }

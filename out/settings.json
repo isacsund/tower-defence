@@ -4,6 +4,11 @@
       "name": "Map 01",
       "file": "map.txt",
       "waves": "waves.json"
+    },
+    "02": {
+      "name": "Map 02",
+      "file": "map.txt",
+      "waves": "waves.json"
     }
   }
 }

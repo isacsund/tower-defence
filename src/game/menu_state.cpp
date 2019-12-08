@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../configuration/configmanager.hpp"
 #include "../map/map.hpp"
-#include "play_state.hpp"
+#include "map_state.hpp"
 #include "texturemanager.hpp"
 #include "wavemanager.hpp"
 
@@ -64,13 +64,35 @@ void MenuState::HandleInput() {
             sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
         if (event.mouseButton.button == sf::Mouse::Left) {
           if (menu_.Get("Play").Contains(mouse_position)) {
-            LoadGame();
+            this->game->PushState(new MapState(this->game));
           }
         }
         break;
       }
       case sf::Event::KeyPressed: {
         if (event.key.code == sf::Keyboard::Escape) {
+          float vol = game->music.getVolume();
+          std::cout << "Volume: " << vol << std::endl;
+          switch (event.key.code) {
+            case sf::Keyboard::M:
+              if (game->music.getStatus() != sf::Music::Status::Paused) {
+                game->music.pause();
+              } else {
+                game->music.play();
+              }
+              break;
+            case sf::Keyboard::Add:
+              if (vol + 5 <= 100) vol += 5;
+              game->music.setVolume(vol);
+              break;
+            case sf::Keyboard::Subtract:
+              if (vol - 5 >= 0) vol -= 5;
+              game->music.setVolume(vol);
+              break;
+            default:
+              break;
+          }
+          break;
         }
         break;
       }
@@ -78,19 +100,4 @@ void MenuState::HandleInput() {
         break;
     }
   }
-}
-
-void MenuState::LoadGame() {
-  Map map = Map();
-  map.SetName("01");
-  map.Load(config_manager->GetValueOrDefault<std::string>(
-      "maps/" + map.GetName() + "/file", "maps/01/file"));
-  map.tile_size =
-      std::min((this->game->window.getSize().x - 200) / map.GetWidth(),
-               (this->game->window.getSize().y) / map.GetHeight());
-  wave_manager.ParseFile(
-      "maps/" + map.GetName() + "/" +
-      config_manager->GetValueOrDefault<std::string>(
-          "maps/" + map.GetName() + "/waves", "maps/01/waves"));
-  this->game->PushState(new PlayState(this->game, map));
 }

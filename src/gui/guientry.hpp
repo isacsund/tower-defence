@@ -8,6 +8,7 @@ class GuiEntry : public sf::Drawable {
            boost::optional<sf::Font&> font, bool visible = true);
   void SetPosition(sf::Vector2f position);
   void SetTitle(const std::string& title);
+  std::string GetTitle() const;
   float GetWidth() const;
   float GetHeight() const;
   bool Contains(sf::Vector2f mouse_position);
@@ -17,6 +18,8 @@ class GuiEntry : public sf::Drawable {
   void Enable();
   void Disable();
   bool IsEnabled();
+  void Highlight();
+  void Unhighlight();
 
  private:
   virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -25,4 +28,5 @@ class GuiEntry : public sf::Drawable {
   sf::Vector2f position_;
   bool visible_;
   bool enabled_;
+  bool highlighted_;
 };

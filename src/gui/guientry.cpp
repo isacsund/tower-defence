@@ -5,7 +5,10 @@
 GuiEntry::GuiEntry(sf::Vector2f position, boost::optional<std::string> title,
                    boost::optional<sf::Texture&> texture,
                    boost::optional<sf::Font&> font, bool visible)
-    : position_(position), visible_(visible), enabled_(true) {
+    : position_(position),
+      visible_(visible),
+      enabled_(true),
+      highlighted_(false) {
   if (title.get_ptr() != 0) {
     title_ = sf::Text();
     title_->setFont(font.get());
@@ -40,6 +43,9 @@ void GuiEntry::SetPosition(sf::Vector2f position) {
 }
 
 void GuiEntry::SetTitle(const std::string& title) { title_->setString(title); }
+std::string GuiEntry::GetTitle() const {
+  return title_->getString().toAnsiString();
+}
 
 float GuiEntry::GetWidth() const {
   if (sprite_.get_ptr() != 0) {
@@ -74,6 +80,15 @@ void GuiEntry::Disable() {
   sprite_->setColor(sf::Color(128, 128, 128, 255));
 }
 bool GuiEntry::IsEnabled() { return enabled_; }
+
+void GuiEntry::Highlight() {
+  highlighted_ = true;
+  sprite_->setColor(sf::Color(192, 192, 192, 255));
+}
+void GuiEntry::Unhighlight() {
+  highlighted_ = false;
+  sprite_->setColor(sf::Color(sf::Color::White));
+}
 
 void GuiEntry::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   if (visible_) {
