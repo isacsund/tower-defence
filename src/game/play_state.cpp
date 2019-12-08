@@ -42,6 +42,8 @@ void PlayState::Draw() {
   this->game->window.draw(background_);
   map_.Draw(this->game->window);
   this->game->window.draw(gui_.at("sidegui"));
+
+  // Get enemies remaining if there are any
   int enemies = std::count_if(enemies_.begin(), enemies_.end(),
                               [](Enemy e) { return e.IsAlive(); });
   gui_.at("sidegui").Get("wave").SetTitle(
@@ -52,7 +54,8 @@ void PlayState::Draw() {
   if (enemies_.size() == 0 && spawn_queue_.size() == 0)
     gui_.at("sidegui").Get("nextwave").Enable();
 
-  if (selected_tower_ != nullptr) this->game->window.draw(gui_.at("towergui"));
+  if (selected_tower_) this->game->window.draw(gui_.at("towergui"));
+
   for (auto& enemy : boost::adaptors::reverse(enemies_)) {
     if (enemy.IsAlive()) {
       enemy.SetPosition(
@@ -72,6 +75,8 @@ void PlayState::Draw() {
         GetTileSize() / (float)(tower.second->GetTexture()).getSize().y);
     this->game->window.draw(*tower.second);
   }
+
+  // If we have an active tower, draw it on the mouse position
   if (active_tower_.get_ptr() != 0) {
     active_tower_->second->SetPosition(
         sf::Mouse::getPosition(this->game->window).x - GetTileSize() / 2,
@@ -92,12 +97,12 @@ void PlayState::HandleInput() {
 
   while (this->game->window.pollEvent(event)) {
     switch (event.type) {
-      /* Close the window */
+      // Close the window
       case sf::Event::Closed: {
         game->window.close();
         break;
       }
-      /* Resize the window */
+      // Resize the window
       case sf::Event::Resized: {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
@@ -193,6 +198,8 @@ void PlayState::Tick() {
   auto path = map_.GetPath();
   auto player_base = map_.GetPlayerBase();
   std::vector<Enemy>::iterator it = enemies_.begin();
+
+  // Loop through all enemies and move them if they aren't dead
   while (it != enemies_.end()) {
     if (it->IsAlive()) {
       it->Move(path);
@@ -208,8 +215,10 @@ void PlayState::Tick() {
       it = enemies_.erase(it);
     }
   }
+
   FindEnemies();
   auto cur_time = clock_.getElapsedTime().asSeconds();
+  // Add enemies to the enemies vector with a certain delay
   if (spawn_queue_.size() > 0) {
     int delay = spawn_queue_.front().GetDelay();
     if (cur_time - last_spawn_ > delay && spawn_queue_.size() > 0) {
@@ -265,11 +274,11 @@ void PlayState::FindEnemies() {
           case Big:
             player_.AddMoney(50);
             break;
-          case Boss:
-            player_.AddMoney(100);
-            break;
           case Magic:
             player_.AddMoney(40);
+            break;
+          case Boss:
+            player_.AddMoney(100);
             break;
           default:
             break;
@@ -307,10 +316,11 @@ void PlayState::HandleMapClick(int x, int y) {
       gui_.at("sidegui").Get("cancelbuy").Hide();
       InitTowerGUI(selected_tower_);
     }
-  } else if ((active_tower_.get_ptr() != 0) &&
-             (map_(x, y).GetType() == Water1 ||
-              map_(x, y).GetType() == Water2) &&
-             !towers_.count({x, y})) {
+  }
+  // Click on a water tile with an active tower
+  else if ((active_tower_.get_ptr() != 0) &&
+           (map_(x, y).GetType() == Water1 || map_(x, y).GetType() == Water2) &&
+           !towers_.count({x, y})) {
     if (active_tower_.get().first == "ship") {
       auto tower = towers_.insert(
           {{x, y},
@@ -405,13 +415,6 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     AddToSpawnQueue(map_.LoadWave(wave_));
     gui_.at("sidegui").Get("nextwave").Disable();
     wave_++;
-
-    int enemies = std::count_if(enemies_.begin(), enemies_.end(),
-                                [](Enemy e) { return e.IsAlive(); });
-
-    gui_.at("sidegui").Get("wave").SetTitle(
-        "Wave: " + std::to_string(wave_ - 1) +
-        "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
   } else if (gui_.at("sidegui").Get("cancelbuy").Contains(mouse_position) &&
              active_tower_.get_ptr() != 0) {
     player_.AddMoney(active_tower_.get().second->GetPrice());
@@ -423,8 +426,10 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
                  .Contains(mouse_position) &&
              gui_.at("towergui").Get("upgrade_tower").IsEnabled()) {
     selected_tower_->Upgrade();
+
     if (!selected_tower_->IsUpgradeable())
       gui_.at("towergui").Get("upgrade_tower").Disable();
+
     UpdateTowerStats();
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
@@ -434,6 +439,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
   }
 }
 
+// Initializes the main GUI
 void PlayState::InitGUI() {
   Gui sidegui = Gui();
   const int margin = 10;
@@ -500,6 +506,7 @@ void PlayState::InitGUI() {
   gui_.insert({"sidegui", sidegui});
 }
 
+// Initializes the tower GUI
 void PlayState::InitTowerGUI(Tower* selected_tower) {
   Gui towergui = Gui();
   const int margin = 10;
