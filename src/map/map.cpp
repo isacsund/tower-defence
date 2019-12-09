@@ -133,7 +133,7 @@ std::vector<Enemy> Map::LoadWave(int wave) {
               Enemy(monster.second.get<int>("max_hp"),
                     monster.second.get<float>("speed"),
                     enemy_spawn_.first + 0.5, enemy_spawn_.second + 0.5,
-                    tile_size, monster.second.get<int>("delay"), enemy_type));
+                    tile_size, monster.second.get<float>("delay"), enemy_type));
         }
       }
     }

@@ -33,7 +33,7 @@ class Enemy : public sf::Drawable {
   float speed_;
   float x_, y_;
   int size_;
-  int delay_;
+  float delay_;
   std::string texture_name_;
   EnemyTypes type_;
   std::pair<int, int> target_tile_;
