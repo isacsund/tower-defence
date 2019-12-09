@@ -3,17 +3,16 @@
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
-             float size, int price, int money_per_wave,
-             const std::string& texturename)
+             float size, int price, const std::string& texturename)
     : range_(range),
       damage_(damage),
       current_upgrade_(1),
       att_speed_(att_speed),
+      money_per_wave_(0),
       x_(x),
       y_(y),
       size_(size),
       price_(price),
-      money_per_wave_(money_per_wave),
       texturename_(texturename),
       last_attack_(0) {
   sprite_ = sf::Sprite(GetTexture());

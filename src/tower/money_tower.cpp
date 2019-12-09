@@ -1,10 +1,11 @@
 #include "money_tower.hpp"
 
-MoneyTower::MoneyTower(int x, int y, float size, int price, int money_per_wave,
+MoneyTower::MoneyTower(int x, int y, float size, int price,
                        const std::string& texturename)
-    : Tower(0, 0, 0, x, y, size, price, money_per_wave, texturename) {
+    : Tower(0, 0, 0, x, y, size, price, texturename) {
   max_upgrade_ = 4;
   upgrade_price_ = 100;
+  money_per_wave_ = 100;
 }
 
 void MoneyTower::Upgrade() {

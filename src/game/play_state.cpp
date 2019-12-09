@@ -338,8 +338,8 @@ void PlayState::HandleMapClick(int x, int y) {
     } else if (active_tower_.get().first == "money") {
       auto tower = towers_.insert(
           {{x, y},
-           std::make_unique<MoneyTower>(
-               x, y, GetTileSize(), active_tower_->second->GetPrice(), 100)});
+           std::make_unique<MoneyTower>(x, y, GetTileSize(),
+                                        active_tower_->second->GetPrice())});
       selected_tower_ = tower.first->second.get();
       selected_tower_->SetActive();
       active_tower_ = boost::none;
@@ -430,7 +430,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
     auto tower =
-        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 300, 100);
+        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 300);
 
     // Check if the player has enough money
     if (player_.GetMoney() >= tower.GetPrice()) {
