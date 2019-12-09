@@ -482,7 +482,7 @@ void PlayState::InitGUI() {
       "tower1_info",
       GuiEntry(
           sf::Vector2f(map_size + tower_width, tower_width / 2 - top_margin),
-          "Basic Tower\nPrice: " + std::to_string(250), boost::none, font_));
+          "Old Tower\nPrice: " + std::to_string(250), boost::none, font_));
 
   int tower_height = sidegui.Get("tower1").GetHeight();
   int enemies = std::count_if(enemies_.begin(), enemies_.end(),
@@ -500,7 +500,7 @@ void PlayState::InitGUI() {
       GuiEntry(
           sf::Vector2f(map_size + tower_width,
                        tower_height + margin + tower_width / 2 - top_margin),
-          "Ship Tower\nPrice: " + std::to_string(400), boost::none, font_));
+          "Pirate Ship\nPrice: " + std::to_string(400), boost::none, font_));
 
   tower_height += sidegui.Get("tower2").GetHeight();
 
