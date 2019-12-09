@@ -20,6 +20,7 @@ PlayState::PlayState(Game* game, Map map)
     : selected_tower_(nullptr),
       last_spawn_(0),
       wave_(1),
+      money_per_wave_(100),
       player_(Player("Pelle")) {
   this->game = game;
   map_ = map;
@@ -51,8 +52,12 @@ void PlayState::Draw() {
       "\nEnemies: " + std::to_string(spawn_queue_.size() + enemies));
 
   // Check if we should enable the next wave button
-  if (enemies_.size() == 0 && spawn_queue_.size() == 0)
+  if (enemies_.size() == 0 && spawn_queue_.size() == 0 &&
+      !gui_.at("sidegui").Get("nextwave").IsEnabled()) {
     gui_.at("sidegui").Get("nextwave").Enable();
+    player_.AddMoney(money_per_wave_);
+    money_per_wave_ += 50;
+  }
 
   if (selected_tower_) this->game->window.draw(gui_.at("towergui"));
 
