@@ -277,7 +277,6 @@ void PlayState::FindEnemies() {
                             pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
       auto path_it = std::find(path.begin(), path.end(), enemy.GetTile());
       int idx = std::distance(path.begin(), path_it);
-      std::cout << idx << std::endl;
       if (distance <= range && idx > longest_distance && enemy.IsAlive()) {
         closest_enemy = &enemy;
         longest_distance = idx;
