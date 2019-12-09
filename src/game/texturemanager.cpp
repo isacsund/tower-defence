@@ -1,5 +1,5 @@
 #include "texturemanager.hpp"
-
+#include <iostream>
 TextureManager& TextureManager::GetInstance() {
   static TextureManager instance;
   return instance;
