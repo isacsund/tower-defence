@@ -540,7 +540,8 @@ void PlayState::InitTowerGUI(Tower* selected_tower) {
       "upgrade_tower",
       GuiEntry(
           sf::Vector2f(tower_width + tower_stats_width + 2 * margin, map_size),
-          std::string("Upgrade"),
+          std::string("Upgrade (" +
+                      std::to_string(selected_tower_->GetUpgradePrice()) + ")"),
           texture_manager.GetTexture("sprites/button.png"), font_));
   if (!selected_tower->IsUpgradeable()) towergui.Get("upgrade_tower").Disable();
   int upgrade_tower_width = towergui.Get("upgrade_tower").GetWidth();
@@ -583,4 +584,10 @@ void PlayState::UpdateTowerStats() {
           boost::str(boost::format("%.1f") % selected_tower_->GetDamage()) +
           "\nAttack speed: " +
           boost::str(boost::format("%.1f") % selected_tower_->GetAttSpeed()));
+
+  gui_.at("towergui")
+      .Get("upgrade_tower")
+      .SetTitle(std::string("Upgrade (" +
+                            std::to_string(selected_tower_->GetUpgradePrice()) +
+                            ")"));
 }
