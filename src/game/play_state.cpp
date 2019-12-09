@@ -150,18 +150,18 @@ void PlayState::HandleInput() {
 
         tower_height += gui_.at("sidegui").Get("tower3").GetHeight();
         gui_.at("sidegui").Get("wave").SetPosition(
-            sf::Vector2f(map_size, tower_height + margin));
+            sf::Vector2f(map_size + margin, tower_height + margin));
 
         int wave_height = gui_.at("sidegui").Get("wave").GetHeight();
-        gui_.at("sidegui").Get("player").SetPosition(
-            sf::Vector2f(map_size, tower_height + wave_height + 2 * margin));
+        gui_.at("sidegui").Get("player").SetPosition(sf::Vector2f(
+            map_size + margin, tower_height + wave_height + 2 * margin));
 
         int player_height = gui_.at("sidegui").Get("player").GetHeight();
         gui_.at("sidegui")
             .Get("nextwave")
             .SetPosition(sf::Vector2f(
                 map_size,
-                tower_height + wave_height + player_height + 3 * margin));
+                tower_height + wave_height + player_height + 4 * margin));
 
         int nextwave_height = gui_.at("sidegui").Get("nextwave").GetHeight();
         gui_.at("sidegui")
@@ -531,25 +531,25 @@ void PlayState::InitGUI() {
   sidegui.Add(
       "wave",
       GuiEntry(
-          sf::Vector2f(map_size, tower_height + margin),
+          sf::Vector2f(map_size + margin, tower_height + margin),
           std::string("Wave: " + std::to_string(wave_ - 1) + "\nEnemies: " +
                       std::to_string(spawn_queue_.size() + enemies)),
 
           boost::none, font_));
   int wave_height = sidegui.Get("wave").GetHeight();
 
-  sidegui.Add(
-      "player",
-      GuiEntry(sf::Vector2f(map_size, tower_height + wave_height + 2 * margin),
-               "Player: " + player_.GetName() +
-                   "\nMoney: " + std::to_string(player_.GetMoney()) +
-                   "\nLives: " + std::to_string(player_.GetLives()),
-               boost::none, font_));
+  sidegui.Add("player",
+              GuiEntry(sf::Vector2f(map_size + margin,
+                                    tower_height + wave_height + 2 * margin),
+                       "Player: " + player_.GetName() +
+                           "\nMoney: " + std::to_string(player_.GetMoney()) +
+                           "\nLives: " + std::to_string(player_.GetLives()),
+                       boost::none, font_));
   int player_height = sidegui.Get("player").GetHeight();
   sidegui.Add(
       "nextwave",
       GuiEntry(sf::Vector2f(map_size, tower_height + wave_height +
-                                          player_height + 3 * margin),
+                                          player_height + 4 * margin),
                std::string("Next wave"),
                texture_manager.GetTexture("sprites/button.png"), font_));
   int nextwave_height = sidegui.Get("nextwave").GetHeight();
