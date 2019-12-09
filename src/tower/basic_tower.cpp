@@ -12,15 +12,17 @@ void BasicTower::Upgrade() {
     current_upgrade_ += 1;
     switch (current_upgrade_) {
       case 2:
-        damage_ += 2;
+        damage_ += 3;
         upgrade_price_ += 50;
         break;
       case 3:
         range_ += 1;
+        damage_ += 2;
         upgrade_price_ += 50;
         break;
       case 4:
         att_speed_ += 0.5;
+        damage_ += 2;
         upgrade_price_ += 100;
         break;
       default:

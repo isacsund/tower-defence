@@ -16,10 +16,12 @@ void ShipTower::Upgrade() {
         break;
       case 3:
         range_ += 2;
+        damage_ += 2;
         upgrade_price_ += 100;
         break;
       case 4:
         att_speed_ += 1;
+        damage_ += 2;
         upgrade_price_ += 100;
         break;
       default:
