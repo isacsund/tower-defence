@@ -262,26 +262,25 @@ void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
 
 void PlayState::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
-  float closest_distance = std::numeric_limits<float>::max();
-  auto player_base = map_.GetPlayerBase();
+  float longest_distance = std::numeric_limits<float>::max();
   Enemy* closest_enemy = nullptr;
+  auto path = map_.GetPath();
   for (auto& tower : towers_) {
     closest_enemy = nullptr;
-    closest_distance = std::numeric_limits<float>::max();
+    longest_distance = std::numeric_limits<float>::min();
     float range = tower.second->GetRange();
     auto tower_pos = tower.second->GetPosition();
+
     for (auto& enemy : enemies_) {
       auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
                             pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
-      float base_distance =
-          sqrt(pow(player_base.first + 0.5 - enemy_pos.first, 2) +
-               pow(player_base.second + 0.5 - enemy_pos.second, 2));
-
-      if (distance <= range && base_distance < closest_distance &&
-          enemy.IsAlive()) {
+      auto path_it = std::find(path.begin(), path.end(), enemy.GetTile());
+      int idx = std::distance(path.begin(), path_it);
+      std::cout << idx << std::endl;
+      if (distance <= range && idx > longest_distance && enemy.IsAlive()) {
         closest_enemy = &enemy;
-        closest_distance = base_distance;
+        longest_distance = idx;
       }
     }
     if ((closest_enemy) && (cur_time - tower.second->GetLastAttack() >

@@ -106,7 +106,7 @@ bool Map::RecalculatePath() {
   }
 }
 
-std::vector<std::pair<int, int>> Map::GetPath() { return path_; }
+std::vector<std::pair<int, int>> Map::GetPath() const { return path_; }
 
 std::vector<Enemy> Map::LoadWave(int wave) {
   std::vector<Enemy> enemies;
