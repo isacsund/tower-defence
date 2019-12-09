@@ -41,5 +41,6 @@ class PlayState : public GameState {
   sf::Clock clock_;
   float last_spawn_;
   int wave_;
+  int money_per_wave_;
   Player player_;
 };
