@@ -6,7 +6,8 @@
 class Tower : public sf::Drawable {
  public:
   Tower(float range, float damage, float att_speed, int x, int y, float size,
-        int price, const std::string& texturename = "sprites/basic_tower.png");
+        int price, int money_per_wave = 0,
+        const std::string& texturename = "sprites/basic_tower.png");
   bool Attack(Enemy& enemy) const;
   const std::pair<int, int> GetPosition() const;
 
@@ -14,6 +15,7 @@ class Tower : public sf::Drawable {
   float GetAttSpeed() const;
   float GetDamage() const;
   float GetLastAttack() const;
+  int GetMoneyPerWave() const;
   void SetLastAttack(float att_time);
   sf::Texture& GetTexture() const;
   sf::Sprite* GetSprite();
@@ -36,6 +38,7 @@ class Tower : public sf::Drawable {
   int current_upgrade_;
   float att_speed_;
   int upgrade_price_;
+  int money_per_wave_;
 
  private:
   int x_, y_;

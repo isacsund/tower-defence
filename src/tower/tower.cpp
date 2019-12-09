@@ -3,7 +3,8 @@
 #include "../game/texturemanager.hpp"
 
 Tower::Tower(float range, float damage, float att_speed, int x, int y,
-             float size, int price, const std::string& texturename)
+             float size, int price, int money_per_wave,
+             const std::string& texturename)
     : range_(range),
       damage_(damage),
       current_upgrade_(1),
@@ -12,6 +13,7 @@ Tower::Tower(float range, float damage, float att_speed, int x, int y,
       y_(y),
       size_(size),
       price_(price),
+      money_per_wave_(money_per_wave),
       texturename_(texturename),
       last_attack_(0) {
   sprite_ = sf::Sprite(GetTexture());
@@ -63,5 +65,5 @@ bool Tower::IsActive() const { return active_; }
 int Tower::GetPrice() const { return price_; }
 int Tower::GetCurrentUpgrade() const { return current_upgrade_; }
 int Tower::GetUpgradePrice() const { return upgrade_price_; }
-
 bool Tower::IsUpgradeable() const { return (current_upgrade_ < max_upgrade_); }
+int Tower::GetMoneyPerWave() const { return money_per_wave_; }

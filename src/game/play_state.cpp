@@ -20,8 +20,8 @@ PlayState::PlayState(Game* game, Map map)
     : selected_tower_(nullptr),
       last_spawn_(0),
       wave_(1),
-      money_per_wave_(100),
-      player_(Player("Pelle")) {
+      money_per_wave_(50),
+      player_(Player("Pelle", 3, 500)) {
   this->game = game;
   map_ = map;
   sf::Vector2f window_size = sf::Vector2f(this->game->window.getSize());
@@ -338,13 +338,14 @@ void PlayState::HandleMapClick(int x, int y) {
     } else if (active_tower_.get().first == "money") {
       auto tower = towers_.insert(
           {{x, y},
-           std::make_unique<MoneyTower>(x, y, GetTileSize(),
-                                        active_tower_->second->GetPrice())});
+           std::make_unique<MoneyTower>(
+               x, y, GetTileSize(), active_tower_->second->GetPrice(), 100)});
       selected_tower_ = tower.first->second.get();
       selected_tower_->SetActive();
       active_tower_ = boost::none;
       gui_.at("sidegui").Get("cancelbuy").Hide();
       InitTowerGUI(selected_tower_);
+      money_per_wave_ += selected_tower_->GetMoneyPerWave();
     }
   }
   // Click on a water tile with an active tower
@@ -429,7 +430,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
     auto tower =
-        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 300);
+        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 300, 100);
 
     // Check if the player has enough money
     if (player_.GetMoney() >= tower.GetPrice()) {
@@ -457,7 +458,9 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
              gui_.at("towergui").Get("upgrade_tower").IsEnabled()) {
     if (player_.GetMoney() >= selected_tower_->GetUpgradePrice()) {
       player_.AddMoney(-selected_tower_->GetUpgradePrice());
+      int current = selected_tower_->GetMoneyPerWave();
       selected_tower_->Upgrade();
+      money_per_wave_ += selected_tower_->GetMoneyPerWave() - current;
     }
 
     if (!selected_tower_->IsUpgradeable())
