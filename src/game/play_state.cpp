@@ -42,7 +42,6 @@ PlayState::PlayState(Game* game, Map map)
 void PlayState::Draw() {
   this->game->window.draw(background_);
   map_.Draw(this->game->window);
-  this->game->window.draw(gui_.at("sidegui"));
 
   // Get enemies remaining if there are any
   int enemies = std::count_if(enemies_.begin(), enemies_.end(),
@@ -94,6 +93,7 @@ void PlayState::Draw() {
     this->game->window.draw(*active_tower_.get().second);
   }
   UpdatePlayerStats();
+  this->game->window.draw(gui_.at("sidegui"));
   Tick();
 }
 
@@ -206,14 +206,22 @@ void PlayState::HandleInput() {
         sf::Vector2f mouse_position =
             sf::Vector2f(event.mouseButton.x, event.mouseButton.y);
         if (event.mouseButton.button == sf::Mouse::Left) {
-          int tile_size = GetTileSize();
-          int tile_x = mouse_position.x / tile_size;
-          int tile_y = mouse_position.y / tile_size;
-          if (tile_x >= 0 && tile_y >= 0 && tile_x < map_.GetWidth() &&
-              tile_y < map_.GetHeight()) {
-            HandleMapClick(tile_x, tile_y);
+          if (player_.GetLives() > 0) {
+            int tile_size = GetTileSize();
+            int tile_x = mouse_position.x / tile_size;
+            int tile_y = mouse_position.y / tile_size;
+            if (tile_x >= 0 && tile_y >= 0 && tile_x < map_.GetWidth() &&
+                tile_y < map_.GetHeight()) {
+              HandleMapClick(tile_x, tile_y);
+            } else {
+              HandleGuiClick(mouse_position);
+            }
           } else {
-            HandleGuiClick(mouse_position);
+            if (gui_.at("sidegui").Has("gameover")) {
+              if (gui_.at("sidegui").Get("gameover").Contains(mouse_position)) {
+                this->game->window.close();
+              }
+            }
           }
         }
         break;
@@ -259,13 +267,28 @@ void PlayState::Tick() {
       it->Move(path);
       if (it->GetTile() == player_base) {
         it->SetHp(0);
+        bool dead = player_.GetLives() == 0;
         if (player_.GetLives() > 0) {
           player_.RemoveLives(1);
           UpdatePlayerStats();
         }
-        if (player_.GetLives() == 0) {
+        if (player_.GetLives() == 0 && !dead) {
           std::cout << "YOU LOST NOOB" << std::endl;
-          game->window.close();
+          gui_.at("sidegui").Add(
+              "gameover",
+              GuiEntry(sf::Vector2f(this->game->window.getSize().x / 2,
+                                    this->game->window.getSize().y / 2),
+                       std::string("Game over!"),
+                       texture_manager.GetTexture("sprites/button.png"),
+                       font_));
+          gui_.at("sidegui")
+              .Get("gameover")
+              .SetPosition(
+                  gui_.at("sidegui").Get("gameover").GetPosition() +
+                  sf::Vector2f(
+                      -gui_.at("sidegui").Get("gameover").GetWidth() / 2,
+                      -gui_.at("sidegui").Get("gameover").GetHeight() / 2));
+          // game->window.close();
         }
       }
       it++;

@@ -10,6 +10,10 @@ void Gui::Add(const std::string& name, GuiEntry entry) {
 
 GuiEntry& Gui::Get(const std::string& name) { return entries_.at(name); }
 
+bool Gui::Has(const std::string& name) {
+  return !(entries_.find(name) == entries_.end());
+}
+
 void Gui::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   if (!visible_) return;
   for (auto entry : entries_) {

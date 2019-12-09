@@ -42,6 +42,8 @@ void GuiEntry::SetPosition(sf::Vector2f position) {
   }
 }
 
+sf::Vector2f GuiEntry::GetPosition() const { return position_; }
+
 void GuiEntry::SetTitle(const std::string& title) { title_->setString(title); }
 std::string GuiEntry::GetTitle() const {
   return title_->getString().toAnsiString();
