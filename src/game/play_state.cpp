@@ -462,11 +462,12 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
       selected_tower_->Upgrade();
       money_per_wave_ += selected_tower_->GetMoneyPerWave() - current;
     }
-
-    if (!selected_tower_->IsUpgradeable())
-      gui_.at("towergui").Get("upgrade_tower").Disable();
-
     UpdateTowerStats();
+    if (!selected_tower_->IsUpgradeable()) {
+      gui_.at("towergui").Get("upgrade_tower").Disable();
+      gui_.at("towergui").Get("upgrade_tower").SetTitle("Upgrade");
+    }
+
   } else if (gui_.find("towergui") != gui_.end() &&
              gui_.at("towergui").Get("sell_tower").Contains(mouse_position)) {
     player_.AddMoney(selected_tower_->GetPrice() / 2);
