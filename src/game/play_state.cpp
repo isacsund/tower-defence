@@ -625,7 +625,10 @@ void PlayState::InitTowerGUI(Tower* selected_tower) {
           std::string("Upgrade (" +
                       std::to_string(selected_tower_->GetUpgradePrice()) + ")"),
           texture_manager.GetTexture("sprites/button.png"), font_));
-  if (!selected_tower->IsUpgradeable()) towergui.Get("upgrade_tower").Disable();
+  if (!selected_tower->IsUpgradeable()) {
+    towergui.Get("upgrade_tower").Disable();
+    towergui.Get("upgrade_tower").SetTitle("Upgrade");
+  }
   int upgrade_tower_width = towergui.Get("upgrade_tower").GetWidth();
 
   towergui.Add(
