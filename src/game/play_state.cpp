@@ -174,32 +174,33 @@ void PlayState::HandleInput() {
                              float(this->game->window.getSize().y) /
                                  float(background_.getTexture()->getSize().y));
         int map_size_y = GetTileSize() * map_.GetHeight();
-        gui_.at("towergui")
-            .Get("tower")
-            .SetPosition(sf::Vector2f(0, map_size_y));
-        tower_width = gui_.at("towergui").Get("tower").GetWidth();
+        if (gui_.find("towergui") != gui_.end()) {
+          gui_.at("towergui")
+              .Get("tower")
+              .SetPosition(sf::Vector2f(0, map_size_y));
+          tower_width = gui_.at("towergui").Get("tower").GetWidth();
 
-        gui_.at("towergui")
-            .Get("tower_stats")
-            .SetPosition(sf::Vector2f(tower_width + margin, map_size_y));
+          gui_.at("towergui")
+              .Get("tower_stats")
+              .SetPosition(sf::Vector2f(tower_width + margin, map_size_y));
 
-        int tower_stats_width =
-            gui_.at("towergui").Get("tower_stats").GetWidth();
+          int tower_stats_width =
+              gui_.at("towergui").Get("tower_stats").GetWidth();
 
-        gui_.at("towergui")
-            .Get("upgrade_tower")
-            .SetPosition(sf::Vector2f(
-                tower_width + tower_stats_width + 2 * margin, map_size_y));
+          gui_.at("towergui")
+              .Get("upgrade_tower")
+              .SetPosition(sf::Vector2f(
+                  tower_width + tower_stats_width + 2 * margin, map_size_y));
 
-        int upgrade_tower_width =
-            gui_.at("towergui").Get("upgrade_tower").GetWidth();
+          int upgrade_tower_width =
+              gui_.at("towergui").Get("upgrade_tower").GetWidth();
 
-        gui_.at("towergui")
-            .Get("sell_tower")
-            .SetPosition(sf::Vector2f(tower_width + tower_stats_width +
-                                          upgrade_tower_width + 3 * margin,
-                                      map_size_y));
-
+          gui_.at("towergui")
+              .Get("sell_tower")
+              .SetPosition(sf::Vector2f(tower_width + tower_stats_width +
+                                            upgrade_tower_width + 3 * margin,
+                                        map_size_y));
+        }
         break;
       }
       case sf::Event::MouseButtonPressed: {
