@@ -7,13 +7,13 @@ enum EnemyTypes { Standard, Fast, Big, Magic, Boss };
 
 class Enemy : public sf::Drawable {
  public:
-  Enemy(float max_hp, float speed, float x, float y, float size, int delay,
+  Enemy(float max_hp, float speed, float x, float y, float size, float delay,
         EnemyTypes type = Standard);
   void Move(const std::vector<std::pair<int, int>>& path);
   float GetHp() const;
   float GetMaxHp() const;
   float GetSpeed() const;
-  int GetDelay() const;
+  float GetDelay() const;
   const std::pair<float, float> GetPosition() const;
   const std::pair<int, int> GetTile() const;
   EnemyTypes GetType() const;
