@@ -49,8 +49,8 @@ void Enemy::Move(const std::vector<std::pair<int, int>>& path) {
       (target_tile_.first == -1 && target_tile_.second == -1)) {
     target_tile_ = FindNextTile(path);
   }
-  float target_x = target_tile_.first + 0.5;
-  float target_y = target_tile_.second + 0.5;
+  float target_x = ((target_tile_.first + 0.5) + ((int)x_ + 0.5)) / 2;
+  float target_y = ((target_tile_.second + 0.5) + ((int)y_ + 0.5)) / 2;
   float dx = target_x - x_;
   float dy = target_y - y_;
   float dist = sqrt(pow(dx, 2) + pow(dy, 2));
