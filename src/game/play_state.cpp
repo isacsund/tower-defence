@@ -236,7 +236,9 @@ void PlayState::Tick() {
         if (player_.GetLives() > 0) {
           player_.RemoveLives(1);
           UpdatePlayerStats();
-        } else {
+        }
+        if (player_.GetLives() == 0) {
+          std::cout << "YOU LOST NOOB" << std::endl;
           game->window.close();
         }
       }
@@ -522,7 +524,6 @@ void PlayState::InitGUI() {
           "Mine\nPrice: " + std::to_string(300), boost::none, font_));
   tower_height += sidegui.Get("tower3").GetHeight();
 
-  std::cout << sidegui.Get("tower3_info").GetHeight() << std::endl;
   sidegui.Add(
       "wave",
       GuiEntry(
