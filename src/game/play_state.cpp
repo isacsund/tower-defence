@@ -106,19 +106,42 @@ void PlayState::HandleInput() {
       case sf::Event::Resized: {
         view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
         this->game->window.setView(view_);
-        int margin = 10;
+        const int margin = 10;
+        const int top_margin = 20;
         int map_size = GetTileSize() * map_.GetWidth();
         gui_.at("sidegui").Get("tower1").SetPosition(sf::Vector2f(map_size, 0));
 
         int tower_height = gui_.at("sidegui").Get("tower1").GetHeight();
+        int tower_width = gui_.at("sidegui").Get("tower1").GetWidth();
+
+        gui_.at("sidegui")
+            .Get("tower1_info")
+            .SetPosition(sf::Vector2f(map_size + tower_width,
+                                      tower_width / 2 - top_margin));
 
         gui_.at("sidegui").Get("tower2").SetPosition(
             sf::Vector2f(map_size, tower_height + margin));
+
+        tower_width = gui_.at("sidegui").Get("tower2").GetWidth();
+
+        gui_.at("sidegui")
+            .Get("tower2_info")
+            .SetPosition(sf::Vector2f(
+                map_size + tower_width,
+                tower_height + margin + tower_width / 2 - top_margin));
 
         tower_height += gui_.at("sidegui").Get("tower2").GetHeight();
 
         gui_.at("sidegui").Get("tower3").SetPosition(
             sf::Vector2f(map_size, tower_height + margin));
+
+        tower_width = gui_.at("sidegui").Get("tower3").GetWidth();
+
+        gui_.at("sidegui")
+            .Get("tower3_info")
+            .SetPosition(sf::Vector2f(
+                map_size + tower_width,
+                tower_height + margin + tower_width / 2 - top_margin));
 
         tower_height += gui_.at("sidegui").Get("tower3").GetHeight();
         gui_.at("sidegui").Get("wave").SetPosition(
@@ -208,6 +231,8 @@ void PlayState::Tick() {
         if (player_.GetLives() > 0) {
           player_.RemoveLives(1);
           UpdatePlayerStats();
+        } else {
+          game->window.close();
         }
       }
       it++;
@@ -237,26 +262,25 @@ void PlayState::AddToSpawnQueue(std::vector<Enemy> enemies) {
 
 void PlayState::FindEnemies() {
   auto cur_time = clock_.getElapsedTime().asSeconds();
-  float closest_distance = std::numeric_limits<float>::max();
-  auto player_base = map_.GetPlayerBase();
+  float longest_distance = std::numeric_limits<float>::max();
   Enemy* closest_enemy = nullptr;
+  auto path = map_.GetPath();
   for (auto& tower : towers_) {
     closest_enemy = nullptr;
-    closest_distance = std::numeric_limits<float>::max();
+    longest_distance = std::numeric_limits<float>::min();
     float range = tower.second->GetRange();
     auto tower_pos = tower.second->GetPosition();
+
     for (auto& enemy : enemies_) {
       auto enemy_pos = enemy.GetPosition();
       float distance = sqrt(pow(tower_pos.first + 0.5 - enemy_pos.first, 2) +
                             pow(tower_pos.second + 0.5 - enemy_pos.second, 2));
-      float base_distance =
-          sqrt(pow(player_base.first + 0.5 - enemy_pos.first, 2) +
-               pow(player_base.second + 0.5 - enemy_pos.second, 2));
-
-      if (distance <= range && base_distance < closest_distance &&
-          enemy.IsAlive()) {
+      auto path_it = std::find(path.begin(), path.end(), enemy.GetTile());
+      int idx = std::distance(path.begin(), path_it);
+      std::cout << idx << std::endl;
+      if (distance <= range && idx > longest_distance && enemy.IsAlive()) {
         closest_enemy = &enemy;
-        closest_distance = base_distance;
+        longest_distance = idx;
       }
     }
     if ((closest_enemy) && (cur_time - tower.second->GetLastAttack() >
@@ -381,7 +405,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
     auto tower = ShipTower(8, 5, 1, mouse_position.x, mouse_position.y,
-                           GetTileSize(), 250);
+                           GetTileSize(), 400);
 
     // Check if the player has enough money
     if (player_.GetMoney() >= tower.GetPrice()) {
@@ -399,7 +423,7 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
     if (selected_tower_ != nullptr) selected_tower_ = nullptr;
 
     auto tower =
-        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 250);
+        MoneyTower(mouse_position.x, mouse_position.y, GetTileSize(), 300);
 
     // Check if the player has enough money
     if (player_.GetMoney() >= tower.GetPrice()) {
@@ -446,11 +470,19 @@ void PlayState::HandleGuiClick(sf::Vector2f mouse_position) {
 void PlayState::InitGUI() {
   Gui sidegui = Gui();
   const int margin = 10;
+  const int top_margin = 20;
   int map_size = GetTileSize() * map_.GetWidth();
   sidegui.Add("tower1",
               GuiEntry(sf::Vector2f(map_size, 0), boost::none,
                        texture_manager.GetTexture("sprites/basic_tower.png"),
                        boost::none));
+
+  int tower_width = sidegui.Get("tower1").GetWidth();
+  sidegui.Add(
+      "tower1_info",
+      GuiEntry(
+          sf::Vector2f(map_size + tower_width, tower_width / 2 - top_margin),
+          "Old Tower\nPrice: " + std::to_string(250), boost::none, font_));
 
   int tower_height = sidegui.Get("tower1").GetHeight();
   int enemies = std::count_if(enemies_.begin(), enemies_.end(),
@@ -462,6 +494,14 @@ void PlayState::InitGUI() {
                texture_manager.GetTexture("sprites/ship_tower.png"),
                boost::none));
 
+  tower_width = sidegui.Get("tower2").GetWidth();
+  sidegui.Add(
+      "tower2_info",
+      GuiEntry(
+          sf::Vector2f(map_size + tower_width,
+                       tower_height + margin + tower_width / 2 - top_margin),
+          "Pirate Ship\nPrice: " + std::to_string(400), boost::none, font_));
+
   tower_height += sidegui.Get("tower2").GetHeight();
 
   sidegui.Add(
@@ -469,9 +509,16 @@ void PlayState::InitGUI() {
       GuiEntry(sf::Vector2f(map_size, tower_height + margin), boost::none,
                texture_manager.GetTexture("sprites/money_tower.png"),
                boost::none));
-
+  tower_width = sidegui.Get("tower3").GetWidth();
+  sidegui.Add(
+      "tower3_info",
+      GuiEntry(
+          sf::Vector2f(map_size + tower_width,
+                       tower_height + margin + tower_width / 2 - top_margin),
+          "Mine\nPrice: " + std::to_string(300), boost::none, font_));
   tower_height += sidegui.Get("tower3").GetHeight();
 
+  std::cout << sidegui.Get("tower3_info").GetHeight() << std::endl;
   sidegui.Add(
       "wave",
       GuiEntry(

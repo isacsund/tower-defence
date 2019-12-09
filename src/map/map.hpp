@@ -21,7 +21,7 @@ class Map {
   const std::pair<int, int> GetEnemySpawn() const;
   const std::pair<int, int> GetPlayerBase() const;
   bool RecalculatePath();
-  std::vector<std::pair<int, int>> GetPath();
+  std::vector<std::pair<int, int>> GetPath() const;
   std::vector<Enemy> LoadWave(int wave);
   int tile_size;
 
