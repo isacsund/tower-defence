@@ -26,6 +26,7 @@ class Tower : public sf::Drawable {
   int GetCurrentUpgrade() const;
   bool IsUpgradeable() const;
   virtual void Upgrade() = 0;
+  int GetUpgradePrice() const;
   virtual ~Tower(){};
 
  protected:
@@ -34,6 +35,7 @@ class Tower : public sf::Drawable {
   float damage_;
   int current_upgrade_;
   float att_speed_;
+  int upgrade_price_;
 
  private:
   int x_, y_;

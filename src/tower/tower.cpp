@@ -62,5 +62,6 @@ void Tower::SetInactive() { active_ = false; }
 bool Tower::IsActive() const { return active_; }
 int Tower::GetPrice() const { return price_; }
 int Tower::GetCurrentUpgrade() const { return current_upgrade_; }
+int Tower::GetUpgradePrice() const { return upgrade_price_; }
 
 bool Tower::IsUpgradeable() const { return (current_upgrade_ < max_upgrade_); }
