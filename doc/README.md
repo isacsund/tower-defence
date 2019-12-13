@@ -10,7 +10,11 @@ A fun medieval style [tower defence](https://en.wikipedia.org/wiki/Tower_defense
 ## Software Structure
 A rough, high level UML diagram of our game:
 <br>
+<br>
+<br>
 ![](https://i.imgur.com/nnUlM3N.png)
+<br>
+<br>
 <br>
 We use game states as a way of managing all the possible states our game uses, such as a main menu screen, an in-game state and a map selection screen. Our biggest class is by far PlayState. It is used to draw the map, the GUI and handles inputs. The PlayState provides most of the game functionality and is the state the game is in when the user is playing the game.
 
